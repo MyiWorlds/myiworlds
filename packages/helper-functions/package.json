@@ -1,0 +1,20 @@
+{
+  "name": "@myiworlds/helper-functions",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.14.13",
+    "typescript": "^3.5.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@myiworlds/cloud-services": "^1.0.0",
+    "@myiworlds/credentials": "^1.0.0",
+    "@myiworlds/types": "^1.0.0"
+  }
+}

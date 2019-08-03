@@ -1,0 +1,12 @@
+type Mutation {
+  deleteCircle(id: String!): DeleteCircleResponse
+}
+
+type DeleteCircleResponse {
+  status: String
+  message: String
+  circleIdToDelete: String
+  circleDeleted: Boolean
+  numberOfPiiCircleClones: Int
+  piiCircleClonesDeleted: Boolean
+}

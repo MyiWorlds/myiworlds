@@ -1,0 +1,22 @@
+{
+  "name": "myiworlds",
+  "private": true,
+  "scripts": {
+    "watch": "lerna run watch --parallel",
+    "build": "lerna run build --parallel",
+    "frontend-build": "lerna run build --scope=@myiworlds/frontend",
+    "backend": "lerna run watch --scope=@myiworlds/backend",
+    "new-version": "lerna version --conventional-commits --yes",
+    "fix": "npx lerna clean -y && npx lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
+    "diff": "lerna diff"
+  },
+  "devDependencies": {
+    "lerna": "^3.16.1"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  }
+}

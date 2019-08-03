@@ -1,0 +1,9 @@
+type Mutation {
+  updateProfile(id: String!, data: JSON): UpdateProfileResponse
+}
+
+type UpdateProfileResponse {
+  status: String
+  message: String
+  updatedProfile: Profile
+}

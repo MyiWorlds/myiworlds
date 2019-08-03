@@ -1,0 +1,21 @@
+{
+  "name": "@myiworlds/types",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "typings": "src/index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.14.13",
+    "typescript": "^3.5.3",
+    "graphql": "^14.4.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@myiworlds/cloud-services": "^1.0.0",
+    "@myiworlds/credentials": "^1.0.0",
+    "@types/graphql": "^14.2.3"
+  }
+}

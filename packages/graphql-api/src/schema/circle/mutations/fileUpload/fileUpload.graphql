@@ -1,0 +1,8 @@
+type Mutation {
+  fileUpload(file: Upload!): FileUploadResponse
+}
+
+type FileUploadResponse {
+  url: String
+  sizes: [String]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@myiworlds/cloud-services",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.14.13",
+    "typescript": "^3.5.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@google-cloud/error-reporting": "^1.1.1",
+    "@google-cloud/storage": "^3.0.3",
+    "@myiworlds/credentials": "^1.0.0",
+    "@myiworlds/types": "1.0.0",
+    "firebase-admin": "^8.2.0"
+  }
+}

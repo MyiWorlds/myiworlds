@@ -1,0 +1,10 @@
+type Mutation {
+  updateCircle(circle: JSON!, merge: Boolean!): UpdateCircleResponse
+}
+
+type UpdateCircleResponse {
+  status: String
+  message: String
+  updatedCircle: Circle
+  creator: Profile
+}
