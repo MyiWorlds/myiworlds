@@ -8,13 +8,13 @@ If your node modules are not "hoisted" up to the top level (this breaks the nice
 Note: Run in root directory, not one of the packages
 
 ```
-npx lerna clean -y && npx lerna bootstrap --hoist
+npm run fix
 ```
 
 or
 
 ```
-lerna bootstrap
+npm run bootstrap
 ```
 
 Other Lerna tips here:
