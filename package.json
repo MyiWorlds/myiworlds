@@ -9,7 +9,8 @@
     "new-version": "lerna version --conventional-commits --yes",
     "fix": "npx lerna clean -y && npx lerna bootstrap --hoist",
     "bootstrap": "lerna bootstrap",
-    "diff": "lerna diff"
+    "diff": "lerna diff",
+    "update-apollo-tracing": "npx apollo service:push --scope=@myiworlds/graphql-api"
   },
   "devDependencies": {
     "lerna": "^3.16.1"

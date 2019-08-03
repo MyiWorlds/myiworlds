@@ -1,6 +1,7 @@
 import Context from './Context';
 import { ApolloServer } from 'apollo-server';
 import { genSchema } from './utils/genSchema';
+import { GraphQLError } from 'graphql';
 import { stackdriver } from '@myiworlds/cloud-services';
 import 'dotenv/config';
 
@@ -23,15 +24,19 @@ export const startServer = async () => {
     playground,
     introspection: true,
     context: ({ req }: { req: any }) => Context(req),
-    formatError: (error: any) => {
+    tracing: process.env.NODE_ENV !== 'production' ? true : false,
+    engine: {
+      apiKey: process.env.ENGINE_API_KEY,
+    },
+    formatError: (error: GraphQLError) => {
       // Can't get it to work with Apollo types
       stackdriver.report(new Error(`${error}`));
 
       if (error.message.startsWith('Database Error: ')) {
-        return 'Internal server error';
+        return new Error('Internal server error');
       }
 
-      return error.message;
+      return new Error(error.message);
     },
   });
 
