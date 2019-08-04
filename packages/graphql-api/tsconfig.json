@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./src/types/*.d.ts"]
+    "typeRoots": ["./src/types/*.d.ts"],
+    "esModuleInterop": true
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts"]

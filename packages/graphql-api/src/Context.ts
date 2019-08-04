@@ -1,4 +1,4 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import getUserId from './services/firebase/authentication/getUserId';
 import { firestore } from '@myiworlds/cloud-services';
 import { getDocumentsByIds } from './services/firebase/firestore/queries';

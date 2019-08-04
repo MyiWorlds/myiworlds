@@ -4,6 +4,7 @@
   "scripts": {
     "watch": "lerna run watch --parallel",
     "build": "lerna run build --parallel",
+    "generate": "lerna run generate --scope=@myiworlds/frontend",
     "frontend-build": "lerna run build --scope=@myiworlds/frontend",
     "backend": "lerna run watch --scope=@myiworlds/backend",
     "new-version": "lerna version --conventional-commits --yes",

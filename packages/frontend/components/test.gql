@@ -1,0 +1,7 @@
+query GetCircleById($id: String!) {
+  getCircleById(id: $id) {
+    id
+    title
+    data
+  }
+}

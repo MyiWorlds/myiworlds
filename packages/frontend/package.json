@@ -6,21 +6,33 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "watch": "next --watch"
+    "generate": "graphql-codegen",
+    "watch": "next"
   },
   "dependencies": {
+    "@graphql-codegen/typescript-operations": "^1.4.0",
     "@myiworlds/cloud-services": "^1.0.0",
     "@myiworlds/credentials": "^1.0.0",
     "@myiworlds/types": "^1.0.0",
     "@zeit/next-typescript": "^1.1.1",
-    "next": "^7.0.2",
+    "apollo-boost": "^0.4.3",
+    "apollo-link-context": "^1.0.18",
+    "apollo-link-http": "^1.5.15",
+    "cookie": "^0.4.0",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^9.0.3",
     "react": "^16.7.0",
+    "react-apollo": "^2.5.8",
     "react-dom": "^16.7.0"
   },
   "devDependencies": {
-    "@types/next": "^7.0.6",
+    "@graphql-codegen/cli": "^1.4.0",
+    "@graphql-codegen/typescript": "^1.4.0",
+    "@graphql-codegen/typescript-react-apollo": "^1.4.0",
+    "@types/cookie": "^0.3.3",
+    "@types/next": "^7.0.9",
     "@types/react": "^16.4.16",
-    "@types/react-dom": "16.0.11",
+    "@types/react-dom": "^16.0.11",
     "typescript": "^3.5.3"
   },
   "license": "ISC"

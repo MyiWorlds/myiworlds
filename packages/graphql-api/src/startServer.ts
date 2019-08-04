@@ -20,6 +20,10 @@ export const startServer = async () => {
   };
 
   const server = new ApolloServer({
+    cors: {
+      credentials: true,
+      origin: true,
+    },
     schema: genSchema() as any,
     playground,
     introspection: true,
