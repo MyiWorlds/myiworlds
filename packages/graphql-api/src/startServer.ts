@@ -1,9 +1,17 @@
 import Context from './Context';
 import { ApolloServer } from 'apollo-server';
 import { genSchema } from './utils/genSchema';
+import { googleCloudServiceAccount } from '@myiworlds/credentials';
 import { GraphQLError } from 'graphql';
 import { stackdriver } from '@myiworlds/cloud-services';
 import 'dotenv/config';
+import debugAgent = require('@google-cloud/debug-agent');
+
+debugAgent.start({
+  allowExpressions: true,
+  projectId: googleCloudServiceAccount.project_id,
+  credentials: googleCloudServiceAccount,
+});
 
 export const startServer = async () => {
   if (!process.env.NODE_ENV) {

@@ -5,10 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Next: Chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/packages/frontend"
+    },
+    {
       "type": "node",
       "request": "attach",
-      "name": "Attach",
+      "name": "Server",
       "port": 9229
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Front/backend",
+      "configurations": ["Next: Chrome", "Server"]
     }
   ]
 }
