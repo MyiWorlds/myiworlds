@@ -1,5 +1,5 @@
-import { stackdriver } from '@myiworlds/cloud-services';
 import { Context, ResolverMap } from '@myiworlds/types';
+import { stackdriver } from '@myiworlds/cloud-services';
 
 export const resolvers: ResolverMap = {
   Circle: {
@@ -10,9 +10,9 @@ export const resolvers: ResolverMap = {
         return null;
       }
     },
-    clonedFrom: async (circle: any, _: null, context: Context) => {
-      if (circle.clonedFrom) {
-        return context.circleLoader.load(circle.clonedFrom);
+    copiedFrom: async (circle: any, _: null, context: Context) => {
+      if (circle.copiedFrom) {
+        return context.circleLoader.load(circle.copiedFrom);
       } else {
         return null;
       }

@@ -8,7 +8,7 @@ export const resolvers: ResolverMap = {
       _: null,
       args: {
         id: string;
-        collection: string;
+        collection: 'circles';
         pii: boolean;
         parent: string;
         slug: string;

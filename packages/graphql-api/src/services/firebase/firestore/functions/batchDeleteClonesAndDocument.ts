@@ -26,7 +26,7 @@ const batchDeleteClonesAndDocument = async (collection: string, id: string) => {
     while (keepDeleting) {
       const clones = await firestore
         .collection(`${collection}-clones`)
-        .where(`${collection}Id`, '==', id)
+        .where(`copiedFrom`, '==', id)
         .orderBy('dateCreated', 'desc')
         .select('id')
         .startAfter(cursor)

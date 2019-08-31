@@ -1,8 +1,8 @@
-import { firebase, stackdriver } from '@myiworlds/cloud-services';
+import { firebaseAdmin, stackdriver } from '@myiworlds/cloud-services';
 
 const getUserId = async (token: string) => {
   if (token && token !== 'null') {
-    const userId = await firebase
+    const userId = await firebaseAdmin
       .auth()
       .verifyIdToken(token)
       .then((decodedToken: any) => {

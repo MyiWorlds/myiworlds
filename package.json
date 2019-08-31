@@ -14,11 +14,12 @@
     "update-apollo-tracing": "npx apollo service:push --scope=@myiworlds/graphql-api"
   },
   "devDependencies": {
-    "lerna": "^3.16.1"
+    "lerna": "^3.16.4"
   },
   "workspaces": {
     "packages": [
       "packages/*"
     ]
-  }
+  },
+  "dependencies": {}
 }

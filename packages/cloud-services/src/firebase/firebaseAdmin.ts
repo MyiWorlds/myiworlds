@@ -1,12 +1,12 @@
-import * as firebase from 'firebase-admin';
+import * as firebaseAdmin from 'firebase-admin';
 import { googleCloudServiceAccount } from '@myiworlds/credentials';
 
-firebase.initializeApp({
-  credential: firebase.credential.cert({
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert({
     projectId: googleCloudServiceAccount.project_id,
     clientEmail: googleCloudServiceAccount.client_email,
     privateKey: googleCloudServiceAccount.private_key,
   }),
 });
 
-export default firebase;
+export default firebaseAdmin;

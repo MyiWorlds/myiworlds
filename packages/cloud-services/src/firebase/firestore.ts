@@ -1,6 +1,6 @@
-import firebase from './';
+import firebaseAdmin from './firebaseAdmin';
 
-const firestore = firebase.firestore();
+const firestore = firebaseAdmin.firestore();
 
 const settings = {
   timestampsInSnapshots: true,

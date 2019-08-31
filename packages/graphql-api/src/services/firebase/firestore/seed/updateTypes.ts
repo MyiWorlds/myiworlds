@@ -1,7 +1,7 @@
-import circles from '../../../../schema/circle/seed/circles';
-import profile from '../../../../schema/profile/seed/profile';
+import circles from './circles/circles';
+import profile from './profiles/profiles';
 import { Circle, Context, Property } from '@myiworlds/types';
-import { typesList } from '../../../../schema/circle/seed/typesList';
+import { typesList } from './circles/typesList';
 import { updateDocumentById } from '../mutations';
 
 const appCreatorsContext: Context = {
@@ -19,7 +19,7 @@ const propertiesToIgnore = [
   'collection',
   'pii',
   'parent',
-  'clonedFrom',
+  'copiedFrom',
   'slug',
   'passwordRequired',
 ];

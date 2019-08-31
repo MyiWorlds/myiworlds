@@ -30,7 +30,7 @@ declare namespace GQL {
     getProfileById: IProfile | null;
     getProfileByUsername: IGetProfileByUsernameResponse | null;
     getProfilesByIds: Array<IProfile | null> | null;
-    user: IUser | null;
+    getUserById: IUser | null;
   }
 
   interface IGetCircleByIdOnQueryArguments {
@@ -75,7 +75,7 @@ declare namespace GQL {
     collection: string | null;
     pii: boolean | null;
     parent: ICircle | null;
-    clonedFrom: ICircle | null;
+    copiedFrom: ICircle | null;
     slug: string | null;
     public: boolean | null;
     passwordRequired: boolean | null;

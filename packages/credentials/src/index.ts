@@ -2,3 +2,4 @@ import googleCloudServiceAccountJson from './dev-google-cloud-service-account.js
 import { GoogleCloudServiceKey } from '@myiworlds/types';
 
 export const googleCloudServiceAccount: GoogleCloudServiceKey = googleCloudServiceAccountJson;
+export { firebaseConfig } from './firebaseConfig';

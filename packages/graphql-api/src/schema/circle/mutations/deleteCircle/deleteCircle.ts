@@ -87,7 +87,7 @@ export default async function deleteCircle(id: string, context: Context) {
             value: true,
           },
           {
-            property: 'circlesId',
+            property: 'clonedFrom',
             condition: '==',
             value: id,
           },

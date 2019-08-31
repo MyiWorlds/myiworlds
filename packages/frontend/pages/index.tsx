@@ -1,21 +1,25 @@
-import * as React from 'react';
-import Layout from '../components/Layout';
-import Link from 'next/link';
+import React, { useContext, useState } from 'react';
+import { UserContext } from '../context/user/userContext';
+import 'isomorphic-unfetch';
 
-const IndexPage: React.FunctionComponent = () => {
+const Index = () => {
+  const [value, setValue] = useState(0);
+  const { user, handleLogout, handleLogin } = useContext(UserContext);
+
   return (
-    <Layout title="Home | Next.js + TypeScript Example">
-      <h1>hello Next.js 👋</h1>
-      <p>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
-      </p>
-      <Link href="/post/[id]" as={`/post/test`}>
-        <a>testing page</a>
-      </Link>
-    </Layout>
+    <div>
+      <div>
+        App {user.email}
+        <h3>{value}</h3>
+        <button onClick={() => setValue(value + 1)}>increment</button>
+        {user.id ? (
+          <button onClick={() => handleLogout()}>Logout</button>
+        ) : (
+          <button onClick={() => handleLogin()}>Login</button>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default IndexPage;
+export default Index;

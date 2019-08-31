@@ -1,9 +1,12 @@
+import cookie from 'cookie';
 import DataLoader from 'dataloader';
 import getUserId from './services/firebase/authentication/getUserId';
-import { firestore } from '@myiworlds/cloud-services';
+import { firestore, stackdriver } from '@myiworlds/cloud-services';
 import { getDocumentsByIds } from './services/firebase/firestore/queries';
 
 const Context = async (req: any) => {
+  const cookies = cookie.parse(req.headers.cookie);
+
   const profileHistoryId =
     req.headers['profile-history-id'] !== 'null' || '' || 'guest'
       ? req.headers['profile-history-id']
@@ -16,23 +19,25 @@ const Context = async (req: any) => {
 
   const headers = {
     validated: false,
-    userId: await getUserId(req.headers.token),
+    userId: await getUserId(cookies.token),
     queriedUserId: req.headers['user-id'],
     selectedProfileId,
     addToHistory,
     profileHistoryId,
   };
 
-  if (
-    headers.userId &&
-    (headers.queriedUserId === 'null' || headers.queriedUserId === '')
-  ) {
-    const user = await firestore
-      .doc(`users/${headers.userId}`)
-      .get()
-      .then((result: any) => result.data());
+  if (headers.userId) {
+    let userId = null;
+    try {
+      const userExists = await firestore.doc(`users/${headers.userId}`).get();
+      if (userExists) {
+        userId = userExists.id;
+      }
+    } catch (error) {
+      stackdriver.report('Error seeing if User exists in Context', error);
+    }
 
-    headers.queriedUserId = user ? user.id : null;
+    headers.queriedUserId = userId ? userId : null;
   }
 
   if (headers.userId === headers.queriedUserId) {

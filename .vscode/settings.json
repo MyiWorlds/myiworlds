@@ -1,4 +1,5 @@
 {
   "workbench.colorCustomizations": {},
+  "eslint.enable": true,
   "debug.node.autoAttach": "on"
 }

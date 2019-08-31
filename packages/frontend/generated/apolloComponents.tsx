@@ -1,6 +1,8 @@
 import gql from "graphql-tag";
 import * as React from "react";
-import * as ReactApollo from "react-apollo";
+import * as ApolloReactCommon from "@apollo/react-common";
+import * as ApolloReactComponents from "@apollo/react-components";
+import * as ApolloReactHoc from "@apollo/react-hoc";
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
@@ -10,9 +12,10 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The `BigInt` scalar type represents non-fractional signed whole numeric values.
+  /**
+   * The `BigInt` scalar type represents non-fractional signed whole numeric values.
    * BigInt can represent values between -(2^53) + 1 and 2^53 - 1.
-   */
+   **/
   BigInt: any;
   JSON: any;
   Upload: any;
@@ -24,7 +27,7 @@ export type Circle = {
   collection?: Maybe<Scalars["String"]>;
   pii?: Maybe<Scalars["Boolean"]>;
   parent?: Maybe<Circle>;
-  clonedFrom?: Maybe<Circle>;
+  copiedFrom?: Maybe<Circle>;
   slug?: Maybe<Scalars["String"]>;
   public?: Maybe<Scalars["Boolean"]>;
   passwordRequired?: Maybe<Scalars["Boolean"]>;
@@ -238,7 +241,7 @@ export type Query = {
   getProfileById?: Maybe<Profile>;
   getProfileByUsername?: Maybe<GetProfileByUsernameResponse>;
   getProfilesByIds?: Maybe<Array<Maybe<Profile>>>;
-  user?: Maybe<User>;
+  getUserById?: Maybe<User>;
 };
 
 export type QueryGetCircleByIdArgs = {
@@ -275,6 +278,10 @@ export type QueryGetProfileByUsernameArgs = {
 
 export type QueryGetProfilesByIdsArgs = {
   ids: Array<Maybe<Scalars["String"]>>;
+};
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars["String"];
 };
 
 export type UpdateCircleResponse = {
@@ -330,31 +337,37 @@ export const GetCircleByIdDocument = gql`
   }
 `;
 export type GetCircleByIdComponentProps = Omit<
-  ReactApollo.QueryProps<GetCircleByIdQuery, GetCircleByIdQueryVariables>,
+  ApolloReactComponents.QueryComponentOptions<
+    GetCircleByIdQuery,
+    GetCircleByIdQueryVariables
+  >,
   "query"
 > &
-  ({ variables: GetCircleByIdQueryVariables; skip?: false } | { skip: true });
+  (
+    | { variables: GetCircleByIdQueryVariables; skip?: boolean }
+    | { skip: boolean });
 
 export const GetCircleByIdComponent = (props: GetCircleByIdComponentProps) => (
-  <ReactApollo.Query<GetCircleByIdQuery, GetCircleByIdQueryVariables>
+  <ApolloReactComponents.Query<GetCircleByIdQuery, GetCircleByIdQueryVariables>
     query={GetCircleByIdDocument}
     {...props}
   />
 );
 
-export type GetCircleByIdProps<TChildProps = {}> = Partial<
-  ReactApollo.DataProps<GetCircleByIdQuery, GetCircleByIdQueryVariables>
+export type GetCircleByIdProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  GetCircleByIdQuery,
+  GetCircleByIdQueryVariables
 > &
   TChildProps;
 export function withGetCircleById<TProps, TChildProps = {}>(
-  operationOptions?: ReactApollo.OperationOption<
+  operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
     GetCircleByIdQuery,
     GetCircleByIdQueryVariables,
     GetCircleByIdProps<TChildProps>
   >
 ) {
-  return ReactApollo.withQuery<
+  return ApolloReactHoc.withQuery<
     TProps,
     GetCircleByIdQuery,
     GetCircleByIdQueryVariables,
@@ -364,3 +377,7 @@ export function withGetCircleById<TProps, TChildProps = {}>(
     ...operationOptions
   });
 }
+export type GetCircleByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleByIdQuery,
+  GetCircleByIdQueryVariables
+>;
