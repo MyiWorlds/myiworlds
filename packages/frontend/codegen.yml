@@ -1,9 +1,12 @@
 overwrite: true
 schema: http://localhost:8000/graphql
 # documents: components/**/*.{ts,tsx}
-documents: components/**/*.gql
+documents:
+  - components/**/*.gql
+  - context/**/*.gql
 hooks:
   afterAllFileWrite:
+    - prettier --write
     - eslint --fix
 generates:
   ./generated/apolloComponents.tsx:

@@ -1,15 +1,12 @@
 import Error from '../../components/Error';
 import guestUser from './guestUser';
 import React, { useEffect, useState } from 'react';
-import { CREATE_USER } from './CREATE_USER';
 import { firebase, firestore } from '../../lib/firebase';
-import { GET_USER } from './GET_USER';
 import { LoggedInUser } from '@myiworlds/types';
 import { ProviderStore } from './userContext.d';
-import { useMutation, useQuery } from '@apollo/react-hooks';
 import {
-  CreateUserResponse,
-  MutationCreateUserArgs,
+  useCreateUserMutation,
+  useGetUserByIdQuery,
 } from '../../generated/apolloComponents';
 
 type SubscriptionToUser = null | (() => void);
@@ -32,23 +29,20 @@ const UserProvider = ({ children }: any) => {
       loading: createUserLoading,
       error: createUserError,
     },
-  ] = useMutation<{
-    createUser: CreateUserResponse;
-    variables: MutationCreateUserArgs;
-  }>(CREATE_USER, {
+  ] = useCreateUserMutation({
     variables: {
       id: userId!,
       email: userEmail!,
     },
   });
 
-  const { data: getUserQuery, loading, error } = useQuery(GET_USER, {
+  const { data: getUserQuery, loading, error } = useGetUserByIdQuery({
     skip: !userId || user.id === userId,
   });
 
   const updateUserData = () => {
     if (getUserQuery && getUserQuery.getUserById) {
-      setUser(getUserQuery.getUserById);
+      setUser(getUserQuery.getUserById as LoggedInUser);
       setAppLoading(false);
     }
   };
@@ -188,6 +182,8 @@ const UserProvider = ({ children }: any) => {
     ) {
       setUser(createUserData.createUser.createdUser as LoggedInUser);
       setAppLoading(false);
+    } else {
+      handleLogout();
     }
   };
 

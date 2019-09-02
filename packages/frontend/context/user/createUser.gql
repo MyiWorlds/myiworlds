@@ -1,0 +1,9 @@
+mutation createUser($id: ID!, $email: String!) {
+  createUser(id: $id, email: $email) {
+    status
+    message
+    createdUser {
+      ...LoggedInUser
+    }
+  }
+}
