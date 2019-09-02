@@ -18,7 +18,7 @@ export interface User {
 }
 
 export interface LoggedInUser {
-  id: string;
+  id: string | null;
   email: string;
   canCreate: boolean;
   dateCreated?: string;

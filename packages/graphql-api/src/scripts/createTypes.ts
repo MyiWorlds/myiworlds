@@ -8,7 +8,10 @@ const typescriptTypes = generateNamespace('GQL', genSchema());
 fs.writeFile(
   path.join(__dirname, '../types/schema.d.ts'),
   typescriptTypes,
-  err => {
-    console.log(err);
+  error => {
+    if (error) {
+      console.error('createTypes had an error', error);
+    }
+    console.log('Generated Types have been saved!');
   },
 );

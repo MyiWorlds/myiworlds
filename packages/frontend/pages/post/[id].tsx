@@ -1,26 +1,25 @@
 import Test from './../../components/test';
-import { GetCircleByIdComponent } from '../../generated/apolloComponents';
+import { useGetCircleByIdQuery } from '../../generated/apolloComponents';
 import { useRouter } from 'next/router';
 
-export default function Post(props: any) {
+const Post = () => {
   const router = useRouter();
+  const { data, loading, error } = useGetCircleByIdQuery({
+    variables: { id: '0v0Ua9nf1eUVyAGceDSy' },
+  });
+  console.log(router.query.id);
+
+  if (loading || error || !data || !data.getCircleById)
+    return <div>nothing yet</div>;
 
   return (
     <div>
-      {console.log(router.query.id)}
-      <h1 />
-      <GetCircleByIdComponent variables={{ id: '0v0Ua9nf1eUVyAGceDSy' }}>
-        {({ loading, error, data }) => {
-          if (loading || error) return <div>nothing yet</div>;
-          return (
-            <div>
-              {console.log('Query Response: ', loading, error, data)}
-              {data.getCircleById.id}
-              <Test title={data.getCircleById.id} />
-            </div>
-          );
-        }}
-      </GetCircleByIdComponent>
+      test
+      {console.log('Query Response: ', loading, error, data)}
+      {data.getCircleById.id}
+      {data.getCircleById.id && <Test title={data.getCircleById.id} />}
     </div>
   );
-}
+};
+
+export default Post;

@@ -45,7 +45,7 @@ const updateCircleTypes = () => {
         await updateDocumentById(circle, appCreatorsContext, false, false),
       );
     } catch (error) {
-      console.error(error);
+      console.error('updateTypes had an error', error);
     }
   });
 };

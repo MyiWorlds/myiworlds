@@ -1,5 +1,5 @@
 import { Context, ResolverMap } from '@myiworlds/types';
-import { firestore, stackdriver } from '@myiworlds/cloud-services';
+import { stackdriver } from '@myiworlds/cloud-services';
 import {
   getDocumentsByIds,
   getDocumentById,

@@ -2,9 +2,17 @@ overwrite: true
 schema: http://localhost:8000/graphql
 # documents: components/**/*.{ts,tsx}
 documents: components/**/*.gql
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
 generates:
   ./generated/apolloComponents.tsx:
     plugins:
       - typescript
       - typescript-operations
       - typescript-react-apollo
+    config:
+      withHooks: true
+      withHOC: false
+      withComponent: false
+      hooksImportFrom: "@apollo/react-hooks"

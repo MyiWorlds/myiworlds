@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import { ApolloError } from 'apollo-client';
@@ -15,7 +14,7 @@ interface Props {
   classes: {
     container: string;
   };
-  error: ApolloError;
+  error: ApolloError | Error;
   iconFontSize?: 'inherit' | 'default' | 'small' | 'large';
   icon?: string;
   message?: JSX.Element | string;

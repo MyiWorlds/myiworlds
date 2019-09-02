@@ -1,1 +1,3 @@
-declare module 'graphql-bigint';
+declare module 'graphql-bigint' {
+  export type GraphQLBigInt = any;
+}

@@ -1,11 +1,11 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import DataLoader from 'dataloader';
 import getUserId from './services/firebase/authentication/getUserId';
 import { firestore, stackdriver } from '@myiworlds/cloud-services';
 import { getDocumentsByIds } from './services/firebase/firestore/queries';
 
 const Context = async (req: any) => {
-  const cookies = cookie.parse(req.headers.cookie);
+  const cookies = cookie.parse(req.headers.cookie || '');
 
   const profileHistoryId =
     req.headers['profile-history-id'] !== 'null' || '' || 'guest'

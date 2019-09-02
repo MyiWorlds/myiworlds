@@ -15,10 +15,11 @@ export default async function getDocumentsByIds(
 
   try {
     if (ids) {
-      // tslint:disable-next-line:array-type
-      const docIds: any = ids.map((id: string) => {
-        return firestore.doc(`${collection}/${id}`);
-      });
+      const docIds: FirebaseFirestore.DocumentReference[] = ids.map(
+        (id: string) => {
+          return firestore.doc(`${collection}/${id}`);
+        },
+      );
 
       const getEntities = await firestore
         .getAll(...docIds)

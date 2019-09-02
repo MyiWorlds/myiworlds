@@ -4,18 +4,27 @@ import React, { useEffect, useState } from 'react';
 import { CREATE_USER } from './CREATE_USER';
 import { firebase, firestore } from '../../lib/firebase';
 import { GET_USER } from './GET_USER';
+import { LoggedInUser } from '@myiworlds/types';
 import { ProviderStore } from './userContext.d';
 import { useMutation, useQuery } from '@apollo/react-hooks';
+import {
+  CreateUserResponse,
+  MutationCreateUserArgs,
+} from '../../generated/apolloComponents';
+
+type SubscriptionToUser = null | (() => void);
 
 export const UserContext = React.createContext({} as ProviderStore);
 
-const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(guestUser);
-  const [userId, setUserId] = useState(null);
-  const [appLoading, setAppLoading] = useState(true);
-  const [isNewUser, setIsNewUser] = useState(false);
-  const [userEmail, setUserEmail] = useState(null);
-  const [subscribedUser, setSubscribedUser] = useState(null);
+const UserProvider = ({ children }: any) => {
+  const [user, setUser] = useState<LoggedInUser>(guestUser);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [appLoading, setAppLoading] = useState<boolean>(true);
+  const [isNewUser, setIsNewUser] = useState<boolean>(false);
+  const [userEmail, setUserEmail] = useState<null | string>(null);
+  // prettier-ignore
+  // eslint-disable-next-line max-len
+  const [userSubscription, setUserSubscription] = useState<SubscriptionToUser>(null);
   const [
     createUser,
     {
@@ -23,10 +32,13 @@ const UserProvider = ({ children }) => {
       loading: createUserLoading,
       error: createUserError,
     },
-  ] = useMutation(CREATE_USER, {
+  ] = useMutation<{
+    createUser: CreateUserResponse;
+    variables: MutationCreateUserArgs;
+  }>(CREATE_USER, {
     variables: {
-      id: userId,
-      email: userEmail,
+      id: userId!,
+      email: userEmail!,
     },
   });
 
@@ -63,37 +75,47 @@ const UserProvider = ({ children }) => {
         .doc(user.id)
         .onSnapshot(
           (docSnapshot: firebase.firestore.DocumentSnapshot) => {
-            console.log('docSnapshot', docSnapshot.data());
-            const userDoc: firebase.firestore.DocumentData = docSnapshot.data();
-
-            if (userDoc) {
-              const currentUserProperties = Object.getOwnPropertyNames(user);
+            const userDoc:
+              | firebase.firestore.DocumentData
+              | undefined = docSnapshot.data();
+            if (userDoc && docSnapshot.exists) {
+              const currentUserProperties: any = Object.getOwnPropertyNames(
+                user,
+              );
               const usersFieldsAreDifferent = currentUserProperties.every(
-                userProperty => user[userProperty] === userDoc[userProperty],
+                (userProperty: keyof LoggedInUser) =>
+                  user[userProperty] === userDoc[userProperty],
               );
               if (usersFieldsAreDifferent) {
                 console.log('Users fields have changed and am updating them');
                 setUserId(user.id);
               }
+            } else {
+              console.log('That user did not exist.');
             }
           },
-          error => {
-            console.error(error);
+          (error: Error) => {
+            console.error(
+              error,
+              'There was an error subscribing to the logged in user',
+            );
           },
         );
 
-      console.log('Subscribed', userSubscription);
-      setSubscribedUser(() => userSubscription);
+      console.log('Subscribed to the logged in user');
+      if (userSubscription) {
+        setUserSubscription(() => userSubscription);
+      }
     }
   };
 
   const handleLogout = () => {
     console.log('Logging you out');
-    if (subscribedUser) {
-      subscribedUser();
+    if (userSubscription) {
+      userSubscription();
     }
     document.cookie = 'token=;';
-    setSubscribedUser(null);
+    setUserSubscription(null);
     setUserId(null);
     setUser(guestUser);
     firebase.auth().signOut();
@@ -103,43 +125,49 @@ const UserProvider = ({ children }) => {
     firebase
       .auth()
       .getRedirectResult()
-      .then((comingFromGoogleLoginRedirect: firebase.auth.UserCredential) => {
+      .then((redirectUserCredential: firebase.auth.UserCredential) => {
         if (
-          comingFromGoogleLoginRedirect &&
-          comingFromGoogleLoginRedirect.user &&
-          comingFromGoogleLoginRedirect.additionalUserInfo.isNewUser
+          redirectUserCredential.user &&
+          redirectUserCredential.additionalUserInfo
         ) {
-          console.log('New User going to start creation flow');
-          setUserEmail(comingFromGoogleLoginRedirect.user.email);
-          setUserId(comingFromGoogleLoginRedirect.user.uid);
-          setIsNewUser(true);
-        } else if (
-          comingFromGoogleLoginRedirect &&
-          comingFromGoogleLoginRedirect.user &&
-          !comingFromGoogleLoginRedirect.additionalUserInfo.isNewUser &&
-          comingFromGoogleLoginRedirect.credential
-        ) {
-          console.log('Redirect login handler');
-          const token = (comingFromGoogleLoginRedirect.credential as firebase.auth.OAuthCredential)
-            .idToken;
-          document.cookie = `token=${token}`;
-          setUserId(comingFromGoogleLoginRedirect.user.uid);
+          if (
+            redirectUserCredential.additionalUserInfo.isNewUser &&
+            redirectUserCredential.user.uid &&
+            redirectUserCredential.user.email
+          ) {
+            console.log('New User going to start creation flow');
+            setUserEmail(redirectUserCredential.user.email);
+            setUserId(redirectUserCredential.user.uid);
+            setIsNewUser(true);
+          } else if (
+            !redirectUserCredential.additionalUserInfo.isNewUser &&
+            redirectUserCredential.user.uid &&
+            redirectUserCredential.credential
+          ) {
+            console.log('Redirect login handler');
+            const token = (redirectUserCredential.credential as firebase.auth.OAuthCredential)
+              .idToken;
+            document.cookie = `token=${token}`;
+            setUserId(redirectUserCredential.user.uid);
+          }
         }
       });
 
-    firebase.auth().onAuthStateChanged(async (firebaseUser: firebase.User) => {
-      console.log('Auth State changed', firebaseUser);
-      if (firebaseUser) {
-        const token = await firebaseUser.getIdToken();
-        document.cookie = `token=${token}`;
-        console.log('Saved your token');
-        setUserId(firebaseUser.uid);
-        setAppLoading(false);
-      } else {
-        document.cookie = 'token=;';
-        setAppLoading(false);
-      }
-    });
+    firebase
+      .auth()
+      .onAuthStateChanged(async (firebaseUser: firebase.User | null) => {
+        console.log('Auth State changed', firebaseUser);
+        if (firebaseUser) {
+          const token = await firebaseUser.getIdToken();
+          document.cookie = `token=${token}`;
+          console.log('Saved your token');
+          setUserId(firebaseUser.uid);
+          setAppLoading(false);
+        } else {
+          document.cookie = 'token=;';
+          setAppLoading(false);
+        }
+      });
   };
 
   const createNewUser = () => {
@@ -158,7 +186,7 @@ const UserProvider = ({ children }) => {
       createUserData.createUser &&
       createUserData.createUser.createdUser
     ) {
-      setUser(createUserData.createUser.createdUser);
+      setUser(createUserData.createUser.createdUser as LoggedInUser);
       setAppLoading(false);
     }
   };
@@ -181,7 +209,7 @@ const UserProvider = ({ children }) => {
   if (createUserError) {
     return (
       <Error
-        error={error}
+        error={createUserError}
         message={'There was an error loading your user account'}
       />
     );

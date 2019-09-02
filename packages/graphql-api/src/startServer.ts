@@ -2,7 +2,7 @@ import Context from './Context';
 import { ApolloServer } from 'apollo-server';
 import { genSchema } from './utils/genSchema';
 import { googleCloudServiceAccount } from '@myiworlds/credentials';
-import { GraphQLError } from 'graphql';
+import { GraphQLError, GraphQLSchema } from 'graphql';
 import { stackdriver } from '@myiworlds/cloud-services';
 import 'dotenv/config';
 import debugAgent = require('@google-cloud/debug-agent');
@@ -32,9 +32,9 @@ export const startServer = async () => {
       credentials: true,
       origin: true,
     },
-    schema: genSchema() as any,
+    schema: genSchema() as GraphQLSchema,
     playground,
-    introspection: true,
+    introspection: process.env.NODE_ENV !== 'production' ? true : false,
     context: ({ req }: { req: any }) => Context(req),
     tracing: process.env.NODE_ENV !== 'production' ? true : false,
     engine: {
@@ -42,7 +42,7 @@ export const startServer = async () => {
     },
     formatError: (error: GraphQLError) => {
       // Can't get it to work with Apollo types
-      stackdriver.report(new Error(`${error}`));
+      stackdriver.report(new Error(`Apollo Server formatError ${error}`));
 
       if (error.message.startsWith('Database Error: ')) {
         return new Error('Internal server error');

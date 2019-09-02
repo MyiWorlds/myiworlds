@@ -6,6 +6,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^10.14.13",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.3.0",
     "typescript": "^3.5.3"
   },
   "scripts": {
