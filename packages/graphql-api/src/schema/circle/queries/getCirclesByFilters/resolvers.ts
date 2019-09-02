@@ -3,7 +3,7 @@ import {
   IFilter,
   IOrderBy,
   ResolverMap
-  } from '@myiworlds/types';
+} from '@myiworlds/types';
 import { getDocumentsByFilters } from '../../../../services/firebase/firestore/queries';
 import { GraphQLResolveInfo } from 'graphql';
 import { stackdriver } from '@myiworlds/cloud-services';

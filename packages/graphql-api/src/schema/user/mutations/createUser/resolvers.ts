@@ -10,8 +10,7 @@ export const resolvers: ResolverMap = {
         id: string;
         email: string;
       },
-      context: Context,
-    ) => createUser(args.id, args.email, context),
+    ) => createUser(args.id, args.email),
   },
   CreateUserResponse: {
     createdUser: async (response: any, _: null, context: Context) =>
