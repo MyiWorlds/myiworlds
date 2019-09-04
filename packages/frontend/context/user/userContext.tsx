@@ -72,7 +72,8 @@ const UserProvider = ({ children }: any) => {
             const userDoc:
               | firebase.firestore.DocumentData
               | undefined = docSnapshot.data();
-            if (userDoc && docSnapshot.exists) {
+
+            if (userDoc && userDoc.exists) {
               const currentUserProperties: any = Object.getOwnPropertyNames(
                 user,
               );
@@ -98,6 +99,7 @@ const UserProvider = ({ children }: any) => {
 
       console.log('Subscribed to the logged in user');
       if (userSubscription) {
+        // Used to cancel the subscription to the user
         setUserSubscription(() => userSubscription);
       }
     }
@@ -124,25 +126,11 @@ const UserProvider = ({ children }: any) => {
           redirectUserCredential.user &&
           redirectUserCredential.additionalUserInfo
         ) {
-          if (
-            redirectUserCredential.additionalUserInfo.isNewUser &&
-            redirectUserCredential.user.uid &&
-            redirectUserCredential.user.email
-          ) {
+          if (redirectUserCredential.additionalUserInfo.isNewUser) {
             console.log('New User going to start creation flow');
             setUserEmail(redirectUserCredential.user.email);
             setUserId(redirectUserCredential.user.uid);
             setIsNewUser(true);
-          } else if (
-            !redirectUserCredential.additionalUserInfo.isNewUser &&
-            redirectUserCredential.user.uid &&
-            redirectUserCredential.credential
-          ) {
-            console.log('Redirect login handler');
-            const token = (redirectUserCredential.credential as firebase.auth.OAuthCredential)
-              .idToken;
-            document.cookie = `token=${token}`;
-            setUserId(redirectUserCredential.user.uid);
           }
         }
       });
@@ -165,13 +153,13 @@ const UserProvider = ({ children }: any) => {
   };
 
   const createNewUser = () => {
-    const createUserIfNew = async () => {
-      if (isNewUser && userId) {
+    if (isNewUser && userId) {
+      const createUserIfNew = async () => {
         await createUser();
         setIsNewUser(false);
-      }
-    };
-    createUserIfNew();
+      };
+      createUserIfNew();
+    }
   };
 
   const updateUserWithCreatedUser = () => {
@@ -182,8 +170,6 @@ const UserProvider = ({ children }: any) => {
     ) {
       setUser(createUserData.createUser.createdUser as LoggedInUser);
       setAppLoading(false);
-    } else {
-      handleLogout();
     }
   };
 
