@@ -1,5 +1,42 @@
+type UpdateCircleInput {
+  id: ID!
+  collection: String
+  pii: Boolean
+  parent: String
+  copiedFrom: String
+  slug: String
+  public: Boolean
+  passwordRequired: Boolean
+  type: String
+  properties: [String]
+  settings: String
+  rating: String
+  tags: [String]
+  title: String
+  subtitle: String
+  description: String
+  media: String
+  icon: String
+  owner: String
+  viewers: [String]
+  editors: [String]
+  key: String
+  string: String
+  data: JSON
+  number: Int
+  bigNumber: BigInt
+  boolean: Boolean
+  date: BigInt
+  geoPoint: JSON
+  line: String
+  lines: [String]
+}
+
 type Mutation {
-  updateCircle(circle: JSON!, merge: Boolean!): UpdateCircleResponse
+  updateCircle(
+    circle: UpdateCircleInput!
+    merge: Boolean!
+  ): UpdateCircleResponse
 }
 
 type UpdateCircleResponse {

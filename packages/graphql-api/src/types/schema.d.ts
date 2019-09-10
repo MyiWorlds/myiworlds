@@ -166,6 +166,7 @@ declare namespace GQL {
     deleteProfile: IDeleteProfileResponse | null;
     updateProfile: IUpdateProfileResponse | null;
     createUser: ICreateUserResponse | null;
+    updateUser: IUpdateUserResponse | null;
   }
 
   interface ICloneCircleOnMutationArguments {
@@ -173,37 +174,7 @@ declare namespace GQL {
   }
 
   interface ICreateCircleOnMutationArguments {
-    id?: string | null;
-    collection: string;
-    pii?: boolean | null;
-    parent?: string | null;
-    slug?: string | null;
-    public?: boolean | null;
-    passwordRequired?: boolean | null;
-    type: string;
-    properties?: Array<string | null> | null;
-    settings?: string | null;
-    rating?: string | null;
-    tags?: Array<string | null> | null;
-    title?: string | null;
-    subtitle?: string | null;
-    description?: string | null;
-    media?: string | null;
-    icon?: string | null;
-    creator: string;
-    owner?: string | null;
-    viewers?: Array<string | null> | null;
-    editors?: Array<string | null> | null;
-    dateCreated?: any | null;
-    dateUpdated?: any | null;
-    string?: string | null;
-    data?: any | null;
-    number?: number | null;
-    bigNumber?: any | null;
-    boolean?: boolean | null;
-    date?: any | null;
-    geoPoint?: any | null;
-    lines?: Array<string | null> | null;
+    circle?: ICreateCircleInput | null;
   }
 
   interface IDeleteCircleOnMutationArguments {
@@ -215,7 +186,7 @@ declare namespace GQL {
   }
 
   interface IUpdateCircleOnMutationArguments {
-    circle: any;
+    circle: IUpdateCircleInput;
     merge: boolean;
   }
 
@@ -228,8 +199,7 @@ declare namespace GQL {
   }
 
   interface IUpdateProfileOnMutationArguments {
-    id: string;
-    data?: any | null;
+    profile?: IUpdateProfileInput | null;
   }
 
   interface ICreateUserOnMutationArguments {
@@ -237,11 +207,47 @@ declare namespace GQL {
     email: string;
   }
 
+  interface IUpdateUserOnMutationArguments {
+    user?: IUpdateUserInput | null;
+    merge: boolean;
+  }
+
   interface ICloneCircleResponse {
     __typename: 'CloneCircleResponse';
     message: string | null;
     clonedCircle: ICircle | null;
     clonedCircleId: string | null;
+  }
+
+  interface ICreateCircleInput {
+    __typename: 'CreateCircleInput';
+    pii: boolean | null;
+    parent: string | null;
+    slug: string | null;
+    public: boolean | null;
+    passwordRequired: boolean | null;
+    type: string;
+    properties: Array<string | null> | null;
+    settings: string | null;
+    rating: string | null;
+    tags: Array<string | null> | null;
+    title: string | null;
+    subtitle: string | null;
+    description: string | null;
+    media: string | null;
+    icon: string | null;
+    creator: string;
+    owner: string | null;
+    viewers: Array<string | null> | null;
+    editors: Array<string | null> | null;
+    string: string | null;
+    data: any | null;
+    number: number | null;
+    bigNumber: any | null;
+    boolean: boolean | null;
+    date: any | null;
+    geoPoint: any | null;
+    lines: Array<string | null> | null;
   }
 
   interface ICreateCircleResponse {
@@ -266,6 +272,41 @@ declare namespace GQL {
     __typename: 'FileUploadResponse';
     url: string | null;
     sizes: Array<string | null> | null;
+  }
+
+  interface IUpdateCircleInput {
+    __typename: 'UpdateCircleInput';
+    id: string;
+    collection: string | null;
+    pii: boolean | null;
+    parent: string | null;
+    copiedFrom: string | null;
+    slug: string | null;
+    public: boolean | null;
+    passwordRequired: boolean | null;
+    type: string | null;
+    properties: Array<string | null> | null;
+    settings: string | null;
+    rating: string | null;
+    tags: Array<string | null> | null;
+    title: string | null;
+    subtitle: string | null;
+    description: string | null;
+    media: string | null;
+    icon: string | null;
+    owner: string | null;
+    viewers: Array<string | null> | null;
+    editors: Array<string | null> | null;
+    key: string | null;
+    string: string | null;
+    data: any | null;
+    number: number | null;
+    bigNumber: any | null;
+    boolean: boolean | null;
+    date: any | null;
+    geoPoint: any | null;
+    line: string | null;
+    lines: Array<string | null> | null;
   }
 
   interface IUpdateCircleResponse {
@@ -299,6 +340,26 @@ declare namespace GQL {
     appCreatedCircleClonesForProfileDeleted: boolean | null;
   }
 
+  interface IUpdateProfileInput {
+    __typename: 'UpdateProfileInput';
+    id: string;
+    public: boolean | null;
+    username: string | null;
+    canCreate: boolean | null;
+    profileMedia: string | null;
+    level: string | null;
+    rating: string | null;
+    isDarkTheme: boolean | null;
+    circleTypeOverrides: string | null;
+    overrideStringTypes: boolean | null;
+    myTheme: string | null;
+    homePublic: string | null;
+    home: string | null;
+    following: string | null;
+    addToHistory: boolean | null;
+    history: string | null;
+  }
+
   interface IUpdateProfileResponse {
     __typename: 'UpdateProfileResponse';
     status: string | null;
@@ -311,6 +372,30 @@ declare namespace GQL {
     status: string | null;
     message: string | null;
     createdUser: IUser | null;
+  }
+
+  interface IUpdateUserInput {
+    __typename: 'UpdateUserInput';
+    id: string;
+    email: string | null;
+    canCreate: boolean | null;
+    levelTotal: string | null;
+    balanceTotal: string | null;
+    ratingTotal: string | null;
+    allMyThemes: string | null;
+    allMyTypeStyles: string | null;
+    inbox: string | null;
+    search: string | null;
+    selectedProfile: string | null;
+    profiles: Array<string | null> | null;
+  }
+
+  interface IUpdateUserResponse {
+    __typename: 'UpdateUserResponse';
+    status: string | null;
+    message: string | null;
+    updatedUser: IUser | null;
+    creator: IProfile | null;
   }
 }
 

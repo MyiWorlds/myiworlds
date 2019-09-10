@@ -1,3 +1,4 @@
+import Button from '@material-ui/core/Button';
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../context/user/userContext';
 import 'isomorphic-unfetch';
@@ -11,11 +12,29 @@ const Index = () => {
       <div>
         App {user.email}
         <h3>{value}</h3>
-        <button onClick={() => setValue(value + 1)}>increment</button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setValue(value + 1)}
+        >
+          increment
+        </Button>
         {user.id ? (
-          <button onClick={() => handleLogout()}>Logout</button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleLogout()}
+          >
+            Logout
+          </Button>
         ) : (
-          <button onClick={() => handleLogin()}>Login</button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleLogin()}
+          >
+            Login
+          </Button>
         )}
       </div>
     </div>

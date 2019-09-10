@@ -23,7 +23,7 @@ export interface LoggedInUser {
   canCreate: boolean;
   dateCreated?: string;
   dateUpdated?: string;
-  selectedProfile: Profile | null;
+  selectedProfile: Profile;
   profiles: Profile[];
   // allMyThemes?: string | null;
   // allMyTypeStyles?: string | null;

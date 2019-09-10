@@ -16,6 +16,6 @@ export const resolvers: ResolverMap = {
     updatedCircle: async (response: any, _: null, context: Context) =>
       getDocumentById('circles', response.updatedDocumentId, context),
     creator: async (response: any, _: null, context: Context) =>
-      getDocumentById('users', response.contextProfileId, context),
+      getDocumentById('profiles', response.contextProfileId, context),
   },
 };

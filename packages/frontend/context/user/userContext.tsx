@@ -214,6 +214,7 @@ const UserProvider = ({ children }: any) => {
   return (
     <UserContext.Provider
       value={{
+        setUser,
         user,
         handleLogout,
         handleLogin,
