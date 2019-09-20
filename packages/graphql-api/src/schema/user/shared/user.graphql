@@ -12,6 +12,5 @@ type User {
   allMyTypeStyles: Circle
   inbox: Circle
   search: Circle
-  selectedProfile: Profile
   profiles: [Profile]
 }

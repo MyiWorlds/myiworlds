@@ -73,7 +73,7 @@ const UserProvider = ({ children }: any) => {
               | firebase.firestore.DocumentData
               | undefined = docSnapshot.data();
 
-            if (userDoc && userDoc.exists) {
+            if (userDoc && docSnapshot.exists) {
               const currentUserProperties: any = Object.getOwnPropertyNames(
                 user,
               );

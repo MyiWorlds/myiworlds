@@ -28,9 +28,6 @@ export const resolvers: ResolverMap = {
     search: async (user: any, _: null, context: Context) =>
       getDocumentById('circles', user.search, context),
 
-    selectedProfile: async (user: any, _: null, context: Context) =>
-      getDocumentById('profiles', user.selectedProfile, context),
-
     profiles: async (user: any, _: null, context: Context) => {
       try {
         return await getDocumentsByIds('profiles', user.profiles, context);

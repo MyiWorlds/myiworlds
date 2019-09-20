@@ -1,4 +1,4 @@
-type UpdateProfileInput {
+input UpdateProfileInput {
   id: ID!
   public: Boolean
   username: String

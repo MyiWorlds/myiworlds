@@ -1,4 +1,4 @@
-type CreateCircleInput {
+input CreateCircleInput {
   pii: Boolean
   parent: String
   slug: String

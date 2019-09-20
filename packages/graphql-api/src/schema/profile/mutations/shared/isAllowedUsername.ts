@@ -5,6 +5,9 @@ export const isAllowedUsername = (username: string) => {
   const bannedUsernames = [
     '',
     'test',
+    'null',
+    'undefined',
+    'nan',
     'app',
     'admin',
     'user',

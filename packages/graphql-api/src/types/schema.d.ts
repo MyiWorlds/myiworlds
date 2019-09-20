@@ -151,7 +151,6 @@ declare namespace GQL {
     allMyTypeStyles: ICircle | null;
     inbox: ICircle | null;
     search: ICircle | null;
-    selectedProfile: IProfile | null;
     profiles: Array<IProfile | null> | null;
   }
 
@@ -220,34 +219,33 @@ declare namespace GQL {
   }
 
   interface ICreateCircleInput {
-    __typename: 'CreateCircleInput';
-    pii: boolean | null;
-    parent: string | null;
-    slug: string | null;
-    public: boolean | null;
-    passwordRequired: boolean | null;
+    pii?: boolean | null;
+    parent?: string | null;
+    slug?: string | null;
+    public?: boolean | null;
+    passwordRequired?: boolean | null;
     type: string;
-    properties: Array<string | null> | null;
-    settings: string | null;
-    rating: string | null;
-    tags: Array<string | null> | null;
-    title: string | null;
-    subtitle: string | null;
-    description: string | null;
-    media: string | null;
-    icon: string | null;
+    properties?: Array<string | null> | null;
+    settings?: string | null;
+    rating?: string | null;
+    tags?: Array<string | null> | null;
+    title?: string | null;
+    subtitle?: string | null;
+    description?: string | null;
+    media?: string | null;
+    icon?: string | null;
     creator: string;
-    owner: string | null;
-    viewers: Array<string | null> | null;
-    editors: Array<string | null> | null;
-    string: string | null;
-    data: any | null;
-    number: number | null;
-    bigNumber: any | null;
-    boolean: boolean | null;
-    date: any | null;
-    geoPoint: any | null;
-    lines: Array<string | null> | null;
+    owner?: string | null;
+    viewers?: Array<string | null> | null;
+    editors?: Array<string | null> | null;
+    string?: string | null;
+    data?: any | null;
+    number?: number | null;
+    bigNumber?: any | null;
+    boolean?: boolean | null;
+    date?: any | null;
+    geoPoint?: any | null;
+    lines?: Array<string | null> | null;
   }
 
   interface ICreateCircleResponse {
@@ -275,38 +273,37 @@ declare namespace GQL {
   }
 
   interface IUpdateCircleInput {
-    __typename: 'UpdateCircleInput';
     id: string;
-    collection: string | null;
-    pii: boolean | null;
-    parent: string | null;
-    copiedFrom: string | null;
-    slug: string | null;
-    public: boolean | null;
-    passwordRequired: boolean | null;
-    type: string | null;
-    properties: Array<string | null> | null;
-    settings: string | null;
-    rating: string | null;
-    tags: Array<string | null> | null;
-    title: string | null;
-    subtitle: string | null;
-    description: string | null;
-    media: string | null;
-    icon: string | null;
-    owner: string | null;
-    viewers: Array<string | null> | null;
-    editors: Array<string | null> | null;
-    key: string | null;
-    string: string | null;
-    data: any | null;
-    number: number | null;
-    bigNumber: any | null;
-    boolean: boolean | null;
-    date: any | null;
-    geoPoint: any | null;
-    line: string | null;
-    lines: Array<string | null> | null;
+    collection?: string | null;
+    pii?: boolean | null;
+    parent?: string | null;
+    copiedFrom?: string | null;
+    slug?: string | null;
+    public?: boolean | null;
+    passwordRequired?: boolean | null;
+    type?: string | null;
+    properties?: Array<string | null> | null;
+    settings?: string | null;
+    rating?: string | null;
+    tags?: Array<string | null> | null;
+    title?: string | null;
+    subtitle?: string | null;
+    description?: string | null;
+    media?: string | null;
+    icon?: string | null;
+    owner?: string | null;
+    viewers?: Array<string | null> | null;
+    editors?: Array<string | null> | null;
+    key?: string | null;
+    string?: string | null;
+    data?: any | null;
+    number?: number | null;
+    bigNumber?: any | null;
+    boolean?: boolean | null;
+    date?: any | null;
+    geoPoint?: any | null;
+    line?: string | null;
+    lines?: Array<string | null> | null;
   }
 
   interface IUpdateCircleResponse {
@@ -341,23 +338,22 @@ declare namespace GQL {
   }
 
   interface IUpdateProfileInput {
-    __typename: 'UpdateProfileInput';
     id: string;
-    public: boolean | null;
-    username: string | null;
-    canCreate: boolean | null;
-    profileMedia: string | null;
-    level: string | null;
-    rating: string | null;
-    isDarkTheme: boolean | null;
-    circleTypeOverrides: string | null;
-    overrideStringTypes: boolean | null;
-    myTheme: string | null;
-    homePublic: string | null;
-    home: string | null;
-    following: string | null;
-    addToHistory: boolean | null;
-    history: string | null;
+    public?: boolean | null;
+    username?: string | null;
+    canCreate?: boolean | null;
+    profileMedia?: string | null;
+    level?: string | null;
+    rating?: string | null;
+    isDarkTheme?: boolean | null;
+    circleTypeOverrides?: string | null;
+    overrideStringTypes?: boolean | null;
+    myTheme?: string | null;
+    homePublic?: string | null;
+    home?: string | null;
+    following?: string | null;
+    addToHistory?: boolean | null;
+    history?: string | null;
   }
 
   interface IUpdateProfileResponse {
@@ -375,19 +371,17 @@ declare namespace GQL {
   }
 
   interface IUpdateUserInput {
-    __typename: 'UpdateUserInput';
     id: string;
-    email: string | null;
-    canCreate: boolean | null;
-    levelTotal: string | null;
-    balanceTotal: string | null;
-    ratingTotal: string | null;
-    allMyThemes: string | null;
-    allMyTypeStyles: string | null;
-    inbox: string | null;
-    search: string | null;
-    selectedProfile: string | null;
-    profiles: Array<string | null> | null;
+    email?: string | null;
+    canCreate?: boolean | null;
+    levelTotal?: string | null;
+    balanceTotal?: string | null;
+    ratingTotal?: string | null;
+    allMyThemes?: string | null;
+    allMyTypeStyles?: string | null;
+    inbox?: string | null;
+    search?: string | null;
+    profiles?: Array<string | null> | null;
   }
 
   interface IUpdateUserResponse {

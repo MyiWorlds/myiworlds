@@ -63,6 +63,36 @@ export type CloneCircleResponse = {
   clonedCircleId?: Maybe<Scalars["String"]>;
 };
 
+export type CreateCircleInput = {
+  pii?: Maybe<Scalars["Boolean"]>;
+  parent?: Maybe<Scalars["String"]>;
+  slug?: Maybe<Scalars["String"]>;
+  public?: Maybe<Scalars["Boolean"]>;
+  passwordRequired?: Maybe<Scalars["Boolean"]>;
+  type: Scalars["String"];
+  properties?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  settings?: Maybe<Scalars["String"]>;
+  rating?: Maybe<Scalars["String"]>;
+  tags?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  title?: Maybe<Scalars["String"]>;
+  subtitle?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
+  media?: Maybe<Scalars["String"]>;
+  icon?: Maybe<Scalars["String"]>;
+  creator: Scalars["String"];
+  owner?: Maybe<Scalars["String"]>;
+  viewers?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  editors?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  string?: Maybe<Scalars["String"]>;
+  data?: Maybe<Scalars["JSON"]>;
+  number?: Maybe<Scalars["Int"]>;
+  bigNumber?: Maybe<Scalars["BigInt"]>;
+  boolean?: Maybe<Scalars["Boolean"]>;
+  date?: Maybe<Scalars["BigInt"]>;
+  geoPoint?: Maybe<Scalars["JSON"]>;
+  lines?: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
 export type CreateCircleResponse = {
   __typename?: "CreateCircleResponse";
   status?: Maybe<Scalars["String"]>;
@@ -134,6 +164,7 @@ export type Mutation = {
   deleteProfile?: Maybe<DeleteProfileResponse>;
   updateProfile?: Maybe<UpdateProfileResponse>;
   createUser?: Maybe<CreateUserResponse>;
+  updateUser?: Maybe<UpdateUserResponse>;
 };
 
 export type MutationCloneCircleArgs = {
@@ -141,37 +172,7 @@ export type MutationCloneCircleArgs = {
 };
 
 export type MutationCreateCircleArgs = {
-  id?: Maybe<Scalars["String"]>;
-  collection: Scalars["String"];
-  pii?: Maybe<Scalars["Boolean"]>;
-  parent?: Maybe<Scalars["String"]>;
-  slug?: Maybe<Scalars["String"]>;
-  public?: Maybe<Scalars["Boolean"]>;
-  passwordRequired?: Maybe<Scalars["Boolean"]>;
-  type: Scalars["String"];
-  properties?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  settings?: Maybe<Scalars["String"]>;
-  rating?: Maybe<Scalars["String"]>;
-  tags?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  title?: Maybe<Scalars["String"]>;
-  subtitle?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
-  media?: Maybe<Scalars["String"]>;
-  icon?: Maybe<Scalars["String"]>;
-  creator: Scalars["String"];
-  owner?: Maybe<Scalars["String"]>;
-  viewers?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  editors?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  dateCreated?: Maybe<Scalars["BigInt"]>;
-  dateUpdated?: Maybe<Scalars["BigInt"]>;
-  string?: Maybe<Scalars["String"]>;
-  data?: Maybe<Scalars["JSON"]>;
-  number?: Maybe<Scalars["Int"]>;
-  bigNumber?: Maybe<Scalars["BigInt"]>;
-  boolean?: Maybe<Scalars["Boolean"]>;
-  date?: Maybe<Scalars["BigInt"]>;
-  geoPoint?: Maybe<Scalars["JSON"]>;
-  lines?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  circle?: Maybe<CreateCircleInput>;
 };
 
 export type MutationDeleteCircleArgs = {
@@ -183,7 +184,7 @@ export type MutationFileUploadArgs = {
 };
 
 export type MutationUpdateCircleArgs = {
-  circle: Scalars["JSON"];
+  circle: UpdateCircleInput;
   merge: Scalars["Boolean"];
 };
 
@@ -196,13 +197,17 @@ export type MutationDeleteProfileArgs = {
 };
 
 export type MutationUpdateProfileArgs = {
-  id: Scalars["String"];
-  data?: Maybe<Scalars["JSON"]>;
+  profile?: Maybe<UpdateProfileInput>;
 };
 
 export type MutationCreateUserArgs = {
   id: Scalars["ID"];
   email: Scalars["String"];
+};
+
+export type MutationUpdateUserArgs = {
+  user?: Maybe<UpdateUserInput>;
+  merge: Scalars["Boolean"];
 };
 
 export type Profile = {
@@ -277,6 +282,40 @@ export type QueryGetProfilesByIdsArgs = {
   ids: Array<Maybe<Scalars["String"]>>;
 };
 
+export type UpdateCircleInput = {
+  id: Scalars["ID"];
+  collection?: Maybe<Scalars["String"]>;
+  pii?: Maybe<Scalars["Boolean"]>;
+  parent?: Maybe<Scalars["String"]>;
+  copiedFrom?: Maybe<Scalars["String"]>;
+  slug?: Maybe<Scalars["String"]>;
+  public?: Maybe<Scalars["Boolean"]>;
+  passwordRequired?: Maybe<Scalars["Boolean"]>;
+  type?: Maybe<Scalars["String"]>;
+  properties?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  settings?: Maybe<Scalars["String"]>;
+  rating?: Maybe<Scalars["String"]>;
+  tags?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  title?: Maybe<Scalars["String"]>;
+  subtitle?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
+  media?: Maybe<Scalars["String"]>;
+  icon?: Maybe<Scalars["String"]>;
+  owner?: Maybe<Scalars["String"]>;
+  viewers?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  editors?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  key?: Maybe<Scalars["String"]>;
+  string?: Maybe<Scalars["String"]>;
+  data?: Maybe<Scalars["JSON"]>;
+  number?: Maybe<Scalars["Int"]>;
+  bigNumber?: Maybe<Scalars["BigInt"]>;
+  boolean?: Maybe<Scalars["Boolean"]>;
+  date?: Maybe<Scalars["BigInt"]>;
+  geoPoint?: Maybe<Scalars["JSON"]>;
+  line?: Maybe<Scalars["String"]>;
+  lines?: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
 export type UpdateCircleResponse = {
   __typename?: "UpdateCircleResponse";
   status?: Maybe<Scalars["String"]>;
@@ -285,11 +324,52 @@ export type UpdateCircleResponse = {
   creator?: Maybe<Profile>;
 };
 
+export type UpdateProfileInput = {
+  id: Scalars["ID"];
+  public?: Maybe<Scalars["Boolean"]>;
+  username?: Maybe<Scalars["String"]>;
+  canCreate?: Maybe<Scalars["Boolean"]>;
+  profileMedia?: Maybe<Scalars["String"]>;
+  level?: Maybe<Scalars["String"]>;
+  rating?: Maybe<Scalars["String"]>;
+  isDarkTheme?: Maybe<Scalars["Boolean"]>;
+  circleTypeOverrides?: Maybe<Scalars["String"]>;
+  overrideStringTypes?: Maybe<Scalars["Boolean"]>;
+  myTheme?: Maybe<Scalars["String"]>;
+  homePublic?: Maybe<Scalars["String"]>;
+  home?: Maybe<Scalars["String"]>;
+  following?: Maybe<Scalars["String"]>;
+  addToHistory?: Maybe<Scalars["Boolean"]>;
+  history?: Maybe<Scalars["String"]>;
+};
+
 export type UpdateProfileResponse = {
   __typename?: "UpdateProfileResponse";
   status?: Maybe<Scalars["String"]>;
   message?: Maybe<Scalars["String"]>;
   updatedProfile?: Maybe<Profile>;
+};
+
+export type UpdateUserInput = {
+  id: Scalars["String"];
+  email?: Maybe<Scalars["String"]>;
+  canCreate?: Maybe<Scalars["Boolean"]>;
+  levelTotal?: Maybe<Scalars["String"]>;
+  balanceTotal?: Maybe<Scalars["String"]>;
+  ratingTotal?: Maybe<Scalars["String"]>;
+  allMyThemes?: Maybe<Scalars["String"]>;
+  allMyTypeStyles?: Maybe<Scalars["String"]>;
+  inbox?: Maybe<Scalars["String"]>;
+  search?: Maybe<Scalars["String"]>;
+  profiles?: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
+export type UpdateUserResponse = {
+  __typename?: "UpdateUserResponse";
+  status?: Maybe<Scalars["String"]>;
+  message?: Maybe<Scalars["String"]>;
+  updatedUser?: Maybe<User>;
+  creator?: Maybe<Profile>;
 };
 
 export type User = {
@@ -307,7 +387,6 @@ export type User = {
   allMyTypeStyles?: Maybe<Circle>;
   inbox?: Maybe<Circle>;
   search?: Maybe<Circle>;
-  selectedProfile?: Maybe<Profile>;
   profiles?: Maybe<Array<Maybe<Profile>>>;
 };
 export type GetCircleByIdQueryVariables = {
@@ -369,33 +448,6 @@ export type LoggedInUserFragment = { __typename?: "User" } & Pick<
         Maybe<{ __typename?: "Profile" } & Pick<Profile, "id" | "username">>
       >
     >;
-    selectedProfile: Maybe<
-      { __typename?: "Profile" } & Pick<
-        Profile,
-        | "id"
-        | "collection"
-        | "public"
-        | "username"
-        | "canCreate"
-        | "dateCreated"
-        | "dateUpdated"
-        | "isDarkTheme"
-        | "overrideCircleTypes"
-        | "addToHistory"
-      > & {
-          profileMedia: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          level: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          rating: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          circleTypeOverrides: Maybe<
-            { __typename?: "Circle" } & Pick<Circle, "id">
-          >;
-          myTheme: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          homePublic: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          home: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          following: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-          history: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-        }
-    >;
   };
 export const LoggedInUserFragmentDoc = gql`
   fragment LoggedInUser on User {
@@ -408,45 +460,6 @@ export const LoggedInUserFragmentDoc = gql`
     profiles {
       id
       username
-    }
-    selectedProfile {
-      id
-      collection
-      public
-      username
-      canCreate
-      profileMedia {
-        id
-      }
-      dateCreated
-      dateUpdated
-      level {
-        id
-      }
-      rating {
-        id
-      }
-      isDarkTheme
-      circleTypeOverrides {
-        id
-      }
-      overrideCircleTypes
-      myTheme {
-        id
-      }
-      homePublic {
-        id
-      }
-      home {
-        id
-      }
-      following {
-        id
-      }
-      addToHistory
-      history {
-        id
-      }
     }
   }
 `;

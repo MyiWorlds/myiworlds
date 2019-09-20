@@ -1,4 +1,4 @@
-type UpdateUserInput {
+input UpdateUserInput {
   id: String!
   email: String
   canCreate: Boolean
@@ -9,7 +9,6 @@ type UpdateUserInput {
   allMyTypeStyles: String
   inbox: String
   search: String
-  selectedProfile: String
   profiles: [String]
 }
 

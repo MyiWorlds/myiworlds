@@ -1,4 +1,4 @@
-type UpdateCircleInput {
+input UpdateCircleInput {
   id: ID!
   collection: String
   pii: Boolean

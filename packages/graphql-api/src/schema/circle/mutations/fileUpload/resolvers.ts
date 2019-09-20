@@ -4,7 +4,7 @@ import {
   Environment,
   Profile,
   ResolverMap
-  } from '@myiworlds/types';
+} from '@myiworlds/types';
 
 export const resolvers: ResolverMap = {
   Mutation: {
@@ -23,8 +23,8 @@ export const resolvers: ResolverMap = {
         .collection('profiles')
         .doc(context.selectedProfileId);
       const requestingProfile:
-        | Profile
-        | undefined = await profileRef.get().then(item => item.data());
+      | Profile
+      | undefined = await profileRef.get().then(item => item.data());
 
       if (
         !requestingProfile ||
@@ -50,9 +50,7 @@ export const resolvers: ResolverMap = {
           )
           .on('finish', async () => {
             const createSizeUrl = (size: number) => {
-              return `https://storage.googleapis.com/${
-                buckets[environment].image.public
-              }/_gsis_${size}_${fileRef.id}`;
+              return `https://storage.googleapis.com/${buckets[environment].image.public}/_gsis_${size}_${fileRef.id}`;
             };
 
             const sizes = [64, 124, 256, 480, 720, 1280, 3840].map(size =>
@@ -60,9 +58,7 @@ export const resolvers: ResolverMap = {
             );
 
             res({
-              url: `https://storage.googleapis.com/${
-                buckets[environment].image.public
-              }/${fileRef.id}`,
+              url: `https://storage.googleapis.com/${buckets[environment].image.public}/${fileRef.id}`,
               sizes,
             });
           }),
