@@ -71,15 +71,18 @@ export default async function updateDocumentById(
           isRequestingUser(documentToUpdate.id, context.userId)
         ) {
           cloneToNewDocument(doc);
-          const fieldsChanged: any = Object.keys(updatedDocument).forEach(
-            (key: string) =>
-              updatedDocument[key] === undefined && delete updatedDocument[key],
-          );
+          Object.keys(updatedDocument).forEach((key: string) => {
+            if (updatedDocument[key] === undefined) {
+              delete updatedDocument[key];
+            }
+          });
 
-          await firestore
-            .collection(updatedDocument.collection)
-            .doc(updatedDocument.id)
-            .set(fieldsChanged, { merge: merge ? true : false });
+          if (updatedDocument) {
+            await firestore
+              .collection(updatedDocument.collection)
+              .doc(updatedDocument.id)
+              .set(updatedDocument, { merge: merge ? true : false });
+          }
 
           response = {
             status: 'SUCCESS',

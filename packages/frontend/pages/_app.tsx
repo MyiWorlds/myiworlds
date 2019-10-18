@@ -3,7 +3,8 @@ import Head from 'next/head';
 import React from 'react';
 import withApollo from '../lib/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { UserProvider } from '../context/user/userContext';
+import { ProfileProvider } from '../context/profile/ProfileContext';
+import { UserProvider } from '../context/user/UserContext';
 
 class MyApp extends App<any> {
   render() {
@@ -20,9 +21,20 @@ class MyApp extends App<any> {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
           />
         </Head>
+        <style jsx global>{`
+          body {
+            background: #000;
+            margin: 0px;
+          }
+        `}</style>
         <ApolloProvider client={apolloClient}>
           <UserProvider>
-            <Component {...pageProps} />
+            <ProfileProvider>
+              {/* App Bar */}
+              {/* Navigation */}
+              {/* Content */}
+              <Component {...pageProps} />
+            </ProfileProvider>
           </UserProvider>
         </ApolloProvider>
       </Container>

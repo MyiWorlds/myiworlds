@@ -1,5 +1,5 @@
 query getUserById {
   getUserById {
-    ...LoggedInUser
+    ...LoggedInUserFragment
   }
 }

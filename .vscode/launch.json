@@ -13,6 +13,18 @@
     },
     {
       "type": "node",
+      "request": "launch",
+      "name": "Next: Node",
+      "runtimeExecutable": "next",
+      "runtimeArgs": ["--inspect"],
+      "port": 9229,
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
       "request": "attach",
       "name": "Server",
       "port": 9229
@@ -21,7 +33,7 @@
   "compounds": [
     {
       "name": "Front/backend",
-      "configurations": ["Next: Chrome", "Server"]
+      "configurations": ["Next: Chrome", "Server", "Next: Node"]
     }
   ]
 }

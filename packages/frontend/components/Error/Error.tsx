@@ -42,36 +42,32 @@ const styles = () =>
     },
   });
 
-class Error extends React.Component<Props> {
-  render() {
-    const {
-      classes,
-      error,
-      icon,
-      iconFontSize,
-      message,
-      messageVariant,
-    } = this.props;
+const Error: React.SFC<Props> = ({
+  classes,
+  error,
+  icon,
+  iconFontSize,
+  message,
+  messageVariant,
+}) => {
+  const errorMessage = message || '';
+  const variant = messageVariant || 'h3';
+  const displayIcon = icon || 'error';
 
-    const errorMessage = message || '';
-    const variant = messageVariant || 'h3';
-    const displayIcon = icon || 'error';
+  console.log('ERROR', '\n', error);
 
-    console.error(error);
-
-    return (
-      <div className={classes.container}>
-        <Icon color="inherit" fontSize={iconFontSize || 'large'}>
-          {displayIcon}
-        </Icon>
-        <Typography variant="h2">I'm sorry, I had an error</Typography>
-        <Typography variant={variant}>{errorMessage}</Typography>
-        <br />
-        <br />
-        <Typography>I have let someone know about this</Typography>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={classes.container}>
+      <Icon color="inherit" fontSize={iconFontSize || 'large'}>
+        {displayIcon}
+      </Icon>
+      <Typography variant="h2">I'm sorry, I had an error</Typography>
+      <Typography variant={variant}>{errorMessage}</Typography>
+      <br />
+      <br />
+      <Typography>I have let someone know about this</Typography>
+    </div>
+  );
+};
 
 export default withStyles(styles)(Error);

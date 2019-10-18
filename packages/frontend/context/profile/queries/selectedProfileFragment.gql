@@ -1,0 +1,39 @@
+fragment SelectedProfileFragment on Profile {
+  id
+  collection
+  public
+  username
+  canCreate
+  profileMedia {
+    id
+  }
+  dateCreated
+  dateUpdated
+  level {
+    id
+  }
+  rating {
+    id
+  }
+  isDarkTheme
+  circleTypeOverrides {
+    id
+  }
+  overrideCircleTypes
+  myTheme {
+    id
+  }
+  homePublic {
+    id
+  }
+  home {
+    id
+  }
+  following {
+    id
+  }
+  addToHistory
+  history {
+    id
+  }
+}

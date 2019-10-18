@@ -3,7 +3,7 @@ mutation createUser($id: ID!, $email: String!) {
     status
     message
     createdUser {
-      ...LoggedInUser
+      ...LoggedInUserFragment
     }
   }
 }

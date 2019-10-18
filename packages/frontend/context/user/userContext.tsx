@@ -3,7 +3,7 @@ import guestUser from './guestUser';
 import React, { useEffect, useState } from 'react';
 import { firebase, firestore } from '../../lib/firebase';
 import { LoggedInUser } from '@myiworlds/types';
-import { ProviderStore } from './userContext.d';
+import { ProviderStore } from './userContextTypes.d';
 import {
   useCreateUserMutation,
   useGetUserByIdQuery,

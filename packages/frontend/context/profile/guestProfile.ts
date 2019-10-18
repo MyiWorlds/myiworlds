@@ -1,15 +1,25 @@
-import { Profile } from '@myiworlds/types';
+import { SelectedProfile } from '@myiworlds/types';
 
-const guestProfile: Profile = {
+const guestProfile: SelectedProfile = {
   id: 'guest',
+  collection: 'profiles',
+  public: true,
   username: 'guest',
+  canCreate: false,
+  profileMedia: null,
+  dateCreated: Date.now(),
+  dateUpdated: Date.now(),
+  level: null,
+  rating: null,
   isDarkTheme: true,
-  overrideCircleTypes: false,
-  addToHistory: false,
+  circleTypeOverrides: null,
+  overrideCircleTypes: null,
   myTheme: null,
-  history: null,
-  home: null,
   homePublic: null,
+  home: null,
+  following: null,
+  addToHistory: false,
+  history: null,
 };
 
 export default guestProfile;

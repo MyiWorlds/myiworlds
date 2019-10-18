@@ -1,15 +1,48 @@
 import Button from '@material-ui/core/Button';
 import React, { useContext } from 'react';
-import { UserContext } from '../context/user/userContext';
+import { ProfileContext } from '../context/profile/ProfileContext';
+import { Typography } from '@material-ui/core';
+import { UserContext } from '../context/user/UserContext';
 import 'isomorphic-unfetch';
+
+// const uiCircle = [
+//   {
+//     type: 'APPBAR-Controller',
+//     lines: [
+//       {
+//         type: 'icon-btn-menu',
+//       },
+//       {
+//         type: 'img-btn',
+//         // open modal or dropdown for user options
+//       },
+//     ],
+//   },
+//   {
+//     type: 'APP-NAVIGATOR',
+//     lines: [
+//       {
+//         type: 'icon-btn-menu',
+//         title: 'home',
+//       },
+//       //  ...
+//     ],
+//   },
+// ];
 
 const Index = () => {
   const { user, handleLogout, handleLogin } = useContext(UserContext);
+  const { selectedProfile } = useContext(ProfileContext);
+
+  console.log('index selected profile', selectedProfile);
 
   return (
     <div>
       <div>
-        {user.email}
+        <Typography variant="caption">User:</Typography>
+        <Typography variant="h4">{user.email}</Typography>
+        <br />
+        <Typography variant="h3">{selectedProfile.username}</Typography>
         {user.id ? (
           <Button
             variant="contained"

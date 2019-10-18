@@ -58,6 +58,25 @@ const circles: Circle[] = [
     string: '',
   },
   {
+    id: 'function',
+    public: true,
+    settings: 'settings',
+    title: 'Function',
+    icon: 'code',
+    type: 'STRING',
+    string: '',
+  },
+  // This is the parent circle used to associate children with
+  // it goes on the circle property of the circle wanting to have the edge
+  {
+    id: 'edge',
+    public: true,
+    settings: 'settings',
+    title: 'Edge',
+    icon: 'list',
+    type: 'EDGE',
+  },
+  {
     id: 'geopoint',
     public: true,
     settings: 'settings',
@@ -96,6 +115,53 @@ const circles: Circle[] = [
     icon: 'settings',
     type: 'LINES',
     lines: ['layout'],
+  },
+  {
+    id: 'type',
+    public: true,
+    settings: 'settings',
+    title: 'Type',
+    description:
+      'A type of data or content and the logic to display it to the profile viewing.',
+    icon: 'settings',
+    type: 'TYPE',
+    data: {
+      viewer: null, //ID to viewing content
+      editor: null, // ID to editing content
+    },
+  },
+  {
+    id: 'rating',
+    public: true,
+    settings: 'settings',
+    title: 'Rating',
+    description: 'Everything can have a rating.',
+    icon: 'rating', //???
+    type: 'REVIEW',
+    number: 0, // Needs to be incremented with each review added
+    data: {
+      breakdown: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+      },
+      topReviews: [], // Array ids or do lines
+    },
+    line: null, // ID which is used to associate all reviews
+  },
+  {
+    id: 'review',
+    public: true,
+    settings: 'settings',
+    title: 'Review',
+    description: 'A ratings review.',
+    icon: 'settings',
+    type: 'REVIEW',
+    number: 0,
+    // Lines accepts image/video/audio
+    lines: [],
   },
   {
     id: 'layout',

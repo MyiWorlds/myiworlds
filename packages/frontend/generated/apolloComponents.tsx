@@ -399,25 +399,69 @@ export type GetCircleByIdQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type CreateProfileMutationVariables = {
+  username: Scalars["String"];
+};
+
+export type CreateProfileMutation = { __typename?: "Mutation" } & {
+  createProfile: Maybe<
+    { __typename?: "CreateProfileResponse" } & Pick<
+      CreateProfileResponse,
+      "status" | "message"
+    > & {
+        createdProfile: Maybe<
+          { __typename?: "Profile" } & SelectedProfileFragmentFragment
+        >;
+      }
+  >;
+};
+
+export type GetProfileByUsernameQueryVariables = {
+  username: Scalars["String"];
+};
+
+export type GetProfileByUsernameQuery = { __typename?: "Query" } & {
+  getProfileByUsername: Maybe<
+    { __typename?: "getProfileByUsernameResponse" } & Pick<
+      GetProfileByUsernameResponse,
+      "usernameAvailable" | "usernameInvalid"
+    >
+  >;
+};
+
 export type GetProfileByIdQueryVariables = {
   id: Scalars["String"];
 };
 
 export type GetProfileByIdQuery = { __typename?: "Query" } & {
   getProfileById: Maybe<
-    { __typename?: "Profile" } & Pick<
-      Profile,
-      "id" | "username" | "isDarkTheme" | "overrideCircleTypes" | "addToHistory"
-    > & {
-        history: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-        myTheme: Maybe<
-          { __typename?: "Circle" } & Pick<Circle, "id" | "type" | "data">
-        >;
-        home: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-        homePublic: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
-      }
+    { __typename?: "Profile" } & SelectedProfileFragmentFragment
   >;
 };
+
+export type SelectedProfileFragmentFragment = { __typename?: "Profile" } & Pick<
+  Profile,
+  | "id"
+  | "collection"
+  | "public"
+  | "username"
+  | "canCreate"
+  | "dateCreated"
+  | "dateUpdated"
+  | "isDarkTheme"
+  | "overrideCircleTypes"
+  | "addToHistory"
+> & {
+    profileMedia: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    level: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    rating: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    circleTypeOverrides: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    myTheme: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    homePublic: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    home: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    following: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+    history: Maybe<{ __typename?: "Circle" } & Pick<Circle, "id">>;
+  };
 
 export type CreateUserMutationVariables = {
   id: Scalars["ID"];
@@ -429,19 +473,23 @@ export type CreateUserMutation = { __typename?: "Mutation" } & {
     { __typename?: "CreateUserResponse" } & Pick<
       CreateUserResponse,
       "status" | "message"
-    > & { createdUser: Maybe<{ __typename?: "User" } & LoggedInUserFragment> }
+    > & {
+        createdUser: Maybe<
+          { __typename?: "User" } & LoggedInUserFragmentFragment
+        >;
+      }
   >;
 };
 
 export type GetUserByIdQueryVariables = {};
 
 export type GetUserByIdQuery = { __typename?: "Query" } & {
-  getUserById: Maybe<{ __typename?: "User" } & LoggedInUserFragment>;
+  getUserById: Maybe<{ __typename?: "User" } & LoggedInUserFragmentFragment>;
 };
 
-export type LoggedInUserFragment = { __typename?: "User" } & Pick<
+export type LoggedInUserFragmentFragment = { __typename?: "User" } & Pick<
   User,
-  "email" | "id" | "canCreate" | "dateCreated" | "dateUpdated"
+  "id" | "email" | "canCreate" | "dateCreated" | "dateUpdated"
 > & {
     profiles: Maybe<
       Array<
@@ -449,9 +497,49 @@ export type LoggedInUserFragment = { __typename?: "User" } & Pick<
       >
     >;
   };
-export const LoggedInUserFragmentDoc = gql`
-  fragment LoggedInUser on User {
-    email
+export const SelectedProfileFragmentFragmentDoc = gql`
+  fragment SelectedProfileFragment on Profile {
+    id
+    collection
+    public
+    username
+    canCreate
+    profileMedia {
+      id
+    }
+    dateCreated
+    dateUpdated
+    level {
+      id
+    }
+    rating {
+      id
+    }
+    isDarkTheme
+    circleTypeOverrides {
+      id
+    }
+    overrideCircleTypes
+    myTheme {
+      id
+    }
+    homePublic {
+      id
+    }
+    home {
+      id
+    }
+    following {
+      id
+    }
+    addToHistory
+    history {
+      id
+    }
+  }
+`;
+export const LoggedInUserFragmentFragmentDoc = gql`
+  fragment LoggedInUserFragment on User {
     id
     email
     canCreate
@@ -503,30 +591,90 @@ export type GetCircleByIdQueryResult = ApolloReactCommon.QueryResult<
   GetCircleByIdQuery,
   GetCircleByIdQueryVariables
 >;
-export const GetProfileByIdDocument = gql`
-  query getProfileById($id: String!) {
-    getProfileById(id: $id) {
-      id
-      username
-      isDarkTheme
-      overrideCircleTypes
-      addToHistory
-      history {
-        id
-      }
-      myTheme {
-        id
-        type
-        data
-      }
-      home {
-        id
-      }
-      homePublic {
-        id
+export const CreateProfileDocument = gql`
+  mutation createProfile($username: String!) {
+    createProfile(username: $username) {
+      status
+      message
+      createdProfile {
+        ...SelectedProfileFragment
       }
     }
   }
+  ${SelectedProfileFragmentFragmentDoc}
+`;
+export type CreateProfileMutationFn = ApolloReactCommon.MutationFunction<
+  CreateProfileMutation,
+  CreateProfileMutationVariables
+>;
+
+export function useCreateProfileMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateProfileMutation,
+    CreateProfileMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    CreateProfileMutation,
+    CreateProfileMutationVariables
+  >(CreateProfileDocument, baseOptions);
+}
+export type CreateProfileMutationHookResult = ReturnType<
+  typeof useCreateProfileMutation
+>;
+export type CreateProfileMutationResult = ApolloReactCommon.MutationResult<
+  CreateProfileMutation
+>;
+export type CreateProfileMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateProfileMutation,
+  CreateProfileMutationVariables
+>;
+export const GetProfileByUsernameDocument = gql`
+  query getProfileByUsername($username: String!) {
+    getProfileByUsername(username: $username) {
+      usernameAvailable
+      usernameInvalid
+    }
+  }
+`;
+
+export function useGetProfileByUsernameQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetProfileByUsernameQuery,
+    GetProfileByUsernameQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    GetProfileByUsernameQuery,
+    GetProfileByUsernameQueryVariables
+  >(GetProfileByUsernameDocument, baseOptions);
+}
+export function useGetProfileByUsernameLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetProfileByUsernameQuery,
+    GetProfileByUsernameQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetProfileByUsernameQuery,
+    GetProfileByUsernameQueryVariables
+  >(GetProfileByUsernameDocument, baseOptions);
+}
+
+export type GetProfileByUsernameQueryHookResult = ReturnType<
+  typeof useGetProfileByUsernameQuery
+>;
+export type GetProfileByUsernameQueryResult = ApolloReactCommon.QueryResult<
+  GetProfileByUsernameQuery,
+  GetProfileByUsernameQueryVariables
+>;
+export const GetProfileByIdDocument = gql`
+  query getProfileById($id: String!) {
+    getProfileById(id: $id) {
+      ...SelectedProfileFragment
+    }
+  }
+  ${SelectedProfileFragmentFragmentDoc}
 `;
 
 export function useGetProfileByIdQuery(
@@ -565,11 +713,11 @@ export const CreateUserDocument = gql`
       status
       message
       createdUser {
-        ...LoggedInUser
+        ...LoggedInUserFragment
       }
     }
   }
-  ${LoggedInUserFragmentDoc}
+  ${LoggedInUserFragmentFragmentDoc}
 `;
 export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<
   CreateUserMutation,
@@ -600,10 +748,10 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const GetUserByIdDocument = gql`
   query getUserById {
     getUserById {
-      ...LoggedInUser
+      ...LoggedInUserFragment
     }
   }
-  ${LoggedInUserFragmentDoc}
+  ${LoggedInUserFragmentFragmentDoc}
 `;
 
 export function useGetUserByIdQuery(

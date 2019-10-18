@@ -1,4 +1,4 @@
-import { Profile } from './profile.d';
+import { CreatedProfile, Profile } from './profile.d';
 export interface User {
   id?: string | null;
   collection?: 'users';
@@ -24,7 +24,7 @@ export interface LoggedInUser {
   dateCreated?: string;
   dateUpdated?: string;
   selectedProfile: Profile;
-  profiles: Profile[];
+  profiles: (CreatedProfile | SelectedProfile)[];
   // allMyThemes?: string | null;
   // allMyTypeStyles?: string | null;
   // inbox?: string | null;
