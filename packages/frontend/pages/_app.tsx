@@ -1,8 +1,12 @@
 import App, { Container } from 'next/app';
+import AppContent from '../components/AppContent/AppContent';
+import AppControllerBar from '../components/AppControllerBar';
+import AppNavigation from '../components/AppNavigation';
 import Head from 'next/head';
 import React from 'react';
 import withApollo from '../lib/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { HideOnScroll } from './../components/HideOnScroll/HideOnScroll';
 import { ProfileProvider } from '../context/profile/ProfileContext';
 import { UserProvider } from '../context/user/UserContext';
 
@@ -30,10 +34,13 @@ class MyApp extends App<any> {
         <ApolloProvider client={apolloClient}>
           <UserProvider>
             <ProfileProvider>
-              {/* App Bar */}
-              {/* Navigation */}
-              {/* Content */}
-              <Component {...pageProps} />
+              <HideOnScroll>
+                <AppControllerBar />
+              </HideOnScroll>
+              <AppNavigation />
+              <AppContent>
+                <Component {...pageProps} />
+              </AppContent>
             </ProfileProvider>
           </UserProvider>
         </ApolloProvider>

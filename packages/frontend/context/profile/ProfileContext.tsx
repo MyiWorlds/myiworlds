@@ -1,5 +1,9 @@
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 import CreateProfile from './components/CreateProfile';
 import Error from '../../components/Error';
+import ExapandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -7,17 +11,11 @@ import guestProfile from './guestProfile';
 import MaterialUiTheme from '../../lib/MaterialUiTheme';
 import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
-import { getCookie, setCookie } from '../../functions/cookies';
+import Typography from '@material-ui/core/Typography';
+import { CreatedProfile, SelectedProfile } from '@myiworlds/types';
+import { eraseCookie, getCookie, setCookie } from '../../functions/cookies';
 import { ProviderStore } from './profileContextTypes.d';
-import { SelectedProfile } from '@myiworlds/types';
 import { UserContext } from '../user/UserContext';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Icon,
-  Typography,
-} from '@material-ui/core';
 import {
   useCreateProfileMutation,
   useGetProfileByIdQuery,
@@ -80,7 +78,7 @@ const ProfileProvider = ({ children }: any) => {
     },
   });
 
-  const getSelectProfile = () => {
+  const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
       setSelectedProfile(getProfileQuery.getProfileById as SelectedProfile);
     }
@@ -143,17 +141,43 @@ const ProfileProvider = ({ children }: any) => {
     setSearchTimeoutActive(true);
   };
 
-  useEffect(() => {
-    const previousLoggedInUser = getCookie('selectedProfileId');
-
-    if (previousLoggedInUser) {
-      setProfileIdToSelect(previousLoggedInUser);
+  const updatedSelectedProfileOnUserChange = () => {
+    const loggedInUserHasSelectedProfile = user.profiles.find(
+      (profile: CreatedProfile | SelectedProfile) =>
+        profile.id === selectedProfile.id,
+    );
+    console.log(loggedInUserHasSelectedProfile, selectedProfile);
+    if (!loggedInUserHasSelectedProfile) {
+      setSelectedProfile(guestProfile);
+      setProfileIdToSelect(null);
     }
-  }, []);
+  };
+
+  const handleAutoLogInToProfile = () => {
+    const previousLoggedInProfile = getCookie('selectedProfileId');
+    if (previousLoggedInProfile) {
+      const isOneOfUsersProfiles = user.profiles.find(
+        (profile: CreatedProfile | SelectedProfile) =>
+          profile.id === previousLoggedInProfile,
+      );
+      if (isOneOfUsersProfiles) {
+        setProfileIdToSelect(previousLoggedInProfile);
+      } else {
+        eraseCookie('selectedProfileId');
+      }
+    }
+  };
+
+  useEffect(handleAutoLogInToProfile, [user.profiles]);
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);
   useEffect(handleUsernameToCreate, [usernameToCreate]);
   useEffect(updateProfileWithCreatedProfile, [createProfileData]);
-  useEffect(getSelectProfile, [getProfileQuery]);
+  useEffect(updateSelectedProfile, [getProfileQuery]);
+  useEffect(updatedSelectedProfileOnUserChange, [
+    selectedProfile,
+    selectedProfile.id,
+    user,
+  ]);
 
   const handleCancelCreateProfile = () => {
     setUsernameToCreate('');
@@ -202,8 +226,7 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   let content = null;
-  console.log('USER', user);
-  console.log('selectedProfile', selectedProfile);
+
   if (user.id && selectedProfile.id === 'guest') {
     console.log('no profile');
     if (!user.profiles.length) {
@@ -211,7 +234,7 @@ const ProfileProvider = ({ children }: any) => {
       content = (
         <ExpansionPanel>
           <ExpansionPanelSummary
-            expandIcon={<Icon>expand_more</Icon>}
+            expandIcon={<ExapandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
@@ -240,9 +263,8 @@ const ProfileProvider = ({ children }: any) => {
         </Card>
       </div>
     );
-  } else if (selectedProfile.id === 'guest') {
-    content = <h1>NO PROFILE</h1>;
   } else {
+    // Guest is logged in
     content = children;
   }
 

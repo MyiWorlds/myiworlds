@@ -34,8 +34,6 @@ const Index = () => {
   const { user, handleLogout, handleLogin } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
 
-  console.log('index selected profile', selectedProfile);
-
   return (
     <div>
       <div>
@@ -60,6 +58,57 @@ const Index = () => {
             Login
           </Button>
         )}
+
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
+        <h1>as;ldkfjalskdjf</h1>
       </div>
     </div>
   );

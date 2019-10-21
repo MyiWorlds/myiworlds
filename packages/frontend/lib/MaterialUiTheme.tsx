@@ -20,7 +20,7 @@ const outerTheme = createMuiTheme({
 const useStyles = makeStyles((theme: Theme) => {
   return {
     app: {
-      position: 'fixed',
+      // position: 'fixed',
       height: '100%',
       width: '100%',
       background: theme.palette.background.paper,

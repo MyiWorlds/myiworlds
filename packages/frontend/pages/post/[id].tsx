@@ -1,4 +1,3 @@
-import Test from './../../components/test';
 import { useGetCircleByIdQuery } from '../../generated/apolloComponents';
 import { useRouter } from 'next/router';
 
@@ -17,7 +16,6 @@ const Post = () => {
       test
       {console.log('Query Response: ', loading, error, data)}
       {data.getCircleById.id}
-      {data.getCircleById.id && <Test title={data.getCircleById.id} />}
     </div>
   );
 };
