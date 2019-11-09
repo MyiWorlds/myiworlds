@@ -1,9 +1,0 @@
-mutation createProfile($username: String!) {
-  createProfile(username: $username) {
-    status
-    message
-    createdProfile {
-      ...SelectedProfileFragment
-    }
-  }
-}

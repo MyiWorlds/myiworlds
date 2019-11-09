@@ -1,5 +1,0 @@
-query getProfileById($id: String!) {
-  getProfileById(id: $id) {
-    ...SelectedProfileFragment
-  }
-}

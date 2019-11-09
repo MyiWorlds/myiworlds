@@ -1,8 +1,0 @@
-type Query {
-  getProfileByUsername(username: String!): getProfileByUsernameResponse
-}
-
-type getProfileByUsernameResponse {
-  usernameAvailable: Boolean
-  usernameInvalid: Boolean
-}

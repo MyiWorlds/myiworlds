@@ -1,9 +1,0 @@
-type Mutation {
-  cloneCircle(id: String): CloneCircleResponse
-}
-
-type CloneCircleResponse {
-  message: String
-  clonedCircle: Circle
-  clonedCircleId: String
-}
