@@ -1,0 +1,30 @@
+{
+  "npmScope": "myiworlds",
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "frontend": {
+      "tags": []
+    },
+    "frontend-e2e": {
+      "tags": []
+    },
+    "graphql-api": {
+      "tags": []
+    },
+    "credentials": {
+      "tags": []
+    },
+    "types": {
+      "tags": []
+    },
+    "services": {
+      "tags": []
+    }
+  }
+}
