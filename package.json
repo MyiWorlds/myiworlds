@@ -29,15 +29,17 @@
   },
   "private": true,
   "dependencies": {
-    "document-register-element": "1.13.1",
-    "react": "16.10.2",
-    "react-dom": "16.10.2",
-    "next": "9.0.5",
+    "@material-ui/core": "^4.6.0",
+    "@material-ui/icons": "^4.5.1",
     "@zeit/next-css": "1.0.1",
-    "@zeit/next-sass": "1.0.1",
     "@zeit/next-less": "1.0.1",
+    "@zeit/next-sass": "1.0.1",
     "@zeit/next-stylus": "1.0.1",
-    "express": "4.17.1"
+    "document-register-element": "1.13.1",
+    "express": "4.17.1",
+    "next": "9.0.5",
+    "react": "16.10.2",
+    "react-dom": "16.10.2"
   },
   "devDependencies": {
     "@nrwl/cypress": "8.7.0",
