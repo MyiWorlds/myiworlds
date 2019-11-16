@@ -1,6 +1,7 @@
 import App from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import { UserProvider } from '../contexts/user/UserContext';
 
 class MyApp extends App<any> {
   render() {
@@ -19,10 +20,21 @@ class MyApp extends App<any> {
         </Head>
         <style jsx global>{`
           body {
+            height: 100%;
+            width: 100%;
+            position: relative;
             margin: 0px;
           }
+
+          #__next {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+          }
         `}</style>
-        <Component {...pageProps} />
+        <UserProvider>
+          <Component {...pageProps} />
+        </UserProvider>
       </>
     );
   }

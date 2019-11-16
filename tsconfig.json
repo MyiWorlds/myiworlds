@@ -15,6 +15,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
     "paths": {
       "@myiworlds/credentials": ["libs/credentials/src/index.ts"],
       "@myiworlds/types": ["libs/types/src/index.ts"],

@@ -1,1 +1,1 @@
-export * from './lib/credentials';
+export * from './firebase';
