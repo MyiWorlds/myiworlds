@@ -1,0 +1,7 @@
+fragment LoggedInUserFragment on User {
+  id
+  email
+  dateCreated
+  dateUpdated
+  photoURL
+}

@@ -1,11 +1,14 @@
 import App from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import { UserProvider } from '../contexts/user/UserContext';
+import withApollo from '../lib/apollo/withApollo';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
+import { UserProvider } from '../contexts/User/UserContext';
 
 class MyApp extends App<any> {
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, apolloClient } = this.props;
     return (
       <>
         <Head>
@@ -32,12 +35,16 @@ class MyApp extends App<any> {
             position: fixed;
           }
         `}</style>
-        <UserProvider>
-          <Component {...pageProps} />
-        </UserProvider>
+        <ApolloProvider client={apolloClient}>
+          <SystemMessagesProvider>
+            <UserProvider>
+              <Component {...pageProps} />
+            </UserProvider>
+          </SystemMessagesProvider>
+        </ApolloProvider>
       </>
     );
   }
 }
 
-export default MyApp;
+export default withApollo(MyApp);

@@ -25,6 +25,9 @@
     },
     "services": {
       "tags": []
+    },
+    "enums": {
+      "tags": []
     }
   }
 }

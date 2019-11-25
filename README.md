@@ -1,76 +1,71 @@
 # Myiworlds
 
-This project was generated using [Nx](https://nx.dev).
+## Setup Instructions
+*All parts are required for the project to work correctly*
 
-<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png" width="450"></p>
+### 1. Firebase
+- Create a Firebase project.
+- Get your Firebase Config for it (used for Firebase Authentication).
+  - In the Firebase Console click the Settings cog, then "Project Settings".
+  - In the first tab "General", scroll down and copy the firebaseConfig object.
+  - Inside this project (MyiWorlds), navigate to the "libs/credentials/firebase" folder and create a file named firebaseConfig.ts.
+  - Paste your Firebase config inside there and do a "export const firebaseConfig = {...your Firebase config here}
 
-🔎 **Nx is a set of Extensible Dev Tools for Monorepos.**
+### 2. Google Cloud Platform
 
-## Adding capabilities to your workspace
+## Starting your development environment
+![2019-11-16_12-09-53](https://user-images.githubusercontent.com/15203899/68998648-234c9b00-086a-11ea-950e-d68f2378e1df.gif)
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+### 3. In project folder
 
-Below are some plugins which you can add to your workspace:
+Install the firebase tools.  We will use this for deploying our Firestore Rules
+```
+npm i -g firebase-tools
+```
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+Login into the email you created the Firebase project in by typing 
+```
+firebase login
+```
+Then follow these steps on the setup in the terminal
 
-## Generate an application
+```
+  * You are currently outside your home directory
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+? Are you ready to proceed? Yes
 
-> You can use any of the plugins above to generate applications as well.
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
 
-## Generate a library
+? Please select an option: Use an existing project
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
 
-> You can also use any of the plugins above to generate libraries as well.
 
-Libraries are sharable across libraries and applications. They can be imported from `@myiworlds/mylib`.
+? What file should be used for Firestore Rules? firestore.rules
 
-## Development server
 
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+? What file should be used for Firestore indexes? firestore.indexes.json
+```
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+Start the frontend and your graphql-api by running:
 
-## Build
+```npm run watch```
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+In VSCode go to the debug menu item on the left side, in the dropdown select "Frontend & Backend Debug" then press the green play button.
 
-## Running unit tests
 
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+Want to create a shared folder in the libs directory to use in multiple of your /apps project?
+```
+nx g @nrwl/workspace:library lib-name-here
+```
 
-Run `nx affected:test` to execute the unit tests affected by a change.
+Importing in NX
+```
+import { SomeToken } from '@myiworlds/lib-name-here'; // the `@myiworlds` scope is configured in `nx.json` "npmScope" field (may be required to change in other places).
+```
 
-## Running end-to-end tests
 
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
+This project was created using NX:
 
 Visit the [Nx Documentation](https://nx.dev) to learn more.

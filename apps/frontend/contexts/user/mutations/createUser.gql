@@ -1,0 +1,9 @@
+mutation createUser($id: ID!, $email: String!, $photoURL: String) {
+  createUser(id: $id, email: $email, photoURL: $photoURL) {
+    status
+    message
+    createdUser {
+      ...LoggedInUserFragment
+    }
+  }
+}

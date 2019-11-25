@@ -93,7 +93,7 @@
           "builder": "@nrwl/node:build",
           "options": {
             "outputPath": "dist/apps/graphql-api",
-            "main": "apps/graphql-api/src/main.ts",
+            "main": "apps/graphql-api/src/index.ts",
             "tsConfig": "apps/graphql-api/tsconfig.app.json",
             "assets": ["apps/graphql-api/src/assets"]
           },
@@ -215,6 +215,33 @@
           "options": {
             "jestConfig": "libs/services/jest.config.js",
             "tsConfig": "libs/services/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "enums": {
+      "root": "libs/enums",
+      "sourceRoot": "libs/enums/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "libs/enums/.eslintrc",
+            "tsConfig": [
+              "libs/enums/tsconfig.lib.json",
+              "libs/enums/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/enums/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/enums/jest.config.js",
+            "tsConfig": "libs/enums/tsconfig.spec.json"
           }
         }
       }

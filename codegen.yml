@@ -1,0 +1,22 @@
+overwrite: true
+schema: http://localhost:8000
+# schema: http://localhost:8000/graphql
+# documents: components/**/*.{ts,tsx}
+documents:
+  - apps/frontend/components/**/*.gql
+  - apps/frontend/contexts/**/*.gql
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+    - eslint --fix
+generates:
+  ./apps/frontend/generated/apolloComponents.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
+      withHOC: false
+      withComponent: false
+      hooksImportFrom: "@apollo/react-hooks"

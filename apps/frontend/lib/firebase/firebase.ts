@@ -1,7 +1,5 @@
 import firebase from 'firebase/app';
 import { firebaseConfig } from '@myiworlds/credentials';
-import 'firebase/auth';
-import 'firebase/firestore';
 
 try {
   firebase.initializeApp(firebaseConfig);
@@ -13,4 +11,4 @@ try {
   }
 }
 
-export { firebase };
+export default firebase;
