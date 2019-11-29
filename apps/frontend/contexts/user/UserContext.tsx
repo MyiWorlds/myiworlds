@@ -62,8 +62,17 @@ const UserProvider = ({ children }: any) => {
     loading: getUserLoading,
     error: getUserError,
   } = useGetUserByIdQuery({
-    skip: !userIdToLogin || user.id === userIdToLogin,
+    skip: !userIdToLogin,
+    fetchPolicy: 'no-cache',
   });
+
+  const saveUser = ({ id, email, photoURL }: LoggedInUser) => {
+    setUser({
+      id,
+      email,
+      photoURL,
+    });
+  };
 
   const handleLogin = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -89,10 +98,6 @@ const UserProvider = ({ children }: any) => {
     firebaseAuth.signOut();
     setUserIdToLogin(null);
     setUser(guestUser);
-  };
-
-  const handleDeleteAccount = () => {
-    deleteUser();
   };
 
   const didMount = () => {
@@ -148,34 +153,28 @@ const UserProvider = ({ children }: any) => {
   };
 
   const subscribeToUser = () => {
-    if (user && user.id) {
+    if (user && user.id && !userSubscription) {
       console.log('Subscribing to the user with email', user.email);
       const subscriptionToUser = firestoreClient
         .collection('users')
         .doc(user.id)
         .onSnapshot(
           (docSnapshot: firebase.firestore.DocumentSnapshot) => {
+            console.log(
+              'Users fields have changed and I am going to update them.',
+            );
             const userDoc:
               | firebase.firestore.DocumentData
               | undefined = docSnapshot.data();
 
             if (userDoc && docSnapshot.exists) {
-              const currentUserProperties: any = Object.getOwnPropertyNames(
-                user,
-              );
-              const usersFieldsAreDifferent = currentUserProperties.every(
-                (userProperty: keyof LoggedInUser) =>
-                  user[userProperty] === userDoc[userProperty],
-              );
-              if (usersFieldsAreDifferent) {
-                console.log(
-                  'Users fields have changed and I am going to update them.',
-                );
-                setUserIdToLogin(user.id);
-              }
+              saveUser(userDoc as LoggedInUser);
+              return;
             } else {
-              console.log('That user did not exist.');
+              console.log('That user no longer exist.');
               setUser(guestUser);
+              setUserIdToLogin(null);
+              return;
             }
           },
           (error: Error) => {
@@ -183,6 +182,7 @@ const UserProvider = ({ children }: any) => {
               error,
               'There was an error subscribing to the logged in user',
             );
+            return;
           },
         );
 
@@ -190,13 +190,16 @@ const UserProvider = ({ children }: any) => {
       if (subscriptionToUser) {
         // Used to cancel the subscription to the user
         setUserSubscription(() => subscriptionToUser);
+        return;
       }
     }
   };
 
   const updateUserData = () => {
     if (getUserQuery && getUserQuery.getUserById) {
-      setUser(getUserQuery.getUserById as LoggedInUser);
+      console.log('UPDATING STATE', getUserQuery.getUserById.email);
+      saveUser(getUserQuery.getUserById as LoggedInUser);
+      subscribeToUser();
       setUserIdToLogin(null);
       setAppLoading(false);
     }
@@ -212,15 +215,18 @@ const UserProvider = ({ children }: any) => {
     if (
       createUserData &&
       createUserData.createUser &&
-      createUserData.createUser.createdUser
+      createUserData.createUser.createdUser &&
+      createUserData.createUser.createdUser.id
     ) {
-      setUser(createUserData.createUser.createdUser as LoggedInUser);
+      saveUser(createUserData.createUser.createdUser as LoggedInUser);
+      subscribeToUser();
       setAppLoading(false);
       setUserToCreate(null);
     }
   };
 
   const userAccountDeleted = () => {
+    console.log('Cleaning up the Users old data');
     if (deleteUserData && deleteUserData.deleteUser) {
       if (deleteUserData.deleteUser.status === RESPONSE_CODES.ERROR) {
         setAppSnackbar({
@@ -293,7 +299,7 @@ const UserProvider = ({ children }: any) => {
         user,
         handleLogin,
         handleLogout,
-        handleDeleteAccount,
+        handleDeleteAccount: deleteUser,
       }}
     >
       {children}
