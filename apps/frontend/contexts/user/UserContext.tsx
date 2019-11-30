@@ -82,6 +82,7 @@ const UserProvider = ({ children }: any) => {
     });
 
     try {
+      console.log('Starting Login process.');
       firebaseAuth.signInWithRedirect(provider);
     } catch (error) {
       console.error(error);
@@ -112,6 +113,9 @@ const UserProvider = ({ children }: any) => {
         ) {
           if (redirectUserCredential.additionalUserInfo.isNewUser) {
             if (redirectUserCredential.user.email) {
+              console.log(
+                'User created a valid account, setting it for account creation.',
+              );
               setUserToCreate({
                 id: redirectUserCredential.user.uid,
                 email: redirectUserCredential.user.email,
@@ -141,10 +145,13 @@ const UserProvider = ({ children }: any) => {
           }
           const token = await firebaseUser.getIdToken();
           document.cookie = `token=${token}`;
-          console.log('Added a new token cookie');
+          console.log(
+            'Added a new token cookie and setting your user id to login.',
+          );
           setUserIdToLogin(firebaseUser.uid);
           setAppLoading(false);
         } else {
+          console.log('Reseting your token.');
           document.cookie = 'token=;';
           setAppLoading(false);
         }
@@ -154,24 +161,26 @@ const UserProvider = ({ children }: any) => {
 
   const subscribeToUser = () => {
     if (user && user.id && !userSubscription) {
-      console.log('Subscribing to the user with email', user.email);
+      console.log('Subscribing to the user with email: ', user.email);
       const subscriptionToUser = firestoreClient
         .collection('users')
         .doc(user.id)
         .onSnapshot(
           (docSnapshot: firebase.firestore.DocumentSnapshot) => {
-            console.log(
-              'Users fields have changed and I am going to update them.',
-            );
             const userDoc:
               | firebase.firestore.DocumentData
               | undefined = docSnapshot.data();
 
             if (userDoc && docSnapshot.exists) {
+              console.log(
+                'Users fields have changed and I am going to update them.',
+              );
               saveUser(userDoc as LoggedInUser);
               return;
             } else {
-              console.log('That user no longer exist.');
+              console.log(
+                'That user no longer exist.  You have been logged in as a guest.',
+              );
               setUser(guestUser);
               setUserIdToLogin(null);
               return;
@@ -179,16 +188,16 @@ const UserProvider = ({ children }: any) => {
           },
           (error: Error) => {
             console.error(
-              error,
               'There was an error subscribing to the logged in user',
+              error,
             );
             return;
           },
         );
 
-      console.log('Subscribed to the logged in user');
       if (subscriptionToUser) {
         // Used to cancel the subscription to the user
+        console.log('Subscribed to the logged in user.');
         setUserSubscription(() => subscriptionToUser);
         return;
       }
@@ -197,7 +206,7 @@ const UserProvider = ({ children }: any) => {
 
   const updateUserData = () => {
     if (getUserQuery && getUserQuery.getUserById) {
-      console.log('UPDATING STATE', getUserQuery.getUserById.email);
+      console.log('The user was fetched and is being updated.');
       saveUser(getUserQuery.getUserById as LoggedInUser);
       subscribeToUser();
       setUserIdToLogin(null);
@@ -218,6 +227,7 @@ const UserProvider = ({ children }: any) => {
       createUserData.createUser.createdUser &&
       createUserData.createUser.createdUser.id
     ) {
+      console.log('User was created and updating the application with it.');
       saveUser(createUserData.createUser.createdUser as LoggedInUser);
       subscribeToUser();
       setAppLoading(false);
