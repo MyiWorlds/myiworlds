@@ -1,6 +1,8 @@
 import App from 'next/app';
 import Head from 'next/head';
+import MaterialUiTheme from './../lib/MaterialUiTheme';
 import React from 'react';
+import UserInterface from '../contexts/UserInterface';
 import withApollo from '../lib/apollo/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
@@ -36,11 +38,15 @@ class MyApp extends App<any> {
           }
         `}</style>
         <ApolloProvider client={apolloClient}>
-          <SystemMessagesProvider>
-            <UserProvider>
-              <Component {...pageProps} />
-            </UserProvider>
-          </SystemMessagesProvider>
+          <MaterialUiTheme>
+            <SystemMessagesProvider>
+              <UserProvider>
+                <UserInterface>
+                  <Component {...pageProps} />
+                </UserInterface>
+              </UserProvider>
+            </SystemMessagesProvider>
+          </MaterialUiTheme>
         </ApolloProvider>
       </>
     );

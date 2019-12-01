@@ -22,6 +22,8 @@ const guestUser = {
   id: null,
   email: 'guest@email.com',
   photoURL: null,
+  dateCreated: Date.now(),
+  dateUpdated: Date.now(),
 };
 
 const UserProvider = ({ children }: any) => {
@@ -66,11 +68,19 @@ const UserProvider = ({ children }: any) => {
     fetchPolicy: 'no-cache',
   });
 
-  const saveUser = ({ id, email, photoURL }: LoggedInUser) => {
+  const saveUser = ({
+    id,
+    email,
+    photoURL,
+    dateCreated,
+    dateUpdated,
+  }: LoggedInUser) => {
     setUser({
       id,
       email,
       photoURL,
+      dateCreated,
+      dateUpdated,
     });
   };
 
@@ -197,10 +207,13 @@ const UserProvider = ({ children }: any) => {
 
       if (subscriptionToUser) {
         // Used to cancel the subscription to the user
-        console.log('Subscribed to the logged in user.');
+        console.log(
+          'Subscribed to the logged in user.  Any changes made to the user will instantly update this app.',
+        );
         setUserSubscription(() => subscriptionToUser);
-        return;
       }
+
+      return () => subscriptionToUser();
     }
   };
 
