@@ -44,6 +44,7 @@ const DeleteAccountModal: React.FunctionComponent<Props> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setTextField(e.target.value)
             }
+            autoComplete="off"
           />
           <br />
           <br />

@@ -2,13 +2,8 @@ import Divider from '@material-ui/core/Divider';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { format } from 'date-fns';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
 
 interface Props {
   title?: string;
@@ -59,7 +54,6 @@ const Header: React.FunctionComponent<Props> = ({
   dateCreated,
 }) => {
   const classes = useStyles();
-  const theme = useTheme();
 
   const mediaWithCustomStyles = media
     ? React.cloneElement(media, {

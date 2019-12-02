@@ -63,8 +63,8 @@ const AppController: React.FC<Props> = ({
             className={classes.userIcon}
             alt={user.email}
             component={ButtonLink}
-            href="/user/[id]"
-            as={`/user/${user.id}`}
+            href="/user"
+            as={'/user'}
             src={user.photoURL || ''}
           />
         ) : (
