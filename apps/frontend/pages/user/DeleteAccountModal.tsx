@@ -56,7 +56,8 @@ const DeleteAccountModal: React.FunctionComponent<Props> = ({
         </Button>
         <Button
           onClick={handleDelete}
-          color="primary"
+          variant="contained"
+          color="secondary"
           autoFocus
           disabled={textField !== 'DELETE'}
         >
