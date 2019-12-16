@@ -167,6 +167,12 @@ const UserProvider = ({ children }: any) => {
         }
       },
     );
+
+    return () => {
+      if (userSubscription) {
+        userSubscription();
+      }
+    };
   };
 
   const subscribeToUser = () => {
@@ -212,8 +218,6 @@ const UserProvider = ({ children }: any) => {
         );
         setUserSubscription(() => subscriptionToUser);
       }
-
-      return () => subscriptionToUser();
     }
   };
 
