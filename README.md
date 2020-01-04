@@ -3,31 +3,31 @@
 ## A fork of a modern web app for your starter kit:
 
 ### Both Frontend/Backend
-Typescript
-Nrwl NX Monorepo
-Firebase Auth
-Apollo Codegen
-Code sharing
+- Typescript
+- Nrwl NX Monorepo
+- Firebase Auth
+- Apollo Codegen
+- Code sharing
 
 ### Frontend
-ReactJS (Hooks)
-NextJS
-MaterialUI
-Live data subscriptions (Firestore)
-Full app wide auth context (NOT basic, very detailed)
-Deployed to Google Cloud Run
-Auth checking on queries
-Deployed on Firebase hosting + Cloud Function
+- ReactJS (Hooks)
+- NextJS
+- MaterialUI
+- Live data subscriptions (Firestore)
+- Full app wide auth context (NOT basic, very detailed)
+- Deployed to Google Cloud Run
+- Auth checking on queries
+- Deployed on Firebase hosting + Cloud Function
 
 ### Backend
-Apollo Server
-Dataloader
-Docker
-Stackdriver Error handling
-Cloud Build
-Service accounts for each service
-Google Cloud Storage
-Dynamic image resizer AppEngine (Python)
+- Apollo Server
+- Dataloader
+- Docker
+- Stackdriver Error handling
+- Cloud Build
+- Service accounts for each service
+- Google Cloud Storage
+- Dynamic image resizer AppEngine (Python)
 
 
 ## Setup Instructions
@@ -84,6 +84,19 @@ Start the frontend and your graphql-api by running:
 
 In VSCode go to the debug menu item on the left side, in the dropdown select "Frontend & Backend Debug" then press the green play button.
 
+## Deploying
+
+### Frontend
+```
+frontend:deploy
+```
+This builds your nextjs application, places the code in the "dist/functions" folder where Firebase Functions will use it to do server side rendering.  In this process it will also setup Firebase hosting to redirect to your server side rendered Nextjs.
+
+### Backend
+```
+graphql-api:deploy
+```
+This builds the graphql server and deploys it to Google Cloud Run.
 
 
 <!-- Not setup yet -->

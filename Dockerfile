@@ -11,7 +11,7 @@ RUN npm install --only=production
 
 COPY /dist/apps/graphql-api .
 
-CMD npm run graphql-api:start
+CMD npm run graphql-api:serve
 
 # After running test locally with
 # docker run -p 8000:8000 BUILDID
