@@ -1,4 +1,17 @@
 {
+  "functions": {
+    "source": "/",
+    "predeploy": []
+  },
+  "hosting": {
+    "public": "dist/public",
+    "rewrites": [
+      {
+        "source": "**/**",
+        "function": "app-next"
+      }
+    ]
+  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"

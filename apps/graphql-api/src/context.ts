@@ -5,9 +5,8 @@ import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 const Context = async (req: ExpressContext['req']) => {
   try {
     const cookies = cookie.parse(
-      req.headers.cookie ? req.headers.cookie.toString() : '',
+      req.headers.cookies ? req.headers.cookies.toString() : '',
     );
-
     const context = {
       userId: await getUserId(cookies.token),
     };

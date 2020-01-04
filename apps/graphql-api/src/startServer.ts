@@ -1,4 +1,4 @@
-import Context from './Context';
+import Context from './context';
 import { ApolloServer, PlaygroundConfig } from 'apollo-server';
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import { genSchema } from './utils/genSchema';
@@ -33,7 +33,7 @@ export const startServer = async () => {
       origin: true,
     },
     schema: genSchema(),
-    playground,
+    playground: process.env.NODE_ENV !== 'production' ? playground : false,
     introspection: process.env.NODE_ENV !== 'production',
     context: ({ req }: { req: ExpressContext['req'] }) => Context(req),
     tracing: process.env.NODE_ENV !== 'production' ? true : false,
@@ -55,7 +55,7 @@ export const startServer = async () => {
   const app = await server
     .listen({ port: process.env.PORT || 8000 })
     .then(({ url }: { url: string }) => {
-      console.log(`🚀  Server ready at ${url} 🚀`);
+      console.log(`🚀  Server ready at ${url} 🚀`, process.env.NODE_ENV);
     });
 
   return app;

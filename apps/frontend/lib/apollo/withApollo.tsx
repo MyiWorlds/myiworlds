@@ -9,7 +9,7 @@ import { isBrowser } from './isBrowser';
 
 function parseCookies(req?: any, options = {}) {
   return cookie.parse(
-    req ? req.headers.cookie || '' : document.cookie,
+    req ? req.headers.cookies || '' : document.cookie,
     options,
   );
 }
@@ -21,6 +21,8 @@ export default (App: any) => {
       apolloState: PropTypes.object.isRequired,
     };
 
+    apolloClient: ApolloClient<NormalizedCacheObject>;
+
     static async getInitialProps(ctx: any) {
       const {
         Component,
@@ -30,7 +32,8 @@ export default (App: any) => {
       const apollo = initApollo(
         {},
         {
-          getToken: () => parseCookies(req).qid,
+          getToken: () => parseCookies(req).token,
+          getSelectedProfileId: () => parseCookies(req).getSelectedProfileId,
         },
       );
 
@@ -81,8 +84,6 @@ export default (App: any) => {
       };
     }
 
-    apolloClient: ApolloClient<NormalizedCacheObject>;
-
     constructor(props: any) {
       super(props);
       // `getDataFromTree` renders the component first, the client is passed off as a property.
@@ -90,6 +91,9 @@ export default (App: any) => {
       this.apolloClient = initApollo(props.apolloState, {
         getToken: () => {
           return parseCookies().token;
+        },
+        getSelectedProfileId: () => {
+          return parseCookies().selectedProfileId;
         },
       });
     }

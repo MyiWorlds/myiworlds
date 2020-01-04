@@ -253,8 +253,8 @@ const UserProvider = ({ children }: any) => {
   };
 
   const userAccountDeleted = () => {
-    console.log('Cleaning up the Users old data');
     if (deleteUserData && deleteUserData.deleteUser) {
+      console.log('Cleaning up the Users old data');
       if (deleteUserData.deleteUser.status === RESPONSE_CODES.ERROR) {
         setAppSnackbar({
           title: deleteUserData.deleteUser.message,

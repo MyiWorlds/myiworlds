@@ -1,4 +1,34 @@
-# Myiworlds
+# MyiWorlds
+
+## A fork of a modern web app for your starter kit:
+
+### Both Frontend/Backend
+Typescript
+Nrwl NX Monorepo
+Firebase Auth
+Apollo Codegen
+Code sharing
+
+### Frontend
+ReactJS (Hooks)
+NextJS
+MaterialUI
+Live data subscriptions (Firestore)
+Full app wide auth context (NOT basic, very detailed)
+Deployed to Google Cloud Run
+Auth checking on queries
+Deployed on Firebase hosting + Cloud Function
+
+### Backend
+Apollo Server
+Dataloader
+Docker
+Stackdriver Error handling
+Cloud Build
+Service accounts for each service
+Google Cloud Storage
+Dynamic image resizer AppEngine (Python)
+
 
 ## Setup Instructions
 *All parts are required for the project to work correctly*
@@ -55,6 +85,14 @@ Start the frontend and your graphql-api by running:
 In VSCode go to the debug menu item on the left side, in the dropdown select "Frontend & Backend Debug" then press the green play button.
 
 
+
+<!-- Not setup yet -->
+<!-- ## Enable Cloud Build
+Go to `https://console.cloud.google.com/cloud-build` and enable the API
+
+Set it up to your GitHub account or wherever you host it -->
+
+
 Want to create a shared folder in the libs directory to use in multiple of your /apps project?
 ```
 nx g @nrwl/workspace:library lib-name-here
@@ -69,3 +107,6 @@ import { SomeToken } from '@myiworlds/lib-name-here'; // the `@myiworlds` scope 
 This project was created using NX:
 
 Visit the [Nx Documentation](https://nx.dev) to learn more.
+
+
+Setting up Nextjs hosting on Firebase Hosting/Functions was done through [functions](https://medium.com/mean-fire/nx-nrwl-firebase-functions-98f96f514055) and [combining both](https://github.com/zeit/next.js/tree/canary/examples/with-firebase-hosting)

@@ -5,10 +5,9 @@ import DeleteAccountModal from './DeleteAccountModal';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Header from '../../components/Header/Header';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Button } from '@material-ui/core';
 import { UserContext } from '../../contexts/User/UserContext';
-import { useRouter } from 'next/router';
 
 const User = () => {
   const { user, handleLogout, handleDeleteAccount } = useContext(UserContext);

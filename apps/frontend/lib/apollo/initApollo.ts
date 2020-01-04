@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch';
+import { cloudRun } from '@myiworlds/credentials';
 import { createHttpLink } from 'apollo-link-http';
 import { isBrowser } from './isBrowser';
 import { setContext } from 'apollo-link-context';
@@ -17,20 +18,30 @@ if (!isBrowser) {
 
 interface Options {
   getToken: () => string;
+  getSelectedProfileId: () => string;
 }
 
-function create(initialState: any, { getToken }: Options) {
+function create(
+  initialState: any,
+  { getToken, getSelectedProfileId }: Options,
+) {
   const httpLink = createHttpLink({
-    uri: 'http://localhost:8000/graphql',
+    uri:
+      process.env.NODE_ENV === 'production'
+        ? cloudRun.url
+        : 'http://localhost:8000/graphql',
     credentials: 'include',
   });
 
   const authLink = setContext((_, { headers }) => {
     const token = getToken();
+    const selectedProfileId = getSelectedProfileId();
     return {
       headers: {
         ...headers,
-        cookie: token ? `qid=${token}` : '',
+        cookies: token
+          ? `token=${token};selectedProfileId=${selectedProfileId}`
+          : '',
       },
     };
   });
