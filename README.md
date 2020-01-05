@@ -3,32 +3,35 @@
 ## A fork of a modern web app for your starter kit:
 
 ### Both Frontend/Backend
-- Typescript
-- Nrwl NX Monorepo
-- Firebase Auth
-- Apollo Codegen
-- Code sharing
+- [Typescript](https://www.typescriptlang.org/)
+- [Nrwl NX Monorepo](https://nx.dev/react) (Allows code share)
+- [Firebase Auth](https://firebase.google.com/products/auth/)
+- [Apollo Codegen](https://graphql-code-generator.com/)
 
 ### Frontend
-- ReactJS (Hooks)
-- NextJS
-- MaterialUI
-- Live data subscriptions (Firestore)
-- Full app wide auth context (NOT basic, very detailed)
-- Deployed to Google Cloud Run
+- [ReactJS (Hooks)](https://reactjs.org/)
+- [NextJS](https://nextjs.org/)
+- [Apollo Client](https://www.apollographql.com/docs/react/)
+- [Material UI](https://material-ui.com/)
+- [Live data subscriptions (Firestore)](https://firebase.google.com/docs/firestore/query-data/listen)
+- [Deployed to Google Cloud Run](https://cloud.google.com/run/)
+- Deployed on [Firebase Hosting](https://firebase.google.com/products/hosting) and [Firebase Functions](https://firebase.google.com/products/functions/)
 - Auth checking on queries
-- Deployed on Firebase hosting + Cloud Function
+- Full app wide authentication using React Context (NOT basic, very detailed)
 
 ### Backend
-- Apollo Server
-- Dataloader
-- Docker
-- Stackdriver Error handling
-- Cloud Build
-- Service accounts for each service
-- Google Cloud Storage
-- Dynamic image resizer AppEngine (Python)
+- [Firebase Firestore](https://firebase.google.com/products/firestore/)
+- [Firebase Functions](https://firebase.google.com/products/functions/)
+- [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
+- [Dataloader](https://github.com/graphql/dataloader)
+- [Docker](https://www.docker.com/)
+- [Stackdriver Error handling](https://cloud.google.com/stackdriver/)
+- [Cloud Build*](https://cloud.google.com/cloud-build/)
+- [Service accounts for each service](https://cloud.google.com/compute/docs/access/service-accounts)
+- [Google Cloud Storage *](https://cloud.google.com/storage/)
+- [Dynamic image resizer AppEngine (Python) *](https://medium.com/google-cloud/uploading-resizing-and-serving-images-with-google-cloud-platform-ca9631a2c556)
 
+<i>\* Still to implement</i>
 
 ## Setup Instructions
 *All parts are required for the project to work correctly*
