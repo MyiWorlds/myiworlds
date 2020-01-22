@@ -46,6 +46,13 @@
 
 ### 2. Google Cloud Platform
 
+# Setting up Google Cloud Run:
+- [Setup guide](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run)
+
+## Services to enable:
+- [Container Registry](https://console.cloud.google.com/apis/library/containerregistry.googleapis.com)
+- [Resource Manager API](https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com?project=myiworlds&folder&organizationId=181350008905)
+
 ## Starting your development environment
 ![2019-11-16_12-09-53](https://user-images.githubusercontent.com/15203899/68998648-234c9b00-086a-11ea-950e-d68f2378e1df.gif)
 
@@ -83,7 +90,9 @@ Then follow these steps on the setup in the terminal
 
 Start the frontend and your graphql-api by running:
 
-```npm run watch```
+```
+npm run watch
+```
 
 In VSCode go to the debug menu item on the left side, in the dropdown select "Frontend & Backend Debug" then press the green play button.
 
@@ -91,15 +100,15 @@ In VSCode go to the debug menu item on the left side, in the dropdown select "Fr
 
 ### Frontend
 ```
-frontend:deploy
+nx deploy frontend
 ```
 This builds your nextjs application, places the code in the "dist/functions" folder where Firebase Functions will use it to do server side rendering.  In this process it will also setup Firebase hosting to redirect to your server side rendered Nextjs.
 
 ### Backend
 ```
-graphql-api:deploy
+nx deploy graphql-api
 ```
-This builds the graphql server and deploys it to Google Cloud Run.
+This sends your app to Google Cloud Container Registry, Cloud Build then see's it and starts building a dev environment so you have the necessary pieces of NX to do the production build.  After Cloud Build passes everything it will then deploy the graphql-api to Cloud Run in "us-central1".
 
 
 <!-- Not setup yet -->

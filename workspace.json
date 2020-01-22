@@ -50,6 +50,16 @@
             "jestConfig": "apps/frontend/jest.config.js",
             "tsConfig": "apps/frontend/tsconfig.spec.json"
           }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx build functions && nx build frontend && firebase deploy"
+              }
+            ]
+          }
         }
       }
     },
@@ -144,6 +154,16 @@
           "options": {
             "jestConfig": "apps/graphql-api/jest.config.js",
             "tsConfig": "apps/graphql-api/tsconfig.spec.json"
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "gcloud builds submit"
+              }
+            ]
           }
         }
       }
