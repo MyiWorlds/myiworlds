@@ -12,6 +12,13 @@
           "options": {
             "root": "apps/frontend",
             "outputPath": "dist/apps/functions/frontend"
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
           }
         },
         "serve": {
@@ -56,7 +63,7 @@
           "options": {
             "commands": [
               {
-                "command": "nx build functions && nx build frontend && firebase deploy"
+                "command": "nx build functions --prod && nx build frontend --prod && firebase deploy"
               }
             ]
           }

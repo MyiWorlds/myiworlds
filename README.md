@@ -105,17 +105,16 @@ nx deploy frontend
 This builds your nextjs application, places the code in the "dist/functions" folder where Firebase Functions will use it to do server side rendering.  In this process it will also setup Firebase hosting to redirect to your server side rendered Nextjs.
 
 ### Backend
+#### Automatic on GitHub trigger:
+To have it watch your GitHub repository and then automatically build ONLY the affected applications follow the setup guide [HERE](https://cloud.google.com/cloud-build/docs/running-builds/create-manage-triggers)
+
+#### Manual:
 ```
 nx deploy graphql-api
 ```
 This sends your app to Google Cloud Container Registry, Cloud Build then see's it and starts building a dev environment so you have the necessary pieces of NX to do the production build.  After Cloud Build passes everything it will then deploy the graphql-api to Cloud Run in "us-central1".
 
 
-<!-- Not setup yet -->
-<!-- ## Enable Cloud Build
-Go to `https://console.cloud.google.com/cloud-build` and enable the API
-
-Set it up to your GitHub account or wherever you host it -->
 
 
 Want to create a shared folder in the libs directory to use in multiple of your /apps project?

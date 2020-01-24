@@ -18,6 +18,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
+    "noUnusedLocals": true,
     "paths": {
       "@myiworlds/credentials": ["libs/credentials/src/index.ts"],
       "@myiworlds/types": ["libs/types/src/index.ts"],

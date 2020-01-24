@@ -1,0 +1,29 @@
+steps:
+# Install all Dev dependecies
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['install']
+  volumes:
+  - name: 'persistent_volume'
+    path: '/persistent_volume'
+
+# Lint the affected apps in dev mode
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['run', 'affected:lint']
+  volumes:
+  - name: 'persistent_volume'
+    path: '/persistent_volume'
+
+# Build the affected apps in dev mode
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['run', 'affected:build']
+  volumes:
+  - name: 'persistent_volume'
+    path: '/persistent_volume'
+
+# Test the affected apps in dev mode
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['run', 'affected:test']
+  volumes:
+  - name: 'persistent_volume'
+    path: '/persistent_volume'
+
