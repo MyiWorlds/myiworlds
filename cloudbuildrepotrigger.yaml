@@ -1,4 +1,13 @@
 steps:
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    git config -f .gitmodules submodule.myiworlds_myiworlds.url https://source.cloud.google.com/myiworlds/github_myiworlds_myiworlds
+    git submodule init
+    git submodule update
+
 # Install all Dev dependecies
 - name: 'gcr.io/cloud-builders/npm'
   args: ['install']
