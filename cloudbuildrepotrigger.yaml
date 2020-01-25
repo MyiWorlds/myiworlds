@@ -1,26 +1,32 @@
 steps:
-- name: 'gcr.io/cloud-builders/git'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    git config -f .gitmodules submodule.myiworlds_myiworlds.url https://source.cloud.google.com/myiworlds/github_myiworlds_myiworlds
-    git submodule init
-    git submodule update
+# - name: 'gcr.io/cloud-builders/git'
+#   entrypoint: 'bash'
+#   args:
+#   - '-c'
+#   - |
+#     git config -f .gitmodules submodule.myiworlds_myiworlds.url https://source.developers.google.com/myiworlds/github_myiworlds_myiworlds
+#     git init
+#     git submodule init
+#     git submodule update
+#   env:
+#   - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
+
 
 # Install all Dev dependecies
 - name: 'gcr.io/cloud-builders/npm'
   args: ['install']
 
-# Lint the affected apps in dev mode
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['run', 'affected:lint']
 
-# Build the affected apps in dev mode
 - name: 'gcr.io/cloud-builders/npm'
-  args: ['run', 'affected:build']
+  args: [ 'run', 'build' ]
+
+   # where PR_BRANCH_NAME is defined by your CI system
+ # rerun what is affected by the last commit in master
+# # Lint the affected apps in dev mode
+# - name: 'gcr.io/cloud-builders/npm'
+#   args: ['run', 'affected:build --base=origin/master~1 --head=origin/master']
 
 # Test the affected apps in dev mode
 - name: 'gcr.io/cloud-builders/npm'
-  args: ['run', 'affected:test']
+  args: ['run', 'test']
 
