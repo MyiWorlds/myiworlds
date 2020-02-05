@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import CreateProjects from './CreateProjects';
 import Header from '../../../Header/Header';
 import React, { useContext } from 'react';
 import ServiceKeys from './service-keys/ServiceKeys';
@@ -12,49 +13,6 @@ import Stepper from '@material-ui/core/Stepper';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { UserContext } from '../../../../contexts/User/UserContext';
-
-const steps = [
-  {
-    label: 'Create Google Cloud Account',
-    content: (
-      <div>
-        <>
-          <Typography variant="body1">
-            If you do not currently have a Google Cloud Account you must first
-            create one here
-          </Typography>
-          <Spacer />
-          <Button
-            component="a"
-            href="https://console.cloud.google.com/freetrial"
-            target="_blank"
-            variant="contained"
-            color="primary"
-          >
-            Create Account
-          </Button>
-          <Spacer />
-        </>
-      </div>
-    ),
-  },
-  {
-    label: 'Create Project',
-    content: (
-      <Typography variant="body1">
-        Create a Project in Google Cloud Platform
-      </Typography>
-    ),
-  },
-  {
-    label: 'Create & Save Security Credentials',
-    content: ServiceKeys,
-  },
-  {
-    label: 'Overview',
-    content: <Typography variant="body1">You did it!</Typography>,
-  },
-];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -72,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Admin = () => {
+const ApplicationSetup = () => {
   const { user } = useContext(UserContext);
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -84,6 +42,47 @@ const Admin = () => {
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
+
+  const steps = [
+    {
+      label: 'Create Google Cloud Account',
+      content: (
+        <>
+          <Typography variant="body1">
+            If you do not currently have a Google Cloud Account you must first
+            create one here
+          </Typography>
+          <Spacer />
+          <Button
+            component="a"
+            href="https://console.cloud.google.com/freetrial"
+            target="_blank"
+            variant="contained"
+            color="primary"
+          >
+            Create Account
+          </Button>
+          <Spacer />
+        </>
+      ),
+    },
+    {
+      label: 'Add Billing account',
+      content: <Typography variant="body1">You did it!</Typography>,
+    },
+    {
+      label: 'Create Application Environemnts',
+      content: <CreateProjects />,
+    },
+    {
+      label: 'Create & Save Security Credentials',
+      content: <ServiceKeys />,
+    },
+    {
+      label: 'Overview',
+      content: <Typography variant="body1">You did it!</Typography>,
+    },
+  ];
 
   if (!user.isSystemAdmin) {
     return (
@@ -133,4 +132,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default ApplicationSetup;
