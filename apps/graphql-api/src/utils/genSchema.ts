@@ -1,4 +1,6 @@
 import bigIntTypeDefs from '../schema/shared/bigInt.typeDefs';
+import createServiceKeysResolver from '../schema/admin/mutations/createServiceKeys.resolvers';
+import createServiceKeysTypeDefs from '../schema/admin/mutations/createServiceKeys.typeDefs';
 import createUserResolver from './../schema/user/mutations/createUser/createUser.resolvers';
 import createUserTypeDefs from '../schema/user/mutations/createUser/createUser.typeDefs';
 import deleteUserResolver from '../schema/user/mutations/deleteUser/deleteUser.resolvers';
@@ -23,6 +25,7 @@ export const genSchema = () => {
       getUserByIdTypeDefs,
       createUserTypeDefs,
       deleteUserTypeDefs,
+      createServiceKeysTypeDefs,
     ];
     const resolvers = [
       userResolvers,
@@ -30,6 +33,7 @@ export const genSchema = () => {
       sharedResolvers,
       createUserResolver,
       deleteUserResolver,
+      createServiceKeysResolver,
     ];
 
     return makeExecutableSchema({

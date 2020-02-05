@@ -14,6 +14,7 @@ const Context = async (req: ExpressContext['req']) => {
     return context;
   } catch (error) {
     console.error('Context had an error', '\n', error);
+    return null;
   }
 };
 

@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
       flexDirection: 'column',
+      position: 'fixed',
+      width: '100%',
+      height: '100%',
     },
     contentArea: {
       display: 'flex',

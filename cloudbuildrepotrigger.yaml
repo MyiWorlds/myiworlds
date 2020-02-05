@@ -1,3 +1,6 @@
+# ISSUE: Unable to build affected libs in Cloud Build + NX
+# https://stackoverflow.com/questions/56641571/google-cloud-build-cannot-run-nx-affectedapps-because-it-cannot-reference-the-m
+
 steps:
 # - name: 'gcr.io/cloud-builders/git'
 #   entrypoint: 'bash'

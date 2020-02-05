@@ -22,6 +22,7 @@ const guestUser = {
   id: null,
   email: 'guest@email.com',
   photoURL: null,
+  isSystemAdmin: false,
   dateCreated: Date.now(),
   dateUpdated: Date.now(),
 };
@@ -74,6 +75,7 @@ const UserProvider = ({ children }: any) => {
     photoURL,
     dateCreated,
     dateUpdated,
+    isSystemAdmin,
   }: LoggedInUser) => {
     setUser({
       id,
@@ -81,6 +83,7 @@ const UserProvider = ({ children }: any) => {
       photoURL,
       dateCreated,
       dateUpdated,
+      isSystemAdmin,
     });
   };
 
@@ -104,7 +107,7 @@ const UserProvider = ({ children }: any) => {
     if (userSubscription) {
       userSubscription();
     }
-    document.cookie = 'token=;';
+    document.cookie = 'token=;path=/';
     setUserSubscription(null);
     firebaseAuth.signOut();
     setUserIdToLogin(null);
@@ -112,7 +115,7 @@ const UserProvider = ({ children }: any) => {
   };
 
   const didMount = () => {
-    document.cookie = 'token=;';
+    document.cookie = 'token=;path=/';
 
     firebaseAuth
       .getRedirectResult()
@@ -154,7 +157,7 @@ const UserProvider = ({ children }: any) => {
             return;
           }
           const token = await firebaseUser.getIdToken();
-          document.cookie = `token=${token}`;
+          document.cookie = `token=${token};path=/`;
           console.log(
             'Added a new token cookie and setting your user id to login.',
           );
@@ -162,7 +165,7 @@ const UserProvider = ({ children }: any) => {
           setAppLoading(false);
         } else {
           console.log('Reseting your token.');
-          document.cookie = 'token=;';
+          document.cookie = 'token=;path=/';
           setAppLoading(false);
         }
       },

@@ -8,10 +8,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import React from 'react';
+import React, { useContext } from 'react';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
+import { UserContext } from './../../User/UserContext';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 interface Props {
   navWidth: number;
   showNavigation: boolean;
@@ -53,6 +54,7 @@ const Navigation: React.FC<Props> = ({
   showNavigation,
   setShowNavigation,
 }) => {
+  const { user } = useContext(UserContext);
   const classes = useStyles({ navWidth });
 
   const navItems = (
@@ -69,6 +71,14 @@ const Navigation: React.FC<Props> = ({
         </ListItemIcon>
         <ListItemText primary="About" />
       </ListItem>
+      {user && user.isSystemAdmin && (
+        <ListItem button component={ButtonLink} href="/admin" as="/admin">
+          <ListItemIcon>
+            <SupervisorAccountIcon />
+          </ListItemIcon>
+          <ListItemText primary="Admin" />
+        </ListItem>
+      )}
     </List>
   );
 

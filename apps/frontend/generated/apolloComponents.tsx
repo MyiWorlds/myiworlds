@@ -32,6 +32,20 @@ export type DeleteUserResponse = {
   userDeleted: Scalars['Boolean'];
 };
 
+export type GetSecuritytKeyResponse = {
+  __typename?: 'getSecuritytKeyResponse';
+  type: Scalars['String'];
+  project_id: Scalars['String'];
+  private_key_id: Scalars['String'];
+  private_key?: Maybe<Scalars['String']>;
+  client_email: Scalars['String'];
+  client_id: Scalars['String'];
+  auth_uri: Scalars['String'];
+  token_uri: Scalars['String'];
+  auth_provider_x509_cert_url: Scalars['String'];
+  client_x509_cert_url: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createUser?: Maybe<CreateUserResponse>;
@@ -47,6 +61,12 @@ export type MutationCreateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   getUserById?: Maybe<User>;
+  getSecurityKey?: Maybe<GetSecuritytKeyResponse>;
+};
+
+export type QueryGetSecurityKeyArgs = {
+  name: Scalars['String'];
+  version: Scalars['String'];
 };
 
 export type User = {
@@ -57,6 +77,7 @@ export type User = {
   photoURL?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
+  isSystemAdmin?: Maybe<Scalars['Boolean']>;
 };
 
 export type CreateUserMutationVariables = {
@@ -97,8 +118,31 @@ export type GetUserByIdQuery = { __typename?: 'Query' } & {
 
 export type LoggedInUserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'email' | 'dateCreated' | 'dateUpdated' | 'photoURL'
+  'id' | 'email' | 'dateCreated' | 'dateUpdated' | 'photoURL' | 'isSystemAdmin'
 >;
+
+export type GetSecurityKeyQueryVariables = {
+  name: Scalars['String'];
+  version: Scalars['String'];
+};
+
+export type GetSecurityKeyQuery = { __typename?: 'Query' } & {
+  getSecurityKey: Maybe<
+    { __typename?: 'getSecuritytKeyResponse' } & Pick<
+      GetSecuritytKeyResponse,
+      | 'type'
+      | 'project_id'
+      | 'private_key_id'
+      | 'private_key'
+      | 'client_email'
+      | 'client_id'
+      | 'auth_uri'
+      | 'token_uri'
+      | 'auth_provider_x509_cert_url'
+      | 'client_x509_cert_url'
+    >
+  >;
+};
 
 export const LoggedInUserFragmentFragmentDoc = gql`
   fragment LoggedInUserFragment on User {
@@ -107,6 +151,7 @@ export const LoggedInUserFragmentFragmentDoc = gql`
     dateCreated
     dateUpdated
     photoURL
+    isSystemAdmin
   }
 `;
 export const CreateUserDocument = gql`
@@ -270,4 +315,70 @@ export type GetUserByIdLazyQueryHookResult = ReturnType<
 export type GetUserByIdQueryResult = ApolloReactCommon.QueryResult<
   GetUserByIdQuery,
   GetUserByIdQueryVariables
+>;
+export const GetSecurityKeyDocument = gql`
+  query getSecurityKey($name: String!, $version: String!) {
+    getSecurityKey(name: $name, version: $version) {
+      type
+      project_id
+      private_key_id
+      private_key
+      client_email
+      client_id
+      auth_uri
+      token_uri
+      auth_provider_x509_cert_url
+      client_x509_cert_url
+    }
+  }
+`;
+
+/**
+ * __useGetSecurityKeyQuery__
+ *
+ * To run a query within a React component, call `useGetSecurityKeyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSecurityKeyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSecurityKeyQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *      version: // value for 'version'
+ *   },
+ * });
+ */
+export function useGetSecurityKeyQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetSecurityKeyQuery,
+    GetSecurityKeyQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetSecurityKeyQuery,
+    GetSecurityKeyQueryVariables
+  >(GetSecurityKeyDocument, baseOptions);
+}
+export function useGetSecurityKeyLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetSecurityKeyQuery,
+    GetSecurityKeyQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetSecurityKeyQuery,
+    GetSecurityKeyQueryVariables
+  >(GetSecurityKeyDocument, baseOptions);
+}
+export type GetSecurityKeyQueryHookResult = ReturnType<
+  typeof useGetSecurityKeyQuery
+>;
+export type GetSecurityKeyLazyQueryHookResult = ReturnType<
+  typeof useGetSecurityKeyLazyQuery
+>;
+export type GetSecurityKeyQueryResult = ApolloReactCommon.QueryResult<
+  GetSecurityKeyQuery,
+  GetSecurityKeyQueryVariables
 >;

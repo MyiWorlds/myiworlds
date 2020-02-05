@@ -116,6 +116,10 @@ This sends your app to Google Cloud Container Registry, Cloud Build then see's i
 
 
 
+## Creating secrets and storing them (service accounts, keys, etc)
+[Setup guide](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets)
+
+
 
 Want to create a shared folder in the libs directory to use in multiple of your /apps project?
 ```

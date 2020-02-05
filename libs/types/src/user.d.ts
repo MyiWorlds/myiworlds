@@ -4,6 +4,7 @@ export interface User {
   id: string;
   email: string;
   photoURL: string | null;
+  isSystemAdmin: boolean;
   dateCreated: number;
   dateUpdated: number;
 }

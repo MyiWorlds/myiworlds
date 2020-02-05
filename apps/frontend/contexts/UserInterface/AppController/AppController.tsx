@@ -64,7 +64,6 @@ const AppController: React.FC<Props> = ({
             alt={user.email}
             component={ButtonLink}
             href="/user"
-            as={'/user'}
             src={user.photoURL || ''}
           />
         ) : (
