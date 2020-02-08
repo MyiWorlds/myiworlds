@@ -36,10 +36,7 @@ export const startServer = async () => {
     playground: process.env.NODE_ENV !== 'production' ? playground : false,
     introspection: process.env.NODE_ENV !== 'production',
     context: ({ req }: { req: ExpressContext['req'] }) => Context(req),
-    tracing: process.env.NODE_ENV !== 'production' ? true : false,
-    engine: {
-      apiKey: process.env.ENGINE_API_KEY,
-    },
+    tracing: false,
     formatError: (error: GraphQLError) => {
       // Can't get it to work with Apollo types
       stackdriver.report(new Error(`Apollo Server formatError ${error}`));

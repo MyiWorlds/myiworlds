@@ -45,6 +45,7 @@ const CreateProjects = () => {
   return (
     <>
       <form noValidate autoComplete="off">
+        <Spacer />
         <TextField
           id="organization-name"
           label="Organization Name"
@@ -54,18 +55,16 @@ const CreateProjects = () => {
         />
         <Spacer />
         <Link
-          href={
-            'https://cloud.google.com/resource-manager/docs/creating-managing-organization'
-          }
+          href="https://cloud.google.com/resource-manager/docs/creating-managing-organization"
           target="__blank"
         >
           Click here
         </Link>{' '}
         for more infomation on Organizations
-        <Spacer multiplier={3} />
+        <Spacer />
         <TextField
           id="project-name"
-          label="Project Name *"
+          label="Project Name"
           variant="outlined"
           value={projectName}
           required={true}
@@ -73,7 +72,7 @@ const CreateProjects = () => {
           fullWidth={true}
           helperText="This should be the name of your Application. It cannot be changed later."
         />
-        <Spacer multiplier={3} />
+        <Spacer />
         <div>
           <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend">Environemnts to create:</FormLabel>
@@ -129,7 +128,7 @@ const CreateProjects = () => {
           Create Account
         </Button>
       </form>
-      <Spacer multiplier={3} />
+      <Spacer />
     </>
   );
 };

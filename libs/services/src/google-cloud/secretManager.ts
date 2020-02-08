@@ -1,5 +1,4 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
-// import { ServiceKeyConfig } from '@myiworlds/types';
 // import stackdriver from './stackdriver';
 import {
   securityManagerReaderServiceAccount,
@@ -11,6 +10,7 @@ const client = new SecretManagerServiceClient({
   credentials: securityManagerReaderServiceAccount,
 });
 
+console.log(googleCloud.services[0].url());
 // interface ServiceKey {
 //   type: string;
 //   project_id: string;

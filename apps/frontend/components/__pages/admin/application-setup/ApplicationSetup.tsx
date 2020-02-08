@@ -67,8 +67,18 @@ const ApplicationSetup = () => {
       ),
     },
     {
-      label: 'Add Billing account',
-      content: <Typography variant="body1">You did it!</Typography>,
+      label: 'Create and add billing account',
+      content: (
+        <>
+          <Typography variant="body1">
+            <b>Recomended:</b> Create a new Gmail account for billing. Make sure
+            to keep it secure with two-factor authentication. You could set this
+            up to forward its email to your primary email, but this is a
+            potential attack vector.
+          </Typography>
+          <Typography variant="body1">Setup billing alert</Typography>
+        </>
+      ),
     },
     {
       label: 'Create Application Environemnts',

@@ -51,7 +51,7 @@
 
 ## Services to enable:
 - [Container Registry](https://console.cloud.google.com/apis/library/containerregistry.googleapis.com)
-- [Resource Manager API](https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com?project=myiworlds&folder&organizationId=181350008905)
+- [Resource Manager API](https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com)
 
 ## Starting your development environment
 ![2019-11-16_12-09-53](https://user-images.githubusercontent.com/15203899/68998648-234c9b00-086a-11ea-950e-d68f2378e1df.gif)
