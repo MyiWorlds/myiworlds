@@ -109,32 +109,34 @@ const ApplicationSetup = () => {
       <Header title="Application Setup" />
       <Stepper activeStep={activeStep} orientation="vertical" nonLinear>
         {steps.map((step, index) => (
-          <Step key={index}>
+          <Step key={index} last={index === steps.length}>
             <StepButton onClick={() => setActiveStep(index)} completed={false}>
               <StepLabel>{step.label}</StepLabel>
             </StepButton>
-            <StepContent>{step.content}</StepContent>
-            {activeStep === index && (
-              <div className={classes.actionsContainer}>
-                <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    className={classes.button}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
+            <StepContent>
+              {step.content}
+              {activeStep === index && (
+                <div className={classes.actionsContainer}>
+                  <div>
+                    <Button
+                      disabled={activeStep === 0}
+                      onClick={handleBack}
+                      className={classes.button}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNext}
+                      className={classes.button}
+                    >
+                      {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </StepContent>
           </Step>
         ))}
       </Stepper>
