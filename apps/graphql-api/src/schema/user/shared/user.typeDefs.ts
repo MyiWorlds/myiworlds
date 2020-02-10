@@ -9,6 +9,7 @@ const userTypeDefs = gql`
     dateCreated: BigInt
     dateUpdated: BigInt
     isSystemAdmin: Boolean
+    canCreate: Boolean
   }
 `;
 

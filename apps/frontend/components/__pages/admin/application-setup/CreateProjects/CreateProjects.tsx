@@ -47,6 +47,18 @@ const CreateProjects = () => {
       <form noValidate autoComplete="off">
         <Spacer />
         <TextField
+          autoFocus={true}
+          id="project-name"
+          label="Project Name"
+          variant="outlined"
+          value={projectName}
+          required={true}
+          onChange={handleProjectNameChange}
+          fullWidth={true}
+          helperText="This should be the name of your Application. It cannot be changed later."
+        />
+        <Spacer />
+        <TextField
           id="organization-name"
           label="Organization Name"
           variant="outlined"
@@ -61,17 +73,6 @@ const CreateProjects = () => {
           Click here
         </Link>{' '}
         for more infomation on Organizations
-        <Spacer />
-        <TextField
-          id="project-name"
-          label="Project Name"
-          variant="outlined"
-          value={projectName}
-          required={true}
-          onChange={handleProjectNameChange}
-          fullWidth={true}
-          helperText="This should be the name of your Application. It cannot be changed later."
-        />
         <Spacer />
         <div>
           <FormControl component="fieldset" className={classes.formControl}>

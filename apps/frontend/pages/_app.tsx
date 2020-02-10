@@ -1,10 +1,10 @@
 import App from 'next/app';
 import MaterialUiTheme from './../lib/MaterialUiTheme';
 import React from 'react';
-import UserInterface from '../contexts/UserInterface';
 import withApollo from '../lib/apollo/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
+import { UserInterfaceProvider } from '../contexts/UserInterface/UserInterfaceContext';
 import { UserProvider } from '../contexts/User/UserContext';
 
 class MyApp extends App<any> {
@@ -15,9 +15,9 @@ class MyApp extends App<any> {
         <MaterialUiTheme>
           <SystemMessagesProvider>
             <UserProvider>
-              <UserInterface>
+              <UserInterfaceProvider>
                 <Component {...pageProps} />
-              </UserInterface>
+              </UserInterfaceProvider>
             </UserProvider>
           </SystemMessagesProvider>
         </MaterialUiTheme>

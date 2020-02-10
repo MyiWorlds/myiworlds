@@ -123,6 +123,7 @@ const Admin = () => {
                     component="a"
                     target="_blank"
                     href={service.url}
+                    key={service.name}
                   >
                     <ListItemAvatar>
                       <Avatar src={service.icon} />

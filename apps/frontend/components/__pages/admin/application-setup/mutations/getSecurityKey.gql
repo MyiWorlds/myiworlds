@@ -1,6 +1,0 @@
-query createServiceKeys() {
-  createServiceKeys() {
-    totalCreated
-    wasSuccessful
-  }
-}

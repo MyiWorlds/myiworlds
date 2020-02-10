@@ -5,4 +5,5 @@ fragment LoggedInUserFragment on User {
   dateUpdated
   photoURL
   isSystemAdmin
+  canCreate
 }

@@ -1,3 +1,4 @@
+import { googleCloud } from '@myiworlds/credentials';
 import { RESPONSE_CODES } from '@myiworlds/enums';
 import {
   firebaseAdmin,
@@ -21,6 +22,16 @@ export default async function createUser(
     message: '',
     createdDocumentId: null,
   };
+
+  // FOR NOW: only allow creator of the application to create account
+  const isApplicationCreator = email !== googleCloud.creatorGmail;
+
+  if (!isApplicationCreator) {
+    response.status = RESPONSE_CODES.ERROR;
+    response.message =
+      'I currently only allow my creator to create accounts and create concent inside me.';
+    return response;
+  }
 
   try {
     const emailExists = await firestoreAdmin
@@ -54,6 +65,8 @@ export default async function createUser(
         dateUpdated: Date.now(),
         email,
         photoURL,
+        canCreate: isApplicationCreator,
+        isSystemAdmin: isApplicationCreator,
       };
 
       await firestoreAdmin

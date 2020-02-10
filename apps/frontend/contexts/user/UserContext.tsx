@@ -23,6 +23,7 @@ const guestUser = {
   email: 'guest@email.com',
   photoURL: null,
   isSystemAdmin: false,
+  canCreate: false,
   dateCreated: Date.now(),
   dateUpdated: Date.now(),
 };
@@ -76,6 +77,7 @@ const UserProvider = ({ children }: any) => {
     dateCreated,
     dateUpdated,
     isSystemAdmin,
+    canCreate,
   }: LoggedInUser) => {
     setUser({
       id,
@@ -84,6 +86,7 @@ const UserProvider = ({ children }: any) => {
       dateCreated,
       dateUpdated,
       isSystemAdmin,
+      canCreate,
     });
   };
 

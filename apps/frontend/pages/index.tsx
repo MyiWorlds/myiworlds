@@ -3,6 +3,7 @@ import Container from '@material-ui/core/Container';
 import Header from '../components/Header/Header';
 import HomeIcon from '@material-ui/icons/Home';
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 const Index = () => {
   return (
@@ -16,6 +17,9 @@ const Index = () => {
           </Avatar>
         }
       />
+      <Typography variant="caption">
+        Todo: mock up with some goodies!
+      </Typography>
     </Container>
   );
 };

@@ -5,6 +5,7 @@ export interface User {
   email: string;
   photoURL: string | null;
   isSystemAdmin: boolean;
+  canCreate: boolean;
   dateCreated: number;
   dateUpdated: number;
 }
