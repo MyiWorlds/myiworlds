@@ -33,7 +33,8 @@ export default (App: any) => {
         {},
         {
           getToken: () => parseCookies(req).token,
-          getSelectedProfileId: () => parseCookies(req).getSelectedProfileId,
+          getUserId: () => parseCookies(req).userId,
+          getSelectedProfileId: () => parseCookies(req).selectedProfileId,
         },
       );
 
@@ -91,6 +92,9 @@ export default (App: any) => {
       this.apolloClient = initApollo(props.apolloState, {
         getToken: () => {
           return parseCookies().token;
+        },
+        getUserId: () => {
+          return parseCookies().userId;
         },
         getSelectedProfileId: () => {
           return parseCookies().selectedProfileId;

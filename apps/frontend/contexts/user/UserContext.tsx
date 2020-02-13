@@ -111,6 +111,8 @@ const UserProvider = ({ children }: any) => {
       userSubscription();
     }
     document.cookie = 'token=;path=/';
+    document.cookie = 'userId=;path=/';
+    document.cookie = 'selectedProfileId=;path=/';
     setUserSubscription(null);
     firebaseAuth.signOut();
     setUserIdToLogin(null);
@@ -119,6 +121,8 @@ const UserProvider = ({ children }: any) => {
 
   const didMount = () => {
     document.cookie = 'token=;path=/';
+    document.cookie = 'userId=;path=/';
+    document.cookie = 'selectedProfileId=;path=/';
 
     firebaseAuth
       .getRedirectResult()
@@ -161,6 +165,7 @@ const UserProvider = ({ children }: any) => {
           }
           const token = await firebaseUser.getIdToken();
           document.cookie = `token=${token};path=/`;
+          document.cookie = `userId=${firebaseUser.uid};path=/`;
           console.log(
             'Added a new token cookie and setting your user id to login.',
           );
@@ -169,6 +174,9 @@ const UserProvider = ({ children }: any) => {
         } else {
           console.log('Reseting your token.');
           document.cookie = 'token=;path=/';
+          document.cookie = 'userId=;path=/';
+          document.cookie = 'selectedProfileId=;path=/';
+
           setAppLoading(false);
         }
       },
