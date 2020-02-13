@@ -9,19 +9,20 @@ const Context = async (req: ExpressContext['req']) => {
     );
     let selectedProfileId = null;
 
-    const userId = async () => {
-      const decodedUserId = await getUserId(cookies.token);
-      const userIdFromClient = cookies.userId;
-      const decodedUserIdIsSameAsClientId = decodedUserId === userIdFromClient;
-      let usersId = null;
+    const decodedUserId = await getUserId(cookies.token);
+    const userIdFromClient = cookies.userId;
+    const decodedUserIdIsSameAsClientId = decodedUserId === userIdFromClient;
+    let userId = null;
 
-      if (decodedUserIdIsSameAsClientId) {
-        usersId = decodedUserId;
-      }
-      return usersId;
-    };
+    if (decodedUserIdIsSameAsClientId) {
+      userId = decodedUserId;
+    }
 
-    if (userId && cookies.selectedProfileId) {
+    if (
+      userId &&
+      cookies.selectedProfileId &&
+      cookies.selectedProfileId !== ''
+    ) {
       selectedProfileId = cookies.selectedProfileId;
     }
 
