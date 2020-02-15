@@ -1,5 +1,4 @@
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AddIcon from '@material-ui/icons/Add';
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import ButtonLink from '../../../components/ButtonLink/ButtonLink';
@@ -17,6 +16,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import Paper from '@material-ui/core/Paper';
 import PeopleIcon from '@material-ui/icons/People';
 import PublicIcon from '@material-ui/icons/Public';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -95,6 +95,9 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.primary.main,
       },
     },
+    drawerPaper: {
+      height: '100%'
+    }
   }),
 );
 
@@ -139,7 +142,6 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
   const { user, handleLogin } = useContext(UserContext);
   const {
     creatingCircle,
-    setCreatingCircle,
     navWidth,
     setNavWidth,
   } = useContext(UserInterfaceContext);
@@ -188,14 +190,6 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
 
   const navItems = (
     <List className={classes.list}>
-      {user && user.canCreate && (
-        <ListItem button onClick={() => setCreatingCircle(true)}>
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText primary="Create" />
-        </ListItem>
-      )}
       <ListItem button component={ButtonLink} href="/" as="/">
         <ListItemIcon>
           <HomeIcon />
@@ -271,23 +265,23 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
             {user.photoURL ? (
               <Avatar alt={user.email} src={user.photoURL || ''} />
             ) : (
-              <AccountCircleIcon />
-            )}
+                <AccountCircleIcon />
+              )}
           </ListItemIcon>
           <ListItemText secondary={user.email} />
         </ListItem>
       ) : (
-        <ListItem
-          className={classes.userBtn}
-          button
-          onClick={() => handleLogin()}
-        >
-          <ListItemIcon>
-            <InfoIcon />
-          </ListItemIcon>
-          <ListItemText primary="Login" />
-        </ListItem>
-      )}
+          <ListItem
+            className={classes.userBtn}
+            button
+            onClick={() => handleLogin()}
+          >
+            <ListItemIcon>
+              <InfoIcon />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
+          </ListItem>
+        )}
     </List>
   );
 
@@ -297,7 +291,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
         <SwipeableDrawer
           variant="temporary"
           open={showNavigation && !creatingCircle}
-          onOpen={() => {}}
+          onOpen={() => { }}
           onClose={() => setShowNavigation(false)}
         >
           <div className={classes.mobileDrawer}>{navItems}</div>
@@ -324,7 +318,9 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
             className={classes.dragger}
           />
           <div className={classes.toolbar} />
-          {navItems}
+          <Paper className={classes.drawerPaper} elevation={3}>
+            {navItems}
+          </Paper>
         </Drawer>
       </Hidden>
     </>

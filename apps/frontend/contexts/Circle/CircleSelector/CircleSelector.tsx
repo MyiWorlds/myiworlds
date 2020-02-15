@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import React, { useContext } from 'react';
+import SearchTextField from './../../UserInterface/AppController/SearchTextField';
 import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -169,6 +170,8 @@ export default function CircleSelector() {
         </Toolbar>
       </AppBar>
 
+      <SearchTextField />
+
       <div className={classes.root}>
         <Grid container spacing={3}>
           {circle.lines.map(creationType => {
@@ -185,23 +188,23 @@ export default function CircleSelector() {
               </Grid>,
               creationType.lines
                 ? creationType.lines.map(type => (
-                    <Grid item xs={6} sm={3} lg={2} key={type.title}>
-                      <Card>
-                        <CardActionArea className={classes.cardActionsArea}>
-                          <Icon className={classes.media}>{type.media}</Icon>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h6"
-                              component="h2"
-                            >
-                              {type.title}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                      </Card>
-                    </Grid>
-                  ))
+                  <Grid item xs={6} sm={3} lg={2} key={type.title}>
+                    <Card>
+                      <CardActionArea className={classes.cardActionsArea}>
+                        <Icon className={classes.media}>{type.media}</Icon>
+                        <CardContent>
+                          <Typography
+                            gutterBottom
+                            variant="h6"
+                            component="h2"
+                          >
+                            {type.title}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                ))
                 : null,
             ];
           })}

@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import React from 'react';
-import SearchTextField from './SearchTextField';
+import SearchIcon from '@material-ui/icons/Search';
 import ShareIcon from '@material-ui/icons/Share';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -74,7 +74,13 @@ const AppController: React.FC<Props> = ({
           MyiWorlds
         </Typography>
 
-        <SearchTextField />
+        <Tooltip title="Search">
+          <span>
+            <IconButton color="inherit" disabled={true}>
+              <SearchIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
 
         <Tooltip title="Customize Layout">
           <span>

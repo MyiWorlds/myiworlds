@@ -9,6 +9,7 @@ import { ProviderStore, UserToCreate } from './userContextTypes';
 import { RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from '../SystemMessages/SystemMessagesContext';
 import { useGetUserByIdQuery } from './../../generated/apolloComponents';
+
 import {
   useCreateUserMutation,
   useDeleteUserMutation,
@@ -105,14 +106,17 @@ const UserProvider = ({ children }: any) => {
     }
   };
 
+  const resetBrowserCookies = () => {
+    document.cookie = 'token=;path=/';
+    document.cookie = 'userId=;path=/';
+  };
+
   const handleLogout = () => {
     console.log('Logging you out');
     if (userSubscription) {
       userSubscription();
     }
-    document.cookie = 'token=;path=/';
-    document.cookie = 'userId=;path=/';
-    document.cookie = 'selectedProfileId=;path=/';
+    resetBrowserCookies();
     setUserSubscription(null);
     firebaseAuth.signOut();
     setUserIdToLogin(null);
