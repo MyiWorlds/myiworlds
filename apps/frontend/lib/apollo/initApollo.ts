@@ -19,11 +19,12 @@ if (!isBrowser) {
 interface Options {
   getToken: () => string;
   getSelectedProfileId: () => string;
+  getUserId: () => string;
 }
 
 function create(
   initialState: any,
-  { getToken, getSelectedProfileId }: Options,
+  { getToken, getSelectedProfileId, getUserId }: Options,
 ) {
   const httpLink = createHttpLink({
     uri:
@@ -36,12 +37,13 @@ function create(
   const authLink = setContext((_, { headers }) => {
     const token = getToken();
     const selectedProfileId = getSelectedProfileId();
+    const userId = getUserId();
     return {
       headers: {
         ...headers,
         cookies: token
-          ? `token=${token};selectedProfileId=${selectedProfileId}`
-          : '',
+          ? `token=${token};selectedProfileId=${selectedProfileId};userId=${userId}`
+          : 'token=;path=/;selectedProfileId=;path=/;userId=;path=/;',
       },
     };
   });

@@ -12,7 +12,8 @@
       "tags": []
     },
     "frontend-e2e": {
-      "tags": []
+      "tags": [],
+      "implicitDependencies": ["frontend"]
     },
     "graphql-api": {
       "tags": []

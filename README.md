@@ -51,7 +51,7 @@
 
 ## Services to enable:
 - [Container Registry](https://console.cloud.google.com/apis/library/containerregistry.googleapis.com)
-- [Resource Manager API](https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com?project=myiworlds&folder&organizationId=181350008905)
+- [Resource Manager API](https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com)
 
 ## Starting your development environment
 ![2019-11-16_12-09-53](https://user-images.githubusercontent.com/15203899/68998648-234c9b00-086a-11ea-950e-d68f2378e1df.gif)
@@ -114,6 +114,10 @@ nx deploy graphql-api
 ```
 This sends your app to Google Cloud Container Registry, Cloud Build then see's it and starts building a dev environment so you have the necessary pieces of NX to do the production build.  After Cloud Build passes everything it will then deploy the graphql-api to Cloud Run in "us-central1".
 
+
+
+## Creating secrets and storing them (service accounts, keys, etc)
+[Setup guide](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets)
 
 
 

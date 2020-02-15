@@ -1,6 +1,12 @@
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 import ButtonLink from '../../../components/ButtonLink/ButtonLink';
 import clsx from 'clsx';
+import Collapse from '@material-ui/core/Collapse';
 import Drawer from '@material-ui/core/Drawer';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import Hidden from '@material-ui/core/Hidden';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
@@ -8,18 +14,36 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import React from 'react';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Paper from '@material-ui/core/Paper';
+import PeopleIcon from '@material-ui/icons/People';
+import PublicIcon from '@material-ui/icons/Public';
+import SettingsIcon from '@material-ui/icons/Settings';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { UserContext } from '../../User/UserContext';
+import { UserInterfaceContext } from '../UserInterfaceContext';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 
 interface Props {
-  navWidth: number;
   showNavigation: boolean;
   setShowNavigation: (value: boolean) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    mobileDrawer: {
+      width: 250,
+      height: '100%',
+    },
     drawer: {
       flexShrink: 0,
       whiteSpace: 'nowrap',
@@ -45,30 +69,219 @@ const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       minHeight: 50,
     },
+    list: {
+      height: '100%',
+      overflow: 'hidden',
+    },
+    userBtn: {
+      position: 'absolute',
+      bottom: 0,
+    },
+    nested: {
+      paddingLeft: theme.spacing(4),
+    },
+    dragger: {
+      width: theme.spacing(),
+      cursor: 'ew-resize',
+      padding: '4px 0 0',
+      borderTop: '1px solid #ddd',
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 100,
+      userSelect: 'none',
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+    drawerPaper: {
+      height: '100%'
+    }
   }),
 );
 
-const Navigation: React.FC<Props> = ({
-  navWidth,
-  showNavigation,
-  setShowNavigation,
-}) => {
+// If needed around the application in the future we should put this in its own react hook component to reuse
+// It auto attaches/removes the listeners
+function useEventListener(eventName: any, handler: any, element = window) {
+  // Create a ref that stores handler
+  const savedHandler = useRef<any>();
+
+  // Update ref.current value if handler changes.
+  // This allows our effect below to always get latest handler ...
+  // ... without us needing to pass it in effect deps array ...
+  // ... and potentially cause effect to re-run every render.
+  useEffect(() => {
+    savedHandler.current = handler;
+  }, [handler]);
+
+  useEffect(() => {
+    // Make sure element supports addEventListener
+    // On
+    const isSupported = element && element.addEventListener;
+    if (!isSupported) {
+      return;
+    }
+
+    // Create event listener that calls handler function stored in ref
+    const eventListener = (event: any) => {
+      savedHandler.current(event);
+    };
+
+    // Add event listener
+    element.addEventListener(eventName, eventListener);
+
+    // Remove event listener on cleanup
+    return () => {
+      element.removeEventListener(eventName, eventListener);
+    };
+  }, [eventName, element]); // Re-run if eventName or element changes
+}
+
+const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
+  const { user, handleLogin } = useContext(UserContext);
+  const {
+    creatingCircle,
+    navWidth,
+    setNavWidth,
+  } = useContext(UserInterfaceContext);
   const classes = useStyles({ navWidth });
+  const [open, setOpen] = useState(false);
+
+  const [isResizing, setIsResizing] = useState(false);
+
+  const handleShowMoreMenuItems = () => {
+    if (!showNavigation) {
+      setShowNavigation(true);
+    }
+    setOpen(!open);
+  };
+
+  // Event handler utilizing useCallback ...
+  // ... so that reference never changes.
+  const handleMouseMove = (e: MouseEvent) => {
+    // we don't want to do anything if we aren't resizing.
+    if (!isResizing) {
+      return;
+    }
+    const offsetLeft = e.clientX - 20;
+    const minWidth = 57;
+    const maxWidth = 1000;
+
+    if (offsetLeft > minWidth && offsetLeft < maxWidth) {
+      setNavWidth(offsetLeft);
+    }
+  };
+
+  const handleMouseup = (e: MouseEvent) => {
+    setIsResizing(false);
+  };
+
+  const handleMousedown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!showNavigation) {
+      setShowNavigation(true);
+    }
+    setIsResizing(true);
+  };
+
+  useCallback(handleMouseMove, [setNavWidth]);
+  useEventListener('mousemove', handleMouseMove);
+  useEventListener('mouseup', handleMouseup);
 
   const navItems = (
-    <List>
+    <List className={classes.list}>
       <ListItem button component={ButtonLink} href="/" as="/">
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
-      <ListItem button component={ButtonLink} href="/about" as="/about">
+      <ListItem button disabled={true}>
         <ListItemIcon>
-          <InfoIcon />
+          <Badge badgeContent={4} color="primary">
+            <NotificationsIcon />
+          </Badge>
         </ListItemIcon>
-        <ListItemText primary="About" />
+        <ListItemText primary="Notifications" />
       </ListItem>
+      <ListItem button disabled={true}>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Friends" />
+      </ListItem>
+      <ListItem button disabled={true}>
+        <ListItemIcon>
+          <PublicIcon />
+        </ListItemIcon>
+        <ListItemText primary="Explore" />
+      </ListItem>
+      <ListItem button disabled={true}>
+        <ListItemIcon>
+          <SettingsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
+      </ListItem>
+
+      {user && user.isSystemAdmin && (
+        <ListItem button component={ButtonLink} href="/admin" as="/admin">
+          <ListItemIcon>
+            <SupervisorAccountIcon />
+          </ListItemIcon>
+          <ListItemText primary="Admin" />
+        </ListItem>
+      )}
+
+      <ListItem button onClick={handleShowMoreMenuItems}>
+        <ListItemIcon>
+          <MoreVertIcon />
+        </ListItemIcon>
+        <ListItemText primary="More" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <ListItem
+          button
+          component={ButtonLink}
+          href="/about"
+          as="/about"
+          className={classes.nested}
+        >
+          <ListItemIcon>
+            <InfoIcon />
+          </ListItemIcon>
+          <ListItemText primary="About" />
+        </ListItem>
+      </Collapse>
+
+      {user.id ? (
+        <ListItem
+          className={classes.userBtn}
+          button
+          component={ButtonLink}
+          href="/user"
+        >
+          <ListItemIcon>
+            {user.photoURL ? (
+              <Avatar alt={user.email} src={user.photoURL || ''} />
+            ) : (
+                <AccountCircleIcon />
+              )}
+          </ListItemIcon>
+          <ListItemText secondary={user.email} />
+        </ListItem>
+      ) : (
+          <ListItem
+            className={classes.userBtn}
+            button
+            onClick={() => handleLogin()}
+          >
+            <ListItemIcon>
+              <InfoIcon />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
+          </ListItem>
+        )}
     </List>
   );
 
@@ -77,11 +290,11 @@ const Navigation: React.FC<Props> = ({
       <Hidden mdUp>
         <SwipeableDrawer
           variant="temporary"
-          open={showNavigation}
-          onOpen={() => {}}
+          open={showNavigation && !creatingCircle}
+          onOpen={() => { }}
           onClose={() => setShowNavigation(false)}
         >
-          <div style={{ width: 250 }}>{navItems}</div>
+          <div className={classes.mobileDrawer}>{navItems}</div>
         </SwipeableDrawer>
       </Hidden>
       <Hidden smDown>
@@ -97,10 +310,17 @@ const Navigation: React.FC<Props> = ({
               [classes.drawerClose]: !showNavigation,
             }),
           }}
-          open={showNavigation}
+          open={showNavigation && !creatingCircle}
         >
+          <div
+            id="dragger"
+            onMouseDown={handleMousedown}
+            className={classes.dragger}
+          />
           <div className={classes.toolbar} />
-          {navItems}
+          <Paper className={classes.drawerPaper} elevation={3}>
+            {navItems}
+          </Paper>
         </Drawer>
       </Hidden>
     </>

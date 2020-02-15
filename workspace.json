@@ -48,7 +48,10 @@
               "apps/frontend/tsconfig.json",
               "apps/frontend/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/frontend/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/frontend/**"
+            ]
           }
         },
         "test": {
@@ -373,8 +376,16 @@
     },
     "@nrwl/react": {
       "application": {
+        "style": "css",
         "linter": "eslint",
         "babel": true
+      },
+      "component": {
+        "style": "css"
+      },
+      "library": {
+        "style": "css",
+        "linter": "eslint"
       }
     },
     "@nrwl/next": {

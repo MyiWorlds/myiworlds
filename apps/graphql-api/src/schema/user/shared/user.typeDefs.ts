@@ -8,6 +8,8 @@ const userTypeDefs = gql`
     photoURL: String
     dateCreated: BigInt
     dateUpdated: BigInt
+    isSystemAdmin: Boolean
+    canCreate: Boolean
   }
 `;
 

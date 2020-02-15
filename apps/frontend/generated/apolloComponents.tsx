@@ -18,6 +18,12 @@ export type Scalars = {
   Upload: any;
 };
 
+export type CreateServiceKeysResponse = {
+  __typename?: 'CreateServiceKeysResponse';
+  totalCreated: Scalars['Int'];
+  wasSuccessful: Scalars['Boolean'];
+};
+
 export type CreateUserResponse = {
   __typename?: 'CreateUserResponse';
   status?: Maybe<Scalars['String']>;
@@ -36,6 +42,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createUser?: Maybe<CreateUserResponse>;
   deleteUser?: Maybe<DeleteUserResponse>;
+  createServiceKeys: CreateServiceKeysResponse;
 };
 
 export type MutationCreateUserArgs = {
@@ -57,6 +64,8 @@ export type User = {
   photoURL?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
+  isSystemAdmin?: Maybe<Scalars['Boolean']>;
+  canCreate?: Maybe<Scalars['Boolean']>;
 };
 
 export type CreateUserMutationVariables = {
@@ -97,7 +106,13 @@ export type GetUserByIdQuery = { __typename?: 'Query' } & {
 
 export type LoggedInUserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'email' | 'dateCreated' | 'dateUpdated' | 'photoURL'
+  | 'id'
+  | 'email'
+  | 'dateCreated'
+  | 'dateUpdated'
+  | 'photoURL'
+  | 'isSystemAdmin'
+  | 'canCreate'
 >;
 
 export const LoggedInUserFragmentFragmentDoc = gql`
@@ -107,6 +122,8 @@ export const LoggedInUserFragmentFragmentDoc = gql`
     dateCreated
     dateUpdated
     photoURL
+    isSystemAdmin
+    canCreate
   }
 `;
 export const CreateUserDocument = gql`
