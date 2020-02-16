@@ -14,25 +14,24 @@ export type Scalars = {
    * BigInt can represent values between -(2^53) + 1 and 2^53 - 1.
    **/
   BigInt: any;
-  JSON: any;
-  Upload: any;
 };
 
-export type CreateServiceKeysResponse = {
-  __typename?: 'CreateServiceKeysResponse';
-  totalCreated: Scalars['Int'];
-  wasSuccessful: Scalars['Boolean'];
+export type CreateServiceKeysPayload = {
+  __typename?: 'CreateServiceKeysPayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  totalCreated?: Maybe<Scalars['Boolean']>;
 };
 
-export type CreateUserResponse = {
-  __typename?: 'CreateUserResponse';
+export type CreateUserPayload = {
+  __typename?: 'CreateUserPayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   createdUser?: Maybe<User>;
 };
 
-export type DeleteUserResponse = {
-  __typename?: 'DeleteUserResponse';
+export type DeleteUserPayload = {
+  __typename?: 'DeleteUserPayload';
   status: Scalars['String'];
   message: Scalars['String'];
   userDeleted: Scalars['Boolean'];
@@ -40,13 +39,13 @@ export type DeleteUserResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createUser?: Maybe<CreateUserResponse>;
-  deleteUser?: Maybe<DeleteUserResponse>;
-  createServiceKeys: CreateServiceKeysResponse;
+  createUser?: Maybe<CreateUserPayload>;
+  deleteUser?: Maybe<DeleteUserPayload>;
+  createServiceKeys?: Maybe<CreateServiceKeysPayload>;
 };
 
 export type MutationCreateUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   email: Scalars['String'];
   photoURL?: Maybe<Scalars['String']>;
 };
@@ -56,9 +55,11 @@ export type Query = {
   getUserById?: Maybe<User>;
 };
 
+/** user who can create and interact with circles. */
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['String']>;
+  /** Firestore Database model type */
   collection?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
@@ -69,15 +70,15 @@ export type User = {
 };
 
 export type CreateUserMutationVariables = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   email: Scalars['String'];
   photoURL?: Maybe<Scalars['String']>;
 };
 
 export type CreateUserMutation = { __typename?: 'Mutation' } & {
   createUser: Maybe<
-    { __typename?: 'CreateUserResponse' } & Pick<
-      CreateUserResponse,
+    { __typename?: 'CreateUserPayload' } & Pick<
+      CreateUserPayload,
       'status' | 'message'
     > & {
         createdUser: Maybe<
@@ -91,8 +92,8 @@ export type DeleteUserMutationVariables = {};
 
 export type DeleteUserMutation = { __typename?: 'Mutation' } & {
   deleteUser: Maybe<
-    { __typename?: 'DeleteUserResponse' } & Pick<
-      DeleteUserResponse,
+    { __typename?: 'DeleteUserPayload' } & Pick<
+      DeleteUserPayload,
       'status' | 'message' | 'userDeleted'
     >
   >;
@@ -127,7 +128,7 @@ export const LoggedInUserFragmentFragmentDoc = gql`
   }
 `;
 export const CreateUserDocument = gql`
-  mutation createUser($id: ID!, $email: String!, $photoURL: String) {
+  mutation createUser($id: String!, $email: String!, $photoURL: String) {
     createUser(id: $id, email: $email, photoURL: $photoURL) {
       status
       message

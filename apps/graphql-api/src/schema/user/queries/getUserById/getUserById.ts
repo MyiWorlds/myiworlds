@@ -11,7 +11,6 @@ const getUserById = async (userId: string | null) => {
       }
     } catch (error) {
       stackdriver.report(error);
-      return null;
     }
   }
   return null;

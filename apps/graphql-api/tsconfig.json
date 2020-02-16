@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node", "jest", "express"]
   },
-  "include": ["src/**/*.ts", "src/startServer.ts"]
+  "include": ["src/**/*.ts"]
 }

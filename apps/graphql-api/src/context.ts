@@ -8,7 +8,6 @@ const Context = async (req: ExpressContext['req']) => {
       req.headers.cookies ? req.headers.cookies.toString() : '',
     );
     let selectedProfileId = null;
-
     const decodedUserId = await getUserId(cookies.token);
     const userIdFromClient = cookies.userId;
     const decodedUserIdIsSameAsClientId = decodedUserId === userIdFromClient;

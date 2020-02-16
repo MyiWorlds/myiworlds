@@ -1,3 +1,4 @@
+import { CreateUserResponse } from './createUserTypes.d';
 import { googleCloud } from '@myiworlds/credentials';
 import { RESPONSE_CODES } from '@myiworlds/enums';
 import {
@@ -5,12 +6,6 @@ import {
   firestoreAdmin,
   stackdriver,
 } from '@myiworlds/services';
-
-export interface CreateUserResponse {
-  status: string;
-  message: string;
-  createdDocumentId: string | null;
-}
 
 export default async function createUser(
   id: string,
@@ -23,15 +18,8 @@ export default async function createUser(
     createdDocumentId: null,
   };
 
-  // FOR NOW: only allow creator of the application to create account
-  const isApplicationCreator = email !== googleCloud.creatorGmail;
-
-  if (!isApplicationCreator) {
-    response.status = RESPONSE_CODES.ERROR;
-    response.message =
-      'I currently only allow my creator to create accounts and create concent inside me.';
-    return response;
-  }
+  // FOR NOW: Only the app creator can create content and is system admin
+  const isApplicationCreator = email === googleCloud.creatorGmail;
 
   try {
     const emailExists = await firestoreAdmin
@@ -46,13 +34,22 @@ export default async function createUser(
         'Someone tried creating an account with an email that already existed in Firestore, something must not have been cleaned up when an account was deleted.',
       );
       response.status = RESPONSE_CODES.ERROR;
-      response.message = 'I had an error creating your user account.';
+      response.message = 'This email is already in the database.';
       response.createdDocumentId = null;
 
-      await firebaseAdmin.auth().deleteUser(id);
-      response.message =
-        response.message +
-        '  The account trying to be created was deleted from Firebase Auth.';
+      const userInFirebaseAuth = await firebaseAdmin.auth().getUser(id).then(() => {
+        return true
+      })
+        .catch(() => {
+          return false;
+        });
+
+      if (userInFirebaseAuth) {
+        await firebaseAdmin.auth().deleteUser(id);
+        response.message =
+          response.message +
+          '  The account trying to be created was deleted from Firebase Auth.';
+      }
 
       return response;
     } else {
