@@ -5,10 +5,9 @@ import firestoreClient from './../../lib/firebase/firestoreClient';
 import guestUser from './guestUser';
 import ProgressWithMessage from '../../components/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
-import { FIRESTORE_COLLECTIONS } from '../../../../libs/enums/src/firestoreCollections';
+import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { LoggedInUser, User } from '@myiworlds/types';
 import { ProviderStore, UserToCreate } from './userContextTypes';
-import { RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from '../SystemMessages/SystemMessagesContext';
 import { useGetUserByIdQuery } from './../../generated/apolloComponents';
 import {
@@ -191,7 +190,7 @@ const UserProvider = ({ children }: any) => {
     if (user && user.id && !userSubscription) {
       console.log('Subscribing to the user with email: ', user.email);
       const subscriptionToUser = firestoreClient
-        .collection(FIRESTORE_COLLECTIONS.Users)
+        .collection(FIRESTORE_COLLECTIONS.USERS)
         .doc(user.id)
         .onSnapshot(
           (docSnapshot: firebase.firestore.DocumentSnapshot) => {
