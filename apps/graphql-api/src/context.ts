@@ -39,11 +39,11 @@ const Context = async (req: ExpressContext['req']) => {
 
       // Data loaders
       circleLoader: new DataLoader(async (keys: string[]) =>
-        getDocumentsByIds('circles', keys, context, false)
+        getDocumentsByIds('circles', keys, context, false),
       ),
       profileLoader: new DataLoader(async (keys: string[]) =>
-        getDocumentsByIds('profiles', keys, context, false)
-      )
+        getDocumentsByIds('profiles', keys, context, false),
+      ),
     };
 
     return context;

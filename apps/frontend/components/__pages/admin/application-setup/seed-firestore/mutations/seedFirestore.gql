@@ -1,0 +1,14 @@
+mutation seedFirestoreCircles {
+  seedFirestoreCircles {
+    status
+    message
+    created {
+      id
+      title
+    }
+    edited {
+      id
+      title
+    }
+  }
+}

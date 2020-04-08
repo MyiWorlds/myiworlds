@@ -1,12 +1,13 @@
 import CircleType from '../circle/CircleType';
 import { Context } from '@myiworlds/types';
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLObjectType, GraphQLString } from 'graphql';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const GraphQLBigInt = require('graphql-bigint');
 
 const PublicProfileType = new GraphQLObjectType({
-  name: 'Public Profile',
-  description: 'The publicProfile in which other publicProfiles can access.  Has fields removed from publicProfile others should not be able to see.',
+  name: 'PublicProfile',
+  description:
+    'The publicProfile in which other publicProfiles can access.  Has fields removed from publicProfile others should not be able to see.',
 
   fields: () => ({
     id: { type: GraphQLString },
@@ -14,6 +15,15 @@ const PublicProfileType = new GraphQLObjectType({
     username: { type: GraphQLString },
     dateCreated: { type: GraphQLBigInt },
     dateUpdated: { type: GraphQLBigInt },
+    media: {
+      type: CircleType,
+      resolve: async (publicProfile, args, context: Context) => {
+        if (publicProfile.media) {
+          return context.circleLoader.load(publicProfile.media);
+        }
+        return null;
+      },
+    },
     theme: {
       type: CircleType,
       resolve: async (publicProfile, args, context: Context) => {
@@ -28,6 +38,15 @@ const PublicProfileType = new GraphQLObjectType({
       resolve: async (publicProfile, args, context: Context) => {
         if (publicProfile.publicHome) {
           return context.circleLoader.load(publicProfile.publicHome);
+        }
+        return null;
+      },
+    },
+    circleUIs: {
+      type: CircleType,
+      resolve: async (profile, args, context: Context) => {
+        if (profile.circleUIs) {
+          return context.circleLoader.load(profile.circleUIs);
         }
         return null;
       },

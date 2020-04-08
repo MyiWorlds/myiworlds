@@ -15,20 +15,38 @@ const ProfileType = new GraphQLObjectType({
     dateCreated: { type: GraphQLBigInt },
     dateUpdated: { type: GraphQLBigInt },
     addToHistory: { type: GraphQLBoolean },
-    theme: {
+    media: {
       type: CircleType,
       resolve: async (profile, args, context: Context) => {
-        if (profile.creator) {
-          return context.circleLoader.load(profile.publicProfile);
+        if (profile.media) {
+          return context.circleLoader.load(profile.media);
         }
         return null;
       },
     },
-    publicProfile: {
+    rating: {
       type: CircleType,
       resolve: async (profile, args, context: Context) => {
-        if (profile.creator) {
-          return context.circleLoader.load(profile.publicProfile);
+        if (profile.rating) {
+          return context.circleLoader.load(profile.rating);
+        }
+        return null;
+      },
+    },
+    theme: {
+      type: CircleType,
+      resolve: async (profile, args, context: Context) => {
+        if (profile.theme) {
+          return context.circleLoader.load(profile.theme);
+        }
+        return null;
+      },
+    },
+    publicHome: {
+      type: CircleType,
+      resolve: async (profile, args, context: Context) => {
+        if (profile.publicHome) {
+          return context.circleLoader.load(profile.publicHome);
         }
         return null;
       },
@@ -36,8 +54,8 @@ const ProfileType = new GraphQLObjectType({
     home: {
       type: CircleType,
       resolve: async (profile, args, context: Context) => {
-        if (profile.creator) {
-          return context.circleLoader.load(profile.publicProfile);
+        if (profile.home) {
+          return context.circleLoader.load(profile.home);
         }
         return null;
       },
@@ -45,8 +63,36 @@ const ProfileType = new GraphQLObjectType({
     history: {
       type: CircleType,
       resolve: async (profile, args, context: Context) => {
-        if (profile.creator) {
+        if (profile.history) {
           return context.circleLoader.load(profile.history);
+        }
+        return null;
+      },
+    },
+    overrideCircleUIs: { type: GraphQLBoolean },
+    circleUIs: {
+      type: CircleType,
+      resolve: async (profile, args, context: Context) => {
+        if (profile.circleUIs) {
+          return context.circleLoader.load(profile.circleUIs);
+        }
+        return null;
+      },
+    },
+    following: {
+      type: CircleType,
+      resolve: async (profile, args, context: Context) => {
+        if (profile.following) {
+          return context.circleLoader.load(profile.following);
+        }
+        return null;
+      },
+    },
+    level: {
+      type: CircleType,
+      resolve: async (profile, args, context: Context) => {
+        if (profile.level) {
+          return context.circleLoader.load(profile.level);
         }
         return null;
       },

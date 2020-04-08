@@ -1,7 +1,12 @@
 import addToProfileHistory from './addToProfileHistory';
-import cloneToNewDocument from './cloneToNewDocument';
+import cloneDocument from './cloneDocument';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
-import { isCreator, isEditor, isRequestingUser } from '../rules';
+import { RESPONSE_CODES, SHARED_TYPES } from '@myiworlds/enums';
+import {
+  isCreator,
+  isEditor,
+  isRequestingUser,
+} from '@myiworlds/helper-functions';
 import {
   Context,
   PublicProfile,
@@ -40,7 +45,7 @@ export default async function updateDocumentById(
 
   if (!context.userId || !context.selectedProfileId) {
     response = {
-      status: 'ERROR',
+      status: RESPONSE_CODES.ERROR,
       message:
         'Sorry, you must be a logged in user with profile to update content.',
       updatedDocumentId: null,
@@ -51,7 +56,7 @@ export default async function updateDocumentById(
 
   if (!updatedDocument.id) {
     response = {
-      status: 'ERROR',
+      status: RESPONSE_CODES.ERROR,
       message:
         'Sorry, I was not given a unique id. I need to know what it is you wish for me to update. Please try again.',
       updatedDocumentId: null,
@@ -62,7 +67,7 @@ export default async function updateDocumentById(
 
   if (!updatedDocument.collection) {
     response = {
-      status: 'ERROR',
+      status: RESPONSE_CODES.ERROR,
       message:
         'Sorry, I was not given a collection name. I have no idea where I would put this. Please add one.',
       updatedDocumentId: null,
@@ -85,19 +90,38 @@ export default async function updateDocumentById(
       .then(async (document: any) => {
         const doc = document.data();
         if (
-          isCreator(documentToUpdate.creator, context.selectedProfileId) ||
-          isEditor(documentToUpdate.editors, context.selectedProfileId) ||
-          isRequestingUser(documentToUpdate.id, context.selectedProfileId) ||
-          isRequestingUser(documentToUpdate.id, context.userId)
+          isCreator(
+            documentToUpdate.creator,
+            context.selectedProfileId as string,
+          ) ||
+          isEditor(
+            documentToUpdate.editors,
+            context.selectedProfileId as string,
+          ) ||
+          isRequestingUser(
+            documentToUpdate.id,
+            context.selectedProfileId as string,
+          ) ||
+          isRequestingUser(documentToUpdate.id, context.userId as string)
         ) {
-          cloneToNewDocument(doc);
-          Object.keys(updatedDocument).forEach((key: string) => {
-            if (updatedDocument[key] === undefined) {
-              delete updatedDocument[key];
-            }
-          });
+          cloneDocument(doc);
+          Object.keys(updatedDocument).forEach(
+            (
+              key: keyof (
+                | Circle
+                | User
+                | CircleClone
+                | PublicProfileClone
+                | UserClone
+                | PublicProfile),
+            ) => {
+              if (updatedDocument[key] === undefined) {
+                delete updatedDocument[key];
+              }
+            },
+          );
 
-          if (updatedDocument) {
+          if (updatedDocument && updatedDocument.id) {
             await firestoreAdmin
               .collection(updatedDocument.collection)
               .doc(updatedDocument.id)
@@ -105,20 +129,18 @@ export default async function updateDocumentById(
           }
 
           response = {
-            status: 'SUCCESS',
+            status: RESPONSE_CODES.SUCCESS,
             message: 'I successfully updated that for you.',
             updatedDocumentId: updatedDocument.id,
             previousCloneId: doc.id,
-            contextProfileId: context.selectedProfileId,
           };
         } else {
           response = {
-            status: 'ERROR',
+            status: RESPONSE_CODES.ERROR,
             message:
               'Sorry, you must be the creator or an editor to update this.',
             updatedDocumentId: null,
             previousCloneId: null,
-            contextProfileId: context.selectedProfileId,
           };
         }
       });
@@ -129,24 +151,15 @@ export default async function updateDocumentById(
         addToHistory === undefined &&
         addToHistory !== false)
     ) {
-      const circle = {
-        type: 'UPDATED',
-        data: {
-          id: updatedDocument.id,
-          collection: updatedDocument.collection,
-        },
-      };
-
-      addToProfileHistory(circle, context);
+      addToProfileHistory(SHARED_TYPES.UPDATED, updatedDocument, context);
     }
   } catch (error) {
     stackdriver.report(error);
     response = {
-      status: 'ERROR',
+      status: RESPONSE_CODES.ERROR,
       message: 'Sorry, I had an error updating that.  Please try again.',
       updatedDocumentId: null,
       previousCloneId: null,
-      contextProfileId: context.selectedProfileId,
     };
   }
 

@@ -1,19 +1,18 @@
 import PublicProfileType from './../profile/PublicProfileType';
 import { Context } from '@myiworlds/types';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { GraphQLJSON } = require('graphql-type-json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const GraphQLBigInt = require('graphql-bigint');
 import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLList,
   GraphQLObjectType,
-  GraphQLString
-  } from 'graphql';
-/* eslint-disable @typescript-eslint/no-var-requires */
-const GraphQLBigInt = require('graphql-bigint');
-const GraphQLJSON = require('graphql-type-json');
+  GraphQLString,
+} from 'graphql';
 
-const CircleType: GraphQLObjectType<any, Context, {
-  [key: string]: any;
-}> = new GraphQLObjectType({
+const CircleType: any = new GraphQLObjectType({
   name: 'Circle',
   description: 'A circle in a graph that can assemble to be anything.',
 
@@ -22,6 +21,7 @@ const CircleType: GraphQLObjectType<any, Context, {
     collection: { type: GraphQLString },
     cached: { type: GraphQLBoolean },
     pii: { type: GraphQLBoolean },
+    autoUpdate: { type: GraphQLBoolean },
     parent: {
       type: CircleType,
       resolve: async (circle, args, context: Context) => {
@@ -105,6 +105,15 @@ const CircleType: GraphQLObjectType<any, Context, {
         return [];
       },
     },
+    ui: {
+      type: CircleType,
+      resolve: async (circle, args, context: Context) => {
+        if (circle.ui) {
+          return context.circleLoader.load(circle.ui);
+        }
+        return null;
+      },
+    },
     dateCreated: { type: GraphQLBigInt },
     dateUpdated: { type: GraphQLBigInt },
     key: { type: GraphQLString },
@@ -136,7 +145,7 @@ const CircleType: GraphQLObjectType<any, Context, {
         }
         return [];
       },
-    }
+    },
   }),
 });
 

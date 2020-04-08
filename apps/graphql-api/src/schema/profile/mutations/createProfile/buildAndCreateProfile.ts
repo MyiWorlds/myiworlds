@@ -1,252 +1,260 @@
+import copyCircle from '../../../circle/mutations/copyCircle/copyCircle';
 import isUsernameTaken from '../shared/isUsernameTaken';
-import { Context } from '@myiworlds/types';
+import { Context, Profile } from '@myiworlds/types';
+import { createCollectionId } from './../../../../services/firebase/firestore/functions/createCollectionId';
+import { CreateProfileResponse } from './createProfileTypes.d';
+import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { isAllowedUsername } from '../shared/isAllowedUsername';
-import {
-  updateDocumentById,
-  createDocument,
-} from '../../../../services/firebase/firestore/mutations';
+import { ProfileFactory } from '@myiworlds/factories';
+import { updateDocumentById } from '../../../../services/firebase/firestore/mutations';
 
-interface Response {
-  status: string;
-  message: string;
-  createdDocumentId: string | null;
-}
-
-// This should be in a cloud function
 export default async function buildAndCreateProfile(
   username: string,
   context: Context,
   systemCreateOverride?: boolean,
 ) {
+  const response: CreateProfileResponse = {
+    status: '',
+    message: '',
+    createdDocumentId: null,
+  };
+
+  if (!context.userId) {
+    response.status = RESPONSE_CODES.DENIED;
+    response.message =
+      'I was given no user id, it is required to create a profile.';
+    return response;
+  }
+
   if (!systemCreateOverride) {
     username = username.toLowerCase();
   }
 
   if (!isAllowedUsername(username) && !systemCreateOverride) {
-    const isNotAllowedUsernameResponse: Response = {
-      status: 'DENIED',
-      message:
-        'I am sorry, I can not let you use that username.  Please try another',
-      createdDocumentId: null,
-    };
-    return isNotAllowedUsernameResponse;
+    response.status = RESPONSE_CODES.DENIED;
+    response.message =
+      'I am sorry, I can not let you use that username.  Please try another';
+    return response;
   }
 
   try {
     if (await isUsernameTaken(username)) {
-      const usernameTakenResponse: Response = {
-        status: 'DENIED',
-        message: 'I am sorry, that username is already taken',
-        createdDocumentId: null,
-      };
-      return usernameTakenResponse;
+      response.status = RESPONSE_CODES.DENIED;
+      response.message = 'I am sorry, that username is already taken';
+      return response;
     }
 
     const profileId = systemCreateOverride
       ? username
-      : firestoreAdmin.collection('profiles').doc().id;
+      : createCollectionId(FIRESTORE_COLLECTIONS.PROFILES);
 
-    const profile = {
+    const profile = new ProfileFactory().use('PROFILE').createWithValues({
       id: profileId,
-      collection: 'profiles',
-      public: true,
       username,
-      canCreate: true,
-      isDarkTheme: true,
-      overrideCircleTypes: false,
-      addToHistory: true,
-      dateCreated: Date.now(),
-      dateUpdated: Date.now(),
-    };
+      userId: context.userId,
+    });
 
     // I must create username outside of create document and share the logic
     // Because it requires profile username which could not be on a user yet
     // if they have no profiles/logged into that profile atm
     await firestoreAdmin
-      .collection(profile.collection)
+      .collection(FIRESTORE_COLLECTIONS.PROFILES)
       .doc(profile.id)
       .set(profile);
 
     // Use the newly created profileId as the profile that creates the following
-    context.selectedProfileId = profile.id;
-
-    const level = await createDocument(
-      {
-        public: true,
-        collection: 'circles',
-        type: 'LINES',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        data: {},
-      },
-      context,
-    );
-
-    const rating = await createDocument(
-      {
-        collection: 'circles',
-        type: 'LINES_TOTALED',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        lines: [],
-      },
-      context,
-    );
-
-    const circleTypeOverrides = await createDocument(
-      {
-        collection: 'circles',
-        type: 'LINES',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        lines: [],
-      },
-      context,
-    );
-
-    const myTheme = await createDocument(
-      {
-        collection: 'circles',
-        title: 'My Theme',
-        description:
-          'The theme that this profile uses to interact with the application.',
-        type: 'DATA',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        data: {
-          palette: {
-            primary: {
-              main: '#2196F3',
-            },
-            secondary: {
-              main: '#f44336',
-            },
-          },
-        },
-      },
-      context,
-    );
-
-    const homePublic = await createDocument(
-      {
-        public: true,
-        collection: 'circles',
-        type: 'LINES',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        lines: [],
-      },
-      context,
-    );
-
-    const home = await createDocument(
-      {
-        public: false,
-        pii: true,
-        collection: 'circles',
-        type: 'LINES',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        lines: [],
-      },
-      context,
-    );
-
-    const following = await createDocument(
-      {
-        public: true,
-        collection: 'circles',
-        type: 'LINES',
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        lines: [],
-      },
-      context,
-    );
-
-    const historyRef = firestoreAdmin.collection('circles').doc();
-    const historyId = historyRef.id;
-
-    const history = await createDocument(
-      {
-        id: historyId,
-        public: true,
-        collection: 'circles',
-        type: 'GET_INTERFACED_CIRCLES_BY_FILTERS',
-        data: {
-          cursor: null,
-          filters: [
-            {
-              condition: '==',
-              property: 'parent',
-              value: historyId,
-            },
-          ],
-          numberOfResults: 12,
-          orderBy: {
-            property: 'dateCreated',
-            ascending: false,
-          },
-        },
-        creator: 'APP',
-        owner: 'APP',
-        editors: [profile.id],
-        title: 'My History',
-        description:
-          'The history of what I have done on the platform.  This can be turned on/off through the profile controls.',
-      },
-      context,
-    );
-
-    const updatedProfile = {
-      id: profile.id,
-      collection: 'profiles',
-      profileMedia: '',
-      level: level.createdDocumentId,
-      rating: rating.createdDocumentId,
-      circleTypeOverrides: circleTypeOverrides.createdDocumentId,
-      myTheme: myTheme.createdDocumentId,
-      homePublic: homePublic.createdDocumentId,
-      home: home.createdDocumentId,
-      following: following.createdDocumentId,
-      history: history.createdDocumentId,
+    const updatedContext: Context = {
+      ...context,
+      selectedProfileId: profile.id,
     };
 
-    await updateDocumentById(updatedProfile, context, true, false);
+    const rating = await copyCircle('rating', updatedContext);
+    const history = await copyCircle('history', updatedContext);
+    const level = await copyCircle('level', updatedContext);
+    const theme = await copyCircle('theme', updatedContext);
+    const following = await copyCircle('following', updatedContext);
+    const circleUIs = await copyCircle('circle-uis', updatedContext);
+    const home = await copyCircle('home', updatedContext);
+    const publicHome = await copyCircle('public-home', updatedContext);
+    const defaultProfileMedia = await copyCircle(
+      'default-profile-media',
+      updatedContext,
+    );
 
-    const user = await firestoreAdmin
-      .collection('users')
-      .doc(context.userId)
-      .get()
-      .then((res: any) => res.data());
+    if (
+      rating &&
+      rating.createdDocumentId &&
+      history &&
+      history.createdDocumentId &&
+      level &&
+      level.createdDocumentId &&
+      theme &&
+      theme.createdDocumentId &&
+      following &&
+      following.createdDocumentId &&
+      circleUIs &&
+      circleUIs.createdDocumentId &&
+      home &&
+      home.createdDocumentId &&
+      publicHome &&
+      publicHome.createdDocumentId &&
+      defaultProfileMedia &&
+      defaultProfileMedia.createdDocumentId
+    ) {
+      const updatedProfile: Profile = {
+        id: profile.id,
+        collection: FIRESTORE_COLLECTIONS.PROFILES,
+        username,
+        userId: context.userId,
+        media: defaultProfileMedia.createdDocumentId,
+        level: level.createdDocumentId,
+        rating: rating.createdDocumentId,
+        circleUIs: circleUIs.createdDocumentId,
+        theme: theme.createdDocumentId,
+        publicHome: publicHome.createdDocumentId,
+        home: home.createdDocumentId,
+        following: following.createdDocumentId,
+        history: history.createdDocumentId,
+      };
 
-    const updatedUser = {
-      id: context.userId,
-      collection: 'users',
-      profiles:
-        user.profiles && user.profiles.length
-          ? [...user.profiles, profile.id]
-          : [profile.id],
-    };
+      await updateDocumentById(updatedProfile, updatedContext, true, false);
 
-    await updateDocumentById(updatedUser, context, true);
+      response.status = RESPONSE_CODES.SUCCESS;
+      response.message = 'I created that profile for you.';
+      response.createdDocumentId = updatedProfile.id;
+      return response;
+    } else {
+      if (rating && rating.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(rating.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('rating deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (history && history.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(history.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('history deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (level && level.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(level.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('level deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (theme && theme.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(theme.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('theme deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (following && following.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(following.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('following deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (circleUIs && circleUIs.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(circleUIs.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('circleUIs deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (home && home.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(home.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('home deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (publicHome && publicHome.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(publicHome.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('publicHome deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
+      if (defaultProfileMedia && defaultProfileMedia.createdDocumentId) {
+        firestoreAdmin
+          .collection(FIRESTORE_COLLECTIONS.PROFILES)
+          .doc(defaultProfileMedia.createdDocumentId)
+          .delete()
+          .then(() => {
+            console.log('defaultProfileMedia deleted');
+          })
+          .catch(error => {
+            stackdriver.report(error);
+          });
+      }
 
-    const response: Response = {
-      status: 'SUCCESS',
-      message: 'I created that profile for you',
-      createdDocumentId: profile.id,
-    };
-    return response;
+      firestoreAdmin
+        .collection(FIRESTORE_COLLECTIONS.PROFILES)
+        .doc(profile.id)
+        .delete()
+        .then(() => {
+          console.log('defaultProfileMedia deleted');
+        })
+        .catch(error => {
+          stackdriver.report(error);
+        });
+
+      response.status = RESPONSE_CODES.ERROR;
+      response.message =
+        'There was an error creating one or more of the circles on the profile.  Everything was undone, please try again.';
+      return response;
+    }
   } catch (error) {
     stackdriver.report(error);
-    throw error;
+    response.status = RESPONSE_CODES.ERROR;
+    response.message =
+      'I am sorry there was an error creating your profile.  Please try again.';
+    return response;
   }
 }

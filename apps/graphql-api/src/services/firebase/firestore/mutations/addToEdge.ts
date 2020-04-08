@@ -1,40 +1,38 @@
+import { Circle, Context, PublicProfile } from '@myiworlds/types';
 import { CIRCLE_TYPES } from '@myiworlds/enums';
+import { CircleFactory } from '@myiworlds/factories';
 import { createDocument, updateDocumentById } from '.';
-import { FIRESTORE_COLLECTIONS } from '../../../../../../../libs/enums/src/firestoreCollections';
+import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { googleCloud } from '@myiworlds/credentials';
-import {
-  Circle,
-  CircleClone,
-  Context,
-  PublicProfile,
-  PublicProfileClone,
-} from '@myiworlds/types';
 
 const addToEdge = (
   parentId: string,
   tags: string[],
-  document: Circle | PublicProfile | CircleClone | PublicProfileClone,
+  document: Circle | PublicProfile,
   shouldUpdateParent: boolean,
   context: Context,
 ) => {
   if (!context.userId || !context.selectedProfileId) {
     return null;
   }
-  const edgeItem: Circle = {
-    id: null,
-    type: CIRCLE_TYPES.EDGE_NODE,
-    collection: FIRESTORE_COLLECTIONS.CIRCLES,
-    tags,
-    parent: parentId,
-    editors: [context.selectedProfileId],
-    creator: googleCloud.applicationCreatorProfile,
-    data: {
-      id: document.id,
-      collection: document.collection,
-    },
-  };
 
-  createDocument(edgeItem, context, false);
+  const edgeItem = new CircleFactory().use(CIRCLE_TYPES.EDGE_NODE).create({
+    selectedProfileId: googleCloud.applicationCreatorProfile,
+    header: {
+      id: null,
+      type: CIRCLE_TYPES.EDGE_NODE,
+      collection: FIRESTORE_COLLECTIONS.CIRCLES,
+      tags,
+      editors: [context.selectedProfileId],
+      creator: googleCloud.applicationCreatorProfile,
+      parent: parentId,
+    },
+    parentCircle: document,
+  }) as Circle;
+
+  if (edgeItem) {
+    createDocument(edgeItem, context, false);
+  }
 
   if (shouldUpdateParent) {
     updateDocumentById(

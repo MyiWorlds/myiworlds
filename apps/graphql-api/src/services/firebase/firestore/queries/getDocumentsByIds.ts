@@ -1,18 +1,24 @@
 import addToProfileHistory from '../mutations/addToProfileHistory';
-import collectionsSwitch from '../functions/collectionsSwitch';
-import { Circle, Context } from '@myiworlds/types';
+import {
+  Circle,
+  CircleClone,
+  Context,
+  FirestoreCollectionTypes,
+  PublicProfile,
+  PublicProfileClone
+  } from '@myiworlds/types';
+import { CircleFactory, factoriesSwitch } from '@myiworlds/factories';
+import { FIRESTORE_COLLECTIONS, SHARED_TYPES } from '@myiworlds/enums';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
-import { PublicProfile } from '../../../../../../../libs/types/src/profile';
-import { SHARED_TYPES } from '@myiworlds/enums';
-import { userCanView } from '../rules';
+import { userCanView } from '@myiworlds/helper-functions';
 
 export default async function getDocumentsByIds(
-  collection: string,
+  collection: FirestoreCollectionTypes,
   ids: string[],
   context: Context,
   addToHistory?: boolean,
 ) {
-  let response: (Circle | PublicProfile)[] = [];
+  let response: (Circle | CircleClone | PublicProfile | PublicProfileClone)[] = [];
 
   if (addToHistory === undefined) {
     addToHistory = context.addToHistory;
@@ -34,14 +40,16 @@ export default async function getDocumentsByIds(
           );
         });
 
-      if (addToHistory) {
-        const circle = {
-          type: SHARED_TYPES.VIEWED_BY_IDS,
-          data: {
-            collection,
-            lines: ids,
+      if (addToHistory && context.selectedProfileId) {
+        const circle = new CircleFactory().use('VIEWED_BY_IDS').create({
+          selectedProfileId: context.selectedProfileId,
+          header: {
+            id: null,
+            collection: FIRESTORE_COLLECTIONS.CIRCLES,
           },
-        };
+          collection,
+          ids,
+        })
 
         addToProfileHistory(
           SHARED_TYPES.VIEWED_BY_IDS,
@@ -81,11 +89,9 @@ export default async function getDocumentsByIds(
 
       sortedEntities.forEach((document: any) => {
         if (document.type === SHARED_TYPES.DOES_NOT_EXIST) {
-          const doc: PublicProfile | Circle | null = collectionsSwitch(
-            SHARED_TYPES.DOES_NOT_EXIST,
+          const doc: PublicProfile | Circle | null = factoriesSwitch(
             document,
-            context,
-          );
+          )?.use('DOES_NOT_EXIST');
           if (doc) {
             response.push(doc);
           }
@@ -93,11 +99,10 @@ export default async function getDocumentsByIds(
           response.push(document);
         } else {
           document.type = SHARED_TYPES.PERMISSION_DENIED;
-          const doc: PublicProfile | Circle | null = collectionsSwitch(
-            SHARED_TYPES.PERMISSION_DENIED,
-            document,
-            context,
-          );
+          const doc: Circle| CircleClone | PublicProfile| PublicProfileClone | null = factoriesSwitch(document)
+          .use('PERMISSION_DENIED')
+          .create();
+
           if (doc) {
             response.push(doc);
           }

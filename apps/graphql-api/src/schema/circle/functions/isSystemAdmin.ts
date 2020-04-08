@@ -1,4 +1,4 @@
-import getUserById from '../queries/getUserById/getCircleById';
+import getUserById from './../../user/queries/getUserById/getUserById';
 
 const isSystemAdmin = async (userId: string | null) => {
   if (!userId) {

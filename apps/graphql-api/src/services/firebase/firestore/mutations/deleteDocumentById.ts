@@ -1,7 +1,9 @@
 import batchDeleteClonesAndDocument from '../functions/batchDeleteClonesAndDocument';
 import { Context } from '@myiworlds/types';
-import { firestore, stackdriver } from '@myiworlds/services';
-import { isCreator, isRequestingUser } from '../rules';
+import { firestoreAdmin, stackdriver } from '@myiworlds/services';
+import { isCreator, isRequestingUser } from '@myiworlds/helper-functions';
+import { RESPONSE_CODES } from '@myiworlds/enums';
+
 // import getDocumentsByFilters from '../queries/getDocumentsByFilters';
 
 interface Response {
@@ -18,10 +20,8 @@ export default async function deleteDocument(
   id: string,
   context: Context,
 ) {
-  console.time('deleteDocument time to complete');
-
   let response: Response = {
-    status: '',
+    status: RESPONSE_CODES.ERROR,
     message: '',
     uidToDelete: id,
     numberOfClones: 0,
@@ -29,10 +29,14 @@ export default async function deleteDocument(
     wasDeleted: false,
   };
 
+  if (!context.selectedProfileId || !context.userId) {
+    return response;
+  }
+
   // const maxQueryResults = 499;
 
   try {
-    const documentExists = await firestore
+    const documentExists = await firestoreAdmin
       .collection(collection)
       .doc(id)
       .get()
@@ -40,7 +44,7 @@ export default async function deleteDocument(
 
     if (!documentExists) {
       response = {
-        status: 'ERROR',
+        status: RESPONSE_CODES.ERROR,
         message:
           'I could not find what you are trying to delete, it no longer exists.',
         uidToDelete: id,
@@ -57,7 +61,7 @@ export default async function deleteDocument(
       response = await batchDeleteClonesAndDocument(collection, id);
     } else {
       response = {
-        status: 'ERROR',
+        status: RESPONSE_CODES.ERROR,
         message:
           'Sorry, I could not delete that. You must be the creator to delete this.',
         uidToDelete: id,
@@ -69,7 +73,7 @@ export default async function deleteDocument(
   } catch (error) {
     stackdriver.report(error);
     response = {
-      status: 'ERROR',
+      status: RESPONSE_CODES.ERROR,
       message: 'I had an error, please refresh and try again try again.',
       uidToDelete: id,
       numberOfClones: response.numberOfClones,
@@ -77,6 +81,5 @@ export default async function deleteDocument(
       wasDeleted: false,
     };
   }
-  console.timeEnd('deleteDocument time to complete');
   return response;
 }

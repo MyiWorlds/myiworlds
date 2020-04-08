@@ -1,14 +1,18 @@
 import addToProfileHistory from './addToProfileHistory';
+import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import {
   Circle,
+  CircleClone,
   Context,
   Profile,
-  User
-  } from '@myiworlds/types';
-import { FIRESTORE_COLLECTIONS } from '../../../../../../../libs/enums/src/firestoreCollections';
-import { firestoreAdmin, stackdriver } from '@myiworlds/services';
-import { RESPONSE_CODES } from '@myiworlds/enums';
-import { SHARED_TYPES } from '../../../../../../../libs/enums/src/sharedTypes';
+  ProfileClone,
+  User,
+} from '@myiworlds/types';
+import {
+  SHARED_TYPES,
+  RESPONSE_CODES,
+  FIRESTORE_COLLECTIONS,
+} from '@myiworlds/enums';
 
 interface CreateDocumentResponse {
   status: string;
@@ -17,7 +21,7 @@ interface CreateDocumentResponse {
 }
 
 const createDocument = async (
-  documentToCreate: Circle | Profile | User,
+  documentToCreate: Circle | CircleClone | Profile | ProfileClone | User,
   context: Context,
   addToHistory?: boolean,
 ): Promise<CreateDocumentResponse> => {
@@ -80,7 +84,7 @@ const createDocument = async (
     }
   } catch (error) {
     stackdriver.report(error);
-    response.status = 'ERROR';
+    response.status = RESPONSE_CODES.ERROR;
     response.message = `There was an error creating the Document. ${error.message}`;
     response.createdDocumentId = null;
   }

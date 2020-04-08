@@ -1,0 +1,6 @@
+query getSeededCirclesByIds {
+  getSeededCirclesByIds {
+    id
+    title
+  }
+}

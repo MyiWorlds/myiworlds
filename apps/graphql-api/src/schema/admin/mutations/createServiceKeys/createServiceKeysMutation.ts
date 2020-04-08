@@ -1,14 +1,10 @@
 import isSystemAdmin from './../../../user/functions/isSystemAdmin';
 import { Context } from '@myiworlds/types';
 import { createServiceKeys } from '@myiworlds/services';
-import {
-  GraphQLString,
-  GraphQLObjectType,
-  GraphQLBoolean,
-} from 'graphql';
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
 
 const createServiceKeysMutation = {
-  name: 'createServiceKeys',
+  name: 'CreateServiceKeys',
   resolve: async (_: null, args: {}, context: Context) => {
     if (await isSystemAdmin(context.userId)) {
       return createServiceKeys();
@@ -28,8 +24,8 @@ const createServiceKeysMutation = {
         type: GraphQLString,
       },
       totalCreated: {
-        type: GraphQLBoolean
-      }
+        type: GraphQLBoolean,
+      },
     }),
   }),
 };

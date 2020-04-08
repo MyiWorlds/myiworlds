@@ -1,10 +1,15 @@
 import addToProfileHistory from '../mutations/addToProfileHistory';
-import collectionsSwitch from '../functions/collectionsSwitch';
-import { Circle, Context, Profile } from '@myiworlds/types';
-import { FIRESTORE_COLLECTIONS } from '../../../../../../../libs/enums/src/firestoreCollections';
+import { factoriesSwitch } from '@myiworlds/factories';
+import { FIRESTORE_COLLECTIONS, SHARED_TYPES } from '@myiworlds/enums';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
-import { SHARED_TYPES } from '../../../../../../../libs/enums/src/sharedTypes';
-import { userCanView } from '../rules';
+import { userCanView } from '@myiworlds/helper-functions';
+import {
+  Context,
+  Circle,
+  CircleClone,
+  PublicProfile,
+  PublicProfileClone,
+} from '@myiworlds/types';
 
 export default async function getDocumentById(
   collection: string,
@@ -12,7 +17,12 @@ export default async function getDocumentById(
   context: Context,
   addToHistory?: boolean,
 ) {
-  let response: null | Circle | Profile = null;
+  let response:
+    | null
+    | Circle
+    | CircleClone
+    | PublicProfile
+    | PublicProfileClone = null;
 
   if (id) {
     try {
@@ -27,11 +37,9 @@ export default async function getDocumentById(
       } else if (userCanView(document, context)) {
         response = document;
       } else {
-        response = collectionsSwitch(
-          SHARED_TYPES.PERMISSION_DENIED,
-          document,
-          context,
-        );
+        response = factoriesSwitch(document)
+          .use('PERMISSION_DENIED')
+          .create();
       }
 
       if (

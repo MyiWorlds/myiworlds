@@ -1,10 +1,4 @@
-import ProfileType from './../profile/ProfileType';
-import {
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLString
-  } from 'graphql';
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const GraphQLBigInt = require('graphql-bigint');
 
@@ -21,7 +15,6 @@ const UserType = new GraphQLObjectType({
     dateUpdated: { type: GraphQLBigInt },
     isSystemAdmin: { type: GraphQLBoolean },
     canCreate: { type: GraphQLBoolean },
-    profiles: { type: GraphQLList(ProfileType) },
   }),
 });
 

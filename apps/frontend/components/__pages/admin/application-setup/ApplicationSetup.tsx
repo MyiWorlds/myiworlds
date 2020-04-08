@@ -1,8 +1,9 @@
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import CreateProjects from './CreateProjects';
+import CreateProjects from './create-projects';
 import Header from '../../../Header/Header';
 import React, { useContext } from 'react';
+import SeedFirestore from './seed-firestore/SeedFirestore';
 import ServiceKeys from './service-keys/ServiceKeys';
 import Spacer from './../../../Spacer/Spacer';
 import Step from '@material-ui/core/Step';
@@ -87,6 +88,10 @@ const ApplicationSetup = () => {
     {
       label: 'Create & Save Security Credentials',
       content: <ServiceKeys />,
+    },
+    {
+      label: 'Seed Database Firebase Firestore',
+      content: <SeedFirestore />,
     },
     {
       label: 'Overview',
