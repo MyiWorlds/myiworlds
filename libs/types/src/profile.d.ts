@@ -1,11 +1,31 @@
+import { Circle } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 
-export interface PublicProfile {
+interface PublicProfileBase {
   id: string;
   collection?: FIRESTORE_COLLECTIONS.PROFILES;
   username: string;
   dateCreated?: number;
   dateUpdated?: number;
+}
+
+export interface PublicProfileHydrated extends PublicProfileBase {
+  media?: Circle;
+  theme?: Circle;
+  rating?: Circle;
+  following?: Circle;
+  level?: Circle;
+  publicHome?: Circle;
+  circleUIs?: Circle;
+}
+
+export interface UserProfileData extends PublicProfileBase {
+  addToHistory?: boolean;
+  home?: string;
+  history?: string;
+  overrideCircleUIs?: boolean;
+  userId: string | null;
+  media?: string;
   theme?: string;
   rating?: string;
   following?: string;
@@ -15,24 +35,49 @@ export interface PublicProfile {
   circleUIs?: string;
 }
 
-export interface Profile extends PublicProfile {
+export interface UserProfileHydrated extends PublicProfileHydrated {
   addToHistory?: boolean;
   home?: string;
   history?: string;
   overrideCircleUIs?: boolean;
   userId: string | null;
+  media?: Circle;
+  theme?: Circle;
+  rating?: Circle;
+  following?: Circle;
+  level?: Circle;
+  publicHome?: Circle;
+  media?: Circle;
+  circleUIs?: Circle;
 }
 
-export interface CreatedProfile extends Profile {
-  id: string;
+export interface PublicProfileData extends PublicProfileBase {
+  media?: string;
+  theme?: string;
+  rating?: string;
+  following?: string;
+  level?: string;
+  publicHome?: string;
+  media?: string;
+  circleUIs?: string;
 }
 
-export interface ProfileClone extends Profile {
+export interface UserProfileCloneHydrated extends UserProfileCreated {
+  collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
+  clonedFrom: UserProfileCreated;
+}
+
+export interface UserProfileCloneData extends UserProfileData {
   collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
   clonedFrom: string;
 }
 
-export interface PublicProfileClone extends PublicProfile {
+export interface PublicProfileCloneHydrated extends PublicProfileData {
   collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
   clonedFrom: string;
+}
+
+export interface PublicProfileCloneHydrated extends PublicProfileData {
+  collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
+  clonedFrom: PublicProfileData;
 }

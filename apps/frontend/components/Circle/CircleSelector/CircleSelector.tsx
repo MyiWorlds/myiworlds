@@ -9,13 +9,13 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import React, { useContext } from 'react';
-import SearchTextField from './../../UserInterface/AppController/SearchTextField';
+import SearchTextField from '../../../contexts/UserInterface/AppController/SearchTextField';
 import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
-import { UserInterfaceContext } from '../../UserInterface/UserInterfaceContext';
+import { UserInterfaceContext } from '../../../contexts/UserInterface/UserInterfaceContext';
 
 // Move out to central circles file
 const circle = {
@@ -188,23 +188,23 @@ export default function CircleSelector() {
               </Grid>,
               creationType.lines
                 ? creationType.lines.map(type => (
-                  <Grid item xs={6} sm={3} lg={2} key={type.title}>
-                    <Card>
-                      <CardActionArea className={classes.cardActionsArea}>
-                        <Icon className={classes.media}>{type.media}</Icon>
-                        <CardContent>
-                          <Typography
-                            gutterBottom
-                            variant="h6"
-                            component="h2"
-                          >
-                            {type.title}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Grid>
-                ))
+                    <Grid item xs={6} sm={3} lg={2} key={type.title}>
+                      <Card>
+                        <CardActionArea className={classes.cardActionsArea}>
+                          <Icon className={classes.media}>{type.media}</Icon>
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h6"
+                              component="h2"
+                            >
+                              {type.title}
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+                  ))
                 : null,
             ];
           })}

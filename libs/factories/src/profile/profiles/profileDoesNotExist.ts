@@ -1,6 +1,6 @@
-import { PublicProfile } from '@myiworlds/types';
+import { PublicProfileData } from '@myiworlds/types';
 
-export class ProfileDoesNotExist implements PublicProfile {
+export class ProfileDoesNotExist implements PublicProfileData {
   id: string;
   collection: 'profiles';
   username: string;

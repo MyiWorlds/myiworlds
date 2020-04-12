@@ -7,8 +7,9 @@ import {
   Context,
   Circle,
   CircleClone,
-  PublicProfile,
-  PublicProfileClone,
+  UserProfileData,
+  PublicProfileData,
+  PublicProfileCloneHydrated,
 } from '@myiworlds/types';
 
 export default async function getDocumentById(
@@ -21,8 +22,9 @@ export default async function getDocumentById(
     | null
     | Circle
     | CircleClone
-    | PublicProfile
-    | PublicProfileClone = null;
+    | UserProfileData
+    | PublicProfileData
+    | PublicProfileCloneHydrated = null;
 
   if (id) {
     try {
@@ -45,10 +47,14 @@ export default async function getDocumentById(
       if (
         addToHistory &&
         response &&
-        response.collection !== FIRESTORE_COLLECTIONS.USERS &&
-        response.collection !== FIRESTORE_COLLECTIONS.USERS_CLONES
+        (response.collection === FIRESTORE_COLLECTIONS.CIRCLES ||
+          response.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES)
       ) {
-        addToProfileHistory(SHARED_TYPES.VIEWED, response, context);
+        addToProfileHistory(
+          SHARED_TYPES.VIEWED,
+          response as Circle | CircleClone,
+          context,
+        );
       }
     } catch (error) {
       stackdriver.report(error);

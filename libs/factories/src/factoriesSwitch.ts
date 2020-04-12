@@ -5,13 +5,19 @@ import { ProfileClonesFactory } from './profile/profileClonesFactory';
 import { ProfileFactory } from './profile/profileFactory';
 import {
   Circle,
-  PublicProfile,
+  PublicProfileData,
   CircleClone,
-  PublicProfileClone,
+  UserProfileData,
+  PublicProfileCloneHydrated,
 } from '@myiworlds/types';
 
 export const factoriesSwitch = (
-  document: Circle | CircleClone | PublicProfile | PublicProfileClone,
+  document:
+    | Circle
+    | CircleClone
+    | PublicProfileData
+    | PublicProfileCloneHydrated
+    | UserProfileData,
 ) => {
   switch (document.collection) {
     case FIRESTORE_COLLECTIONS.PROFILES: {

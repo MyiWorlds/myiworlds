@@ -1,5 +1,6 @@
 import addToProfileHistory from './addToProfileHistory';
 import cloneDocument from './cloneDocument';
+import { FIRESTORE_COLLECTIONS } from './../../../../../../../libs/enums/src/firestoreCollections';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { RESPONSE_CODES, SHARED_TYPES } from '@myiworlds/enums';
 import {
@@ -9,8 +10,9 @@ import {
 } from '@myiworlds/helper-functions';
 import {
   Context,
-  PublicProfile,
-  PublicProfileClone,
+  UserProfileData,
+  PublicProfileData,
+  PublicProfileCloneHydrated,
   Circle,
   CircleClone,
   User,
@@ -29,9 +31,10 @@ export default async function updateDocumentById(
     | Circle
     | User
     | CircleClone
-    | PublicProfileClone
     | UserClone
-    | PublicProfile,
+    | PublicProfileCloneHydrated
+    | UserProfileData
+    | PublicProfileData,
   context: Context,
   merge: boolean,
   addToHistory?: boolean,
@@ -111,9 +114,10 @@ export default async function updateDocumentById(
                 | Circle
                 | User
                 | CircleClone
-                | PublicProfileClone
                 | UserClone
-                | PublicProfile),
+                | PublicProfileCloneHydrated
+                | UserProfileData
+                | PublicProfileData),
             ) => {
               if (updatedDocument[key] === undefined) {
                 delete updatedDocument[key];
@@ -149,9 +153,15 @@ export default async function updateDocumentById(
       addToHistory ||
       (context.addToHistory &&
         addToHistory === undefined &&
-        addToHistory !== false)
+        addToHistory !== false &&
+        (updatedDocument.collection === FIRESTORE_COLLECTIONS.CIRCLES ||
+          updatedDocument.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES))
     ) {
-      addToProfileHistory(SHARED_TYPES.UPDATED, updatedDocument, context);
+      addToProfileHistory(
+        SHARED_TYPES.UPDATED,
+        updatedDocument as Circle | CircleClone,
+        context,
+      );
     }
   } catch (error) {
     stackdriver.report(error);

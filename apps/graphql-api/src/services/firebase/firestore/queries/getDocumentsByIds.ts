@@ -4,8 +4,9 @@ import {
   CircleClone,
   Context,
   FirestoreCollectionTypes,
-  PublicProfile,
-  PublicProfileClone
+  PublicProfileCloneHydrated,
+  PublicProfileData,
+  UserProfileData
   } from '@myiworlds/types';
 import { CircleFactory, factoriesSwitch } from '@myiworlds/factories';
 import { FIRESTORE_COLLECTIONS, SHARED_TYPES } from '@myiworlds/enums';
@@ -18,7 +19,7 @@ export default async function getDocumentsByIds(
   context: Context,
   addToHistory?: boolean,
 ) {
-  let response: (Circle | CircleClone | PublicProfile | PublicProfileClone)[] = [];
+  let response: (Circle | CircleClone | UserProfileData | PublicProfileData | PublicProfileCloneHydrated)[] = [];
 
   if (addToHistory === undefined) {
     addToHistory = context.addToHistory;
@@ -89,7 +90,7 @@ export default async function getDocumentsByIds(
 
       sortedEntities.forEach((document: any) => {
         if (document.type === SHARED_TYPES.DOES_NOT_EXIST) {
-          const doc: PublicProfile | Circle | null = factoriesSwitch(
+          const doc: PublicProfileData | UserProfileData | PublicProfileCloneHydrated | Circle | null = factoriesSwitch(
             document,
           )?.use('DOES_NOT_EXIST');
           if (doc) {
@@ -99,7 +100,7 @@ export default async function getDocumentsByIds(
           response.push(document);
         } else {
           document.type = SHARED_TYPES.PERMISSION_DENIED;
-          const doc: Circle| CircleClone | PublicProfile| PublicProfileClone | null = factoriesSwitch(document)
+          const doc: Circle| CircleClone | UserProfileData | PublicProfileData| PublicProfileCloneHydrated | null = factoriesSwitch(document)
           .use('PERMISSION_DENIED')
           .create();
 

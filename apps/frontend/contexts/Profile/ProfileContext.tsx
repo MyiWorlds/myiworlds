@@ -4,9 +4,9 @@ import MaterialUiTheme from '../../lib/MaterialUiTheme';
 import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
 import { getCookie, setCookie } from '../../functions/cookies';
-import { Profile } from '@myiworlds/types';
 import { ProviderStore } from './profileContextTypes.d';
 import { UserContext } from '../User/UserContext';
+import { UserProfileHydrated } from '@myiworlds/types';
 // import Card from '@material-ui/core/Card';
 // import CardContent from '@material-ui/core/CardContent';
 // import CardHeader from '@material-ui/core/CardHeader';
@@ -30,7 +30,9 @@ const ProfileProvider = ({ children }: any) => {
     null,
   );
   const [usernameToCreate, setUsernameToCreate] = useState<string>('');
-  const [selectedProfile, setSelectedProfile] = useState<Profile>(guestProfile);
+  const [selectedProfile, setSelectedProfile] = useState<UserProfileHydrated>(
+    guestProfile,
+  );
   const [searchTimeoutActive, setSearchTimeoutActive] = useState(false);
   const [checkUsername, setCheckUsername] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);
@@ -77,7 +79,7 @@ const ProfileProvider = ({ children }: any) => {
 
   const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
-      setSelectedProfile(getProfileQuery.getProfileById as Profile);
+      setSelectedProfile(getProfileQuery.getProfileById as UserProfileHydrated);
     }
     // If you want to change the theme you need to update the circle by id in the app
     return;
@@ -143,7 +145,7 @@ const ProfileProvider = ({ children }: any) => {
   //     user.profiles &&
   //     user.profiles.length &&
   //     user.profiles.find(
-  //       (profile: CreatedProfile | Profile) =>
+  //       (profile: CreatedProfile | CreatedProfile) =>
   //         profile.id === selectedProfile.id,
   //     );
 
@@ -156,9 +158,13 @@ const ProfileProvider = ({ children }: any) => {
   const handleAutoLogInToProfile = () => {
     const previousLoggedInProfile = getCookie('selectedProfileId');
 
-    if (previousLoggedInProfile && selectedProfile.id === 'guest') {
+    if (
+      previousLoggedInProfile &&
+      previousLoggedInProfile !== '' &&
+      selectedProfile.id === 'guest'
+    ) {
       // const isOneOfUsersProfiles = user.profiles.find(
-      //   (profile: CreatedProfile | Profile) =>
+      //   (profile: CreatedProfile | CreatedProfile) =>
       //     profile.id === previousLoggedInProfile,
       // );
       // if (isOneOfUsersProfiles) {
@@ -178,7 +184,7 @@ const ProfileProvider = ({ children }: any) => {
       // setShowSelectProfileModal(true);
     }
   };
-
+  console.log('rendered');
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);
   useEffect(handleUsernameToCreate, [usernameToCreate]);
   useEffect(updateProfileWithCreatedProfile, [createProfileData]);
@@ -197,20 +203,20 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   if (loadingGetProfile) {
-    return <h1>loading Get Profile</h1>;
+    return <h1>loading Get CreatedProfile</h1>;
   }
 
   if (errorGettingProfile) {
     return (
       <Error
         error={errorGettingProfile}
-        message={'There was an error getting the Profile'}
+        message={'There was an error getting the CreatedProfile'}
       />
     );
   }
 
   if (createProfileLoading) {
-    return <h1>Saving Profile</h1>;
+    return <h1>Saving CreatedProfile</h1>;
   }
 
   if (createProfileError) {
@@ -250,7 +256,7 @@ const ProfileProvider = ({ children }: any) => {
   //           aria-controls="panel1a-content"
   //           id="panel1a-header"
   //         >
-  //           <Typography>Create New Profile</Typography>
+  //           <Typography>Create New CreatedProfile</Typography>
   //         </ExpansionPanelSummary>
   //         <ExpansionPanelDetails></ExpansionPanelDetails>
   //       </ExpansionPanel>
@@ -265,7 +271,7 @@ const ProfileProvider = ({ children }: any) => {
   //     <div style={{ margin: '0px auto' }}>
   //       <SelectProfileDialog onSelect={handleSelectProfile} />
   //       <Card>
-  //         <CardHeader title="Create Profile" />
+  //         <CardHeader title="Create CreatedProfile" />
   //         <CardContent>
   //           <CreateProfile />
   //         </CardContent>
@@ -279,7 +285,10 @@ const ProfileProvider = ({ children }: any) => {
 
   let content = null;
 
-  if (selectedProfile) {
+  if (
+    (selectedProfile.id !== 'guest' && user.id) ||
+    (!user.id && selectedProfile.id === 'guest')
+  ) {
     content = children;
   } else {
     content = <SelectProfileDialog onSelect={handleSelectProfile} />;

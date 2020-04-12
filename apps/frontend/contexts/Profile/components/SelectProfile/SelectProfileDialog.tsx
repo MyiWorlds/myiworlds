@@ -14,11 +14,10 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import PersonIcon from '@material-ui/icons/Person';
 import React, { useEffect, useState } from 'react';
 import { blue } from '@material-ui/core/colors';
-import { CreatedProfile } from '@myiworlds/types';
 import { Icon } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Profile } from '@myiworlds/types';
 import { useGetUserProfilesLazyQuery } from '../../../../generated/apolloComponents';
+import { UserProfileHydrated } from '@myiworlds/types';
 import {
   Button,
   DialogContent,
@@ -53,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SelectProfileDialog = (props: SelectProfileDialogProps) => {
   const classes = useStyles();
   const { onSelect } = props;
-  const [profiles, setProfiles] = useState<Profile[]>([guestProfile]);
+  const [profiles, setProfiles] = useState<UserProfileHydrated[]>([guestProfile]);
   const [showCreateProfile, setShowCreateProfile] = useState(
     profiles && profiles.length ? false : true,
   );
@@ -72,7 +71,7 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
       fullWidth={true}
     >
       <MuiDialogTitle disableTypography className={classes.root}>
-        <Typography variant="h6">Create Profile</Typography>
+        <Typography variant="h6">Create CreatedProfile</Typography>
         <IconButton
           aria-label="close"
           className={classes.closeButton}
@@ -94,11 +93,11 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
       open={!showCreateProfile}
       fullWidth={true}
     >
-      <DialogTitle id="simple-dialog-title">Select Profile</DialogTitle>
+      <DialogTitle id="simple-dialog-title">Select CreatedProfile</DialogTitle>
       <DialogContent>
         <List>
-          {profiles &&
-            profiles.map((profile: CreatedProfile) => (
+          {profiles && profiles[0].id !== 'guest' &&
+            profiles.map((profile: UserProfileHydrated) => (
               <ListItem
                 button
                 onClick={() => onSelect(profile.id)}
@@ -120,7 +119,7 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
           variant="contained"
           startIcon={<AddIcon />}
         >
-          New Profile
+          New CreatedProfile
         </Button>
       </DialogActions>
     </Dialog>
@@ -128,9 +127,9 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
 
   const onDataChange = () => {
     if (getUserProfilesQuery && getUserProfilesQuery?.getUserProfiles && getUserProfilesQuery.getUserProfiles.length) {
-      setProfiles(getUserProfilesQuery?.getUserProfiles as Profile[])
+      setProfiles(getUserProfilesQuery?.getUserProfiles as UserProfileHydrated[])
     } else {
-      if (!profiles.length) {
+      if (!profiles.length || profiles[0].id === 'guest') {
         setShowCreateProfile(true);
       }
     }

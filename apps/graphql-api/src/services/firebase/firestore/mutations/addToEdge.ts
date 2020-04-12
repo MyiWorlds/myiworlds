@@ -1,4 +1,4 @@
-import { Circle, Context, PublicProfile } from '@myiworlds/types';
+import { Circle, CircleClone, Context } from '@myiworlds/types';
 import { CIRCLE_TYPES } from '@myiworlds/enums';
 import { CircleFactory } from '@myiworlds/factories';
 import { createDocument, updateDocumentById } from '.';
@@ -8,7 +8,7 @@ import { googleCloud } from '@myiworlds/credentials';
 const addToEdge = (
   parentId: string,
   tags: string[],
-  document: Circle | PublicProfile,
+  document: Circle | CircleClone,
   shouldUpdateParent: boolean,
   context: Context,
 ) => {

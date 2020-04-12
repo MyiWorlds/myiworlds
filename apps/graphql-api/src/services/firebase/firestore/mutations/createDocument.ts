@@ -4,8 +4,8 @@ import {
   Circle,
   CircleClone,
   Context,
-  Profile,
-  ProfileClone,
+  UserProfileData,
+  UserProfileCloneData,
   User,
 } from '@myiworlds/types';
 import {
@@ -21,7 +21,12 @@ interface CreateDocumentResponse {
 }
 
 const createDocument = async (
-  documentToCreate: Circle | CircleClone | Profile | ProfileClone | User,
+  documentToCreate:
+    | Circle
+    | CircleClone
+    | UserProfileData
+    | UserProfileCloneData
+    | User,
   context: Context,
   addToHistory?: boolean,
 ): Promise<CreateDocumentResponse> => {
@@ -77,10 +82,14 @@ const createDocument = async (
     if (
       response.status === RESPONSE_CODES.SUCCESS &&
       addToHistory &&
-      documentToCreate.collection !== FIRESTORE_COLLECTIONS.USERS &&
-      documentToCreate.collection !== FIRESTORE_COLLECTIONS.USERS_CLONES
+      (documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES &&
+        documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES)
     ) {
-      addToProfileHistory(SHARED_TYPES.CREATED, documentToCreate, context);
+      addToProfileHistory(
+        SHARED_TYPES.CREATED,
+        documentToCreate as Circle | CircleClone,
+        context,
+      );
     }
   } catch (error) {
     stackdriver.report(error);

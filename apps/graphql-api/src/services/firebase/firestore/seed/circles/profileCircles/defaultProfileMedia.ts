@@ -10,5 +10,5 @@ export const defaultProfileMedia = new CircleFactory()
       title: 'Default profile pic',
       public: true,
     },
-    string: 'account-circle',
+    string: 'account_circle',
   });

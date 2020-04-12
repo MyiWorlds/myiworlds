@@ -1,11 +1,11 @@
 import AddIcon from '@material-ui/icons/Add';
 import AppController from './AppController';
+import CircleSelector from '../../components/Circle/CircleSelector/CircleSelector';
 import ContentArea from './ContentArea';
 import Fab from '@material-ui/core/Fab';
 import Navigation from './Navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import Zoom from '@material-ui/core/Zoom';
-import { CreateCircleProvider } from '../Circle/CreateCircleContext';
 import { ProfileProvider } from '../Profile/ProfileContext';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
@@ -99,7 +99,7 @@ const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
 
       <ProfileProvider>
         <div>
-          <CreateCircleProvider />
+          <CircleSelector />
           <div className={classes.root}>
             <AppController
               setShowNavigation={setShowNavigation}

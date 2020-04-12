@@ -1,6 +1,6 @@
-import { PublicProfile } from '@myiworlds/types';
+import { PublicProfileData } from '@myiworlds/types';
 
-export class ProfilePermssionDenied implements PublicProfile {
+export class ProfilePermssionDenied implements PublicProfileData {
   id: string;
   collection: 'profiles';
   type: 'PERMISSION_DENIED';

@@ -1,6 +1,6 @@
-import { Profile } from '@myiworlds/types';
+import { UserProfileData } from '@myiworlds/types';
 
-export class UserProfile implements Profile {
+export class UserProfile implements UserProfileData {
   id: string;
   collection: 'profiles';
   username: string;
@@ -26,7 +26,7 @@ export class UserProfile implements Profile {
     };
   }
 
-  createWithValues(profile: Profile) {
+  createWithValues(profile: UserProfileData) {
     return {
       ...this,
       ...profile,

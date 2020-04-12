@@ -63,7 +63,7 @@ const createCircleMutation = {
     fields: () => ({
       status: { type: GraphQLString },
       message: { type: GraphQLString },
-      createdCircle: {
+      CircleHydrated: {
         type: CircleType,
         resolve: async (response: CreateCircleResponse, context: Context) => {
           if (response.createdDocumentId) {

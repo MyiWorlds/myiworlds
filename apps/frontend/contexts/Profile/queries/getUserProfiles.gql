@@ -2,5 +2,11 @@ query getUserProfiles {
   getUserProfiles {
     id
     username
+    media {
+      id
+      type
+      title
+      string
+    }
   }
 }

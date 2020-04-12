@@ -1,18 +1,12 @@
 import addToEdge from './addToEdge';
-import {
-  Circle,
-  CircleClone,
-  Context,
-  PublicProfile,
-  PublicProfileClone,
-} from '@myiworlds/types';
+import { Circle, CircleClone, Context } from '@myiworlds/types';
 
 const addToProfileHistory = (
   interactionType: string,
-  document: Circle | PublicProfile | CircleClone | PublicProfileClone,
+  document: Circle | CircleClone,
   context: Context,
 ) => {
-  if (context.userId && context.profileHistoryId) {
+  if (context.userId && context.profileHistoryId && document) {
     addToEdge(
       context.profileHistoryId,
       [interactionType],

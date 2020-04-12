@@ -1,6 +1,6 @@
-import { PublicProfile } from '@myiworlds/types';
+import { PublicProfileData } from '@myiworlds/types';
 
-export class ProfileGuest implements PublicProfile {
+export class ProfileGuest implements PublicProfileData {
   id: string;
   collection: 'profiles';
   username: string;

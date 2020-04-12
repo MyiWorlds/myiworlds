@@ -1,6 +1,6 @@
-import { Profile } from '@myiworlds/types';
+import { CreatedProfile } from '@myiworlds/types';
 
-const guestProfile: Profile = {
+const guestProfile: CreatedProfile = {
   id: 'guest',
   collection: 'profiles',
   username: 'guest',

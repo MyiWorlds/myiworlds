@@ -1,6 +1,6 @@
-import { PublicProfileClone } from '@myiworlds/types';
+import { PublicProfileCloneHydrated } from '@myiworlds/types';
 
-export class ProfileCloneDoesNotExist implements PublicProfileClone {
+export class ProfileCloneDoesNotExist implements PublicProfileCloneHydrated {
   id: string;
   collection: 'profiles-clones';
   username: string;

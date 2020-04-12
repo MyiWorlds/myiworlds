@@ -10,11 +10,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
+import Media from './../../../../Media/Media';
 import ProgressWithMessage from './../../../../ProgressWithMessage/ProgressWithMessage';
-import React, { useState } from 'react';
-import { CreatedCircle } from '@myiworlds/types';
+import React from 'react';
+import { CircleHydrated } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { useGetSeededCirclesByIdsQuery } from './../../../../../generated/apolloComponents';
+import {
+  useGetSeededCirclesByIdsQuery,
+  useSeedFirestoreCirclesMutation,
+} from './../../../../../generated/apolloComponents';
 
 interface Props {}
 
@@ -37,8 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SeedFirestore: React.FunctionComponent<Props> = () => {
   const classes = useStyles();
-  const [fetch, setFetch] = useState(false);
-  console.log(fetch);
   const {
     data: getSeededCirclesByIdsQuery,
     loading: getSeededCirclesByIdsLoading,
@@ -46,6 +48,21 @@ const SeedFirestore: React.FunctionComponent<Props> = () => {
   } = useGetSeededCirclesByIdsQuery({
     fetchPolicy: 'no-cache',
   });
+
+  const [
+    seedFirestoreCircles,
+    {
+      data: seedFirestoreCirclesData,
+      loading: seedFirestoreCirclesLoading,
+      error: seedFirestoreCirclesError,
+    },
+  ] = useSeedFirestoreCirclesMutation();
+
+  console.log(
+    seedFirestoreCirclesData,
+    seedFirestoreCirclesLoading,
+    seedFirestoreCirclesError,
+  );
 
   let list = null;
 
@@ -63,12 +80,16 @@ const SeedFirestore: React.FunctionComponent<Props> = () => {
     getSeededCirclesByIdsQuery.getSeededCirclesByIds
   ) {
     list = getSeededCirclesByIdsQuery.getSeededCirclesByIds.map(
-      (circle: CreatedCircle) => {
+      (circle: CircleHydrated) => {
         return (
           <ListItem button key={circle.id}>
             <ListItemAvatar>
               <Avatar>
-                <FiberManualRecordIcon />
+                {circle.media ? (
+                  <Media circle={circle.media} />
+                ) : (
+                  <FiberManualRecordIcon />
+                )}
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={circle.title} />
@@ -88,7 +109,7 @@ const SeedFirestore: React.FunctionComponent<Props> = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setFetch(true)}
+          onClick={() => seedFirestoreCircles()}
         >
           Seed
         </Button>

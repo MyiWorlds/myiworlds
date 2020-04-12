@@ -1,6 +1,6 @@
-import { PublicProfileClone } from '@myiworlds/types';
+import { PublicProfileCloneHydrated } from '@myiworlds/types';
 
-export class ProfileClonePermssionDenied implements PublicProfileClone {
+export class ProfileClonePermssionDenied implements PublicProfileCloneHydrated {
   id: string;
   collection: 'profiles-clones';
   type: 'PERMISSION_DENIED';

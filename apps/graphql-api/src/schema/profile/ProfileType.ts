@@ -5,7 +5,7 @@ import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
 const GraphQLBigInt = require('graphql-bigint');
 
 const ProfileType = new GraphQLObjectType({
-  name: 'Profile',
+  name: 'CreatedProfile',
   description: 'user who can create and interact with circles.',
 
   fields: () => ({

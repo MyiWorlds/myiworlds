@@ -82,11 +82,17 @@ export interface Circle extends Header {
   lines?: string[];
 }
 
-export interface CreatedCircle extends Circle {
+export interface CircleHydrated extends Circle {
   id: string;
+  media?: CircleHydrated;
 }
 
 export interface CircleClone extends Circle {
+  collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
+  clonedFrom: string;
+}
+
+export interface CircleCloneHydrated extends Circle {
   collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
   clonedFrom: string;
 }

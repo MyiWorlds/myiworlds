@@ -1,8 +1,10 @@
-import { Circle, Profile, User } from '@myiworlds/types';
+import { Circle, User, UserProfileData } from '@myiworlds/types';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 
 // This should be in a cloud function
-export default async function cloneDocument(doc: Circle | Profile | User) {
+export default async function cloneDocument(
+  doc: Circle | UserProfileData | User,
+) {
   const newCollection = `${doc.collection}-clones` as
     | 'circles-clones'
     | 'profiles-clones'

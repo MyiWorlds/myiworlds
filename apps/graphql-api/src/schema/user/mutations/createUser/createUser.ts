@@ -37,9 +37,12 @@ export default async function createUser(
       response.message = 'This email is already in the database.';
       response.createdDocumentId = null;
 
-      const userInFirebaseAuth = await firebaseAdmin.auth().getUser(id).then(() => {
-        return true
-      })
+      const userInFirebaseAuth = await firebaseAdmin
+        .auth()
+        .getUser(id)
+        .then(() => {
+          return true;
+        })
         .catch(() => {
           return false;
         });

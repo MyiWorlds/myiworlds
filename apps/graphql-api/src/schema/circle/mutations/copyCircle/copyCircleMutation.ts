@@ -25,7 +25,7 @@ const copyCircleMutation = {
     fields: () => ({
       status: { type: GraphQLString },
       message: { type: GraphQLString },
-      createdCircle: {
+      CircleHydrated: {
         type: CircleType,
         resolve: async (response: CopyCircleResponse, context: Context) => {
           if (response.createdDocumentId) {

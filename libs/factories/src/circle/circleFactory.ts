@@ -10,6 +10,7 @@ import { CircleKeyValue } from './circles/circleKeyValue';
 import { CircleLine } from './circles/circleLine';
 import { CircleLines } from './circles/circleLines';
 import { CircleMediaFontIcon } from './circles/circleMediaFontIcon';
+import { CircleMediaImageHref } from './circles/circleMediaImageHref';
 import { CircleNumber } from './circles/circleNumber';
 import { CirclePermssionDenied } from './circles/circlePermissionDenied';
 import { CircleQueryGetDocumentById } from './circles/circleQueryGetDocumentById';
@@ -33,6 +34,7 @@ export class CircleFactory {
   use(type: 'LINES'): CircleLines;
   use(type: 'UI'): CircleUI;
   use(type: 'MEDIA_FONT_ICON'): CircleMediaFontIcon;
+  use(type: 'MEDIA_IMAGE_HREF'): CircleMediaImageHref;
   use(type: 'EDGE'): CircleEdge;
   use(type: 'EDGE_NODE'): CircleEdgeNode;
   use(type: 'QUERY_GET_DOCUMENT_BY_ID'): CircleQueryGetDocumentById;
@@ -81,6 +83,9 @@ export class CircleFactory {
 
       case 'MEDIA_FONT_ICON':
         return new CircleMediaFontIcon();
+
+      case 'MEDIA_IMAGE_HREF':
+        return new CircleMediaImageHref();
 
       case 'UI':
         return new CircleUI();

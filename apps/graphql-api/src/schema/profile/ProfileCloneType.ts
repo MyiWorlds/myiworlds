@@ -6,7 +6,7 @@ const GraphQLBigInt = require('graphql-bigint');
 
 const ProfileCloneType = new GraphQLObjectType({
   name: 'ProfileClone',
-  description: 'Profile which only a user can access clone.',
+  description: 'CreatedProfile which only a user can access clone.',
 
   fields: () => ({
     id: { type: GraphQLString },

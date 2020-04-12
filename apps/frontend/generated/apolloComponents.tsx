@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -60,7 +60,7 @@ export type Circle = {
 
 /** A circle in a graph that can assemble to be anything. */
 export type CircleClone = {
-  __typename?: 'circleClone';
+  __typename?: 'CircleClone';
   id?: Maybe<Scalars['String']>;
   collection?: Maybe<Scalars['String']>;
   cached?: Maybe<Scalars['Boolean']>;
@@ -102,14 +102,14 @@ export type CopyCirclePayload = {
   __typename?: 'CopyCirclePayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  createdCircle?: Maybe<Circle>;
+  CircleHydrated?: Maybe<Circle>;
 };
 
 export type CreateCirclePayload = {
   __typename?: 'CreateCirclePayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  createdCircle?: Maybe<Circle>;
+  CircleHydrated?: Maybe<Circle>;
 };
 
 export type CreateProfilePayload = {
@@ -215,8 +215,8 @@ export type MutationCreateCircleArgs = {
 };
 
 /** user who can create and interact with circles. */
-export type Profile = {
-  __typename?: 'Profile';
+export type CreatedProfile = {
+  __typename?: 'CreatedProfile';
   id?: Maybe<Scalars['String']>;
   collection?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
@@ -235,7 +235,7 @@ export type Profile = {
   level?: Maybe<Circle>;
 };
 
-/** Profile which only a user can access clone. */
+/** CreatedProfile which only a user can access clone. */
 export type ProfileClone = {
   __typename?: 'ProfileClone';
   id?: Maybe<Scalars['String']>;
@@ -277,11 +277,11 @@ export type Query = {
   getCircleById?: Maybe<Circle>;
   getCircleCloneById?: Maybe<CircleClone>;
   getCircleByProfileUsername?: Maybe<Circle>;
-  getProfileById?: Maybe<Profile>;
+  getProfileById?: Maybe<CreatedProfile>;
   getPublicProfileById?: Maybe<PublicProfile>;
   getProfileCloneById?: Maybe<ProfileClone>;
   getProfileByUsername?: Maybe<GetProfileByUsernamePayload>;
-  getUserProfiles?: Maybe<Array<Maybe<Profile>>>;
+  getUserProfiles?: Maybe<Array<Maybe<CreatedProfile>>>;
 };
 
 export type QueryGetCircleByIdArgs = {
@@ -324,7 +324,7 @@ export type UpdateProfilePayload = {
   __typename?: 'UpdateProfilePayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  updatedProfile?: Maybe<Profile>;
+  updatedProfile?: Maybe<CreatedProfile>;
 };
 
 /** user who can create and interact with circles. */
@@ -349,10 +349,32 @@ export type SeedFirestoreCirclesMutation = { __typename?: 'Mutation' } & {
       'status' | 'message'
     > & {
         created: Maybe<
-          Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
+          Array<
+            Maybe<
+              { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+                  media: Maybe<
+                    { __typename?: 'Circle' } & Pick<
+                      Circle,
+                      'id' | 'type' | 'title' | 'string'
+                    >
+                  >;
+                }
+            >
+          >
         >;
         edited: Maybe<
-          Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
+          Array<
+            Maybe<
+              { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+                  media: Maybe<
+                    { __typename?: 'Circle' } & Pick<
+                      Circle,
+                      'id' | 'type' | 'title' | 'string'
+                    >
+                  >;
+                }
+            >
+          >
         >;
       }
   >;
@@ -362,7 +384,18 @@ export type GetSeededCirclesByIdsQueryVariables = {};
 
 export type GetSeededCirclesByIdsQuery = { __typename?: 'Query' } & {
   getSeededCirclesByIds: Maybe<
-    Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
+    Array<
+      Maybe<
+        { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+            media: Maybe<
+              { __typename?: 'Circle' } & Pick<
+                Circle,
+                'id' | 'type' | 'title' | 'string'
+              >
+            >;
+          }
+      >
+    >
   >;
 };
 
@@ -398,12 +431,36 @@ export type GetProfileByIdQueryVariables = {
 
 export type GetProfileByIdQuery = { __typename?: 'Query' } & {
   getProfileById: Maybe<
-    { __typename?: 'Profile' } & SelectedProfileFragmentFragment
+    { __typename?: 'CreatedProfile' } & SelectedProfileFragmentFragment
   >;
 };
 
-export type SelectedProfileFragmentFragment = { __typename?: 'Profile' } & Pick<
-  Profile,
+export type GetUserProfilesQueryVariables = {};
+
+export type GetUserProfilesQuery = { __typename?: 'Query' } & {
+  getUserProfiles: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'CreatedProfile' } & Pick<
+          CreatedProfile,
+          'id' | 'username'
+        > & {
+            media: Maybe<
+              { __typename?: 'Circle' } & Pick<
+                Circle,
+                'id' | 'type' | 'title' | 'string'
+              >
+            >;
+          }
+      >
+    >
+  >;
+};
+
+export type SelectedProfileFragmentFragment = {
+  __typename?: 'CreatedProfile';
+} & Pick<
+  CreatedProfile,
   | 'id'
   | 'collection'
   | 'username'
@@ -412,15 +469,22 @@ export type SelectedProfileFragmentFragment = { __typename?: 'Profile' } & Pick<
   | 'overrideCircleUIs'
   | 'addToHistory'
 > & {
-    media: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    level: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    rating: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    circleUIs: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    theme: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'data'>>;
-    publicHome: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    home: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    following: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    history: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    media: Maybe<
+      { __typename?: 'Circle' } & Pick<
+        Circle,
+        'id' | 'type' | 'title' | 'string'
+      >
+    >;
+    level: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    rating: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    circleUIs: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    theme: Maybe<
+      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'type' | 'data'>
+    >;
+    publicHome: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    home: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    following: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    history: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
   };
 
 export type CreateUserMutationVariables = {
@@ -457,17 +521,6 @@ export type GetUserByIdQueryVariables = {};
 
 export type GetUserByIdQuery = { __typename?: 'Query' } & {
   getUserById: Maybe<{ __typename?: 'User' } & LoggedInUserFragmentFragment>;
-  getUserProfiles: Maybe<
-    Array<Maybe<{ __typename?: 'Profile' } & Pick<Profile, 'id' | 'username'>>>
-  >;
-};
-
-export type GetUserProfilesQueryVariables = {};
-
-export type GetUserProfilesQuery = { __typename?: 'Query' } & {
-  getUserProfiles: Maybe<
-    Array<Maybe<{ __typename?: 'Profile' } & Pick<Profile, 'id' | 'username'>>>
-  >;
 };
 
 export type LoggedInUserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -482,42 +535,53 @@ export type LoggedInUserFragmentFragment = { __typename?: 'User' } & Pick<
 >;
 
 export const SelectedProfileFragmentFragmentDoc = gql`
-  fragment SelectedProfileFragment on Profile {
+  fragment SelectedProfileFragment on CreatedProfile {
     id
     collection
     username
     media {
       id
+      type
+      title
+      string
     }
     dateCreated
     dateUpdated
     level {
       id
+      type
     }
     rating {
       id
+      type
     }
     overrideCircleUIs
     circleUIs {
       id
+      type
     }
     overrideCircleUIs
     theme {
       id
+      type
       data
     }
     publicHome {
       id
+      type
     }
     home {
       id
+      type
     }
     following {
       id
+      type
     }
     addToHistory
     history {
       id
+      type
     }
   }
 `;
@@ -540,10 +604,22 @@ export const SeedFirestoreCirclesDocument = gql`
       created {
         id
         title
+        media {
+          id
+          type
+          title
+          string
+        }
       }
       edited {
         id
         title
+        media {
+          id
+          type
+          title
+          string
+        }
       }
     }
   }
@@ -595,6 +671,12 @@ export const GetSeededCirclesByIdsDocument = gql`
     getSeededCirclesByIds {
       id
       title
+      media {
+        id
+        type
+        title
+        string
+      }
     }
   }
 `;
@@ -812,6 +894,68 @@ export type GetProfileByIdQueryResult = ApolloReactCommon.QueryResult<
   GetProfileByIdQuery,
   GetProfileByIdQueryVariables
 >;
+export const GetUserProfilesDocument = gql`
+  query getUserProfiles {
+    getUserProfiles {
+      id
+      username
+      media {
+        id
+        type
+        title
+        string
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUserProfilesQuery__
+ *
+ * To run a query within a React component, call `useGetUserProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserProfilesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserProfilesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetUserProfilesQuery,
+    GetUserProfilesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetUserProfilesQuery,
+    GetUserProfilesQueryVariables
+  >(GetUserProfilesDocument, baseOptions);
+}
+export function useGetUserProfilesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetUserProfilesQuery,
+    GetUserProfilesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetUserProfilesQuery,
+    GetUserProfilesQueryVariables
+  >(GetUserProfilesDocument, baseOptions);
+}
+export type GetUserProfilesQueryHookResult = ReturnType<
+  typeof useGetUserProfilesQuery
+>;
+export type GetUserProfilesLazyQueryHookResult = ReturnType<
+  typeof useGetUserProfilesLazyQuery
+>;
+export type GetUserProfilesQueryResult = ApolloReactCommon.QueryResult<
+  GetUserProfilesQuery,
+  GetUserProfilesQueryVariables
+>;
 export const CreateUserDocument = gql`
   mutation createUser($id: String!, $email: String!, $photoURL: String) {
     createUser(id: $id, email: $email, photoURL: $photoURL) {
@@ -925,10 +1069,6 @@ export const GetUserByIdDocument = gql`
     getUserById {
       ...LoggedInUserFragment
     }
-    getUserProfiles {
-      id
-      username
-    }
   }
   ${LoggedInUserFragmentFragmentDoc}
 `;
@@ -977,60 +1117,4 @@ export type GetUserByIdLazyQueryHookResult = ReturnType<
 export type GetUserByIdQueryResult = ApolloReactCommon.QueryResult<
   GetUserByIdQuery,
   GetUserByIdQueryVariables
->;
-export const GetUserProfilesDocument = gql`
-  query getUserProfiles {
-    getUserProfiles {
-      id
-      username
-    }
-  }
-`;
-
-/**
- * __useGetUserProfilesQuery__
- *
- * To run a query within a React component, call `useGetUserProfilesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserProfilesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetUserProfilesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetUserProfilesQuery,
-    GetUserProfilesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    GetUserProfilesQuery,
-    GetUserProfilesQueryVariables
-  >(GetUserProfilesDocument, baseOptions);
-}
-export function useGetUserProfilesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetUserProfilesQuery,
-    GetUserProfilesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    GetUserProfilesQuery,
-    GetUserProfilesQueryVariables
-  >(GetUserProfilesDocument, baseOptions);
-}
-export type GetUserProfilesQueryHookResult = ReturnType<
-  typeof useGetUserProfilesQuery
->;
-export type GetUserProfilesLazyQueryHookResult = ReturnType<
-  typeof useGetUserProfilesLazyQuery
->;
-export type GetUserProfilesQueryResult = ApolloReactCommon.QueryResult<
-  GetUserProfilesQuery,
-  GetUserProfilesQueryVariables
 >;

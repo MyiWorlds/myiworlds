@@ -1,6 +1,6 @@
 import copyCircle from '../../../circle/mutations/copyCircle/copyCircle';
 import isUsernameTaken from '../shared/isUsernameTaken';
-import { Context, Profile } from '@myiworlds/types';
+import { Context, UserProfileData } from '@myiworlds/types';
 import { createCollectionId } from './../../../../services/firebase/firestore/functions/createCollectionId';
 import { CreateProfileResponse } from './createProfileTypes.d';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
@@ -102,12 +102,12 @@ export default async function buildAndCreateProfile(
       defaultProfileMedia &&
       defaultProfileMedia.createdDocumentId
     ) {
-      const updatedProfile: Profile = {
+      const updatedProfile: UserProfileData = {
         id: profile.id,
         collection: FIRESTORE_COLLECTIONS.PROFILES,
         username,
         userId: context.userId,
-        media: defaultProfileMedia.createdDocumentId,
+        media: 'default-profile-media',
         level: level.createdDocumentId,
         rating: rating.createdDocumentId,
         circleUIs: circleUIs.createdDocumentId,

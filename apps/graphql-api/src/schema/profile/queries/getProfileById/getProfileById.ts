@@ -1,9 +1,9 @@
-import { Context, Profile } from '@myiworlds/types';
+import { Context, UserProfileData } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { firestoreAdmin } from '@myiworlds/services';
 
 const getProfileById = async (id: string, context: Context) => {
-  const profileRequested: Profile | null = await await firestoreAdmin
+  const profileRequested: UserProfileData | null = await await firestoreAdmin
     .collection(FIRESTORE_COLLECTIONS.PROFILES)
     .doc(id)
     .get()
