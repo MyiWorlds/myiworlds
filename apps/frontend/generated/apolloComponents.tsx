@@ -1,6 +1,6 @@
+import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -112,6 +112,27 @@ export type CreateCirclePayload = {
   CircleHydrated?: Maybe<Circle>;
 };
 
+/** user who can create and interact with circles. */
+export type CreatedProfile = {
+  __typename?: 'CreatedProfile';
+  id?: Maybe<Scalars['String']>;
+  collection?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  addToHistory?: Maybe<Scalars['Boolean']>;
+  media?: Maybe<Circle>;
+  rating?: Maybe<Circle>;
+  theme?: Maybe<Circle>;
+  publicHome?: Maybe<Circle>;
+  home?: Maybe<Circle>;
+  history?: Maybe<Circle>;
+  overrideCircleUIs?: Maybe<Scalars['Boolean']>;
+  circleUIs?: Maybe<Circle>;
+  following?: Maybe<Circle>;
+  level?: Maybe<Circle>;
+};
+
 export type CreateProfilePayload = {
   __typename?: 'CreateProfilePayload';
   status?: Maybe<Scalars['String']>;
@@ -212,27 +233,6 @@ export type MutationCreateCircleArgs = {
   geoPoint?: Maybe<Scalars['String']>;
   line?: Maybe<Scalars['String']>;
   lines?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-/** user who can create and interact with circles. */
-export type CreatedProfile = {
-  __typename?: 'CreatedProfile';
-  id?: Maybe<Scalars['String']>;
-  collection?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  dateCreated?: Maybe<Scalars['BigInt']>;
-  dateUpdated?: Maybe<Scalars['BigInt']>;
-  addToHistory?: Maybe<Scalars['Boolean']>;
-  media?: Maybe<Circle>;
-  rating?: Maybe<Circle>;
-  theme?: Maybe<Circle>;
-  publicHome?: Maybe<Circle>;
-  home?: Maybe<Circle>;
-  history?: Maybe<Circle>;
-  overrideCircleUIs?: Maybe<Scalars['Boolean']>;
-  circleUIs?: Maybe<Circle>;
-  following?: Maybe<Circle>;
-  level?: Maybe<Circle>;
 };
 
 /** CreatedProfile which only a user can access clone. */

@@ -1,15 +1,25 @@
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import DeleteAccountModal from './DeleteAccountModal';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Header from '../../../components/Header/Header';
+import HistoryIcon from '@material-ui/icons/History';
+import InvertColorsIcon from '@material-ui/icons/InvertColors';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import Media from './../../Media/Media';
+import ProfileSelector from './ProfileSelector';
 import React, { useContext } from 'react';
+import Spacer from './../../Spacer/Spacer';
+import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import { Button } from '@material-ui/core';
+import { ListItemSecondaryAction } from '@material-ui/core';
 import { ProfileContext } from '../../../contexts/Profile/ProfileContext';
 import { UserContext } from '../../../contexts/User/UserContext';
 
@@ -50,6 +60,17 @@ const User = () => {
     </Button>
   );
 
+  const currentTheme =
+    selectedProfile.theme &&
+    selectedProfile.theme.palette &&
+    selectedProfile.theme.palette.type
+      ? selectedProfile.theme.palette.type
+      : 'dark';
+  const darkTheme = currentTheme === 'dark';
+  const handleToggleDarkTheme = () => {
+    console.log('Update Circle code needs to be written');
+  };
+
   return (
     <Container maxWidth="lg">
       <Header
@@ -67,17 +88,70 @@ const User = () => {
         actions={user.id ? [logoutBtn, deleteAccountBtn] : undefined}
       />
 
-      <Typography variant="h4">Selected CreatedProfile:</Typography>
+      <Spacer />
+
+      <Typography variant="h5">Selected Profile:</Typography>
       <Card>
-        <Header
-          media={
-            <Avatar>
-              <Media circle={selectedProfile.media} />
-            </Avatar>
-          }
-          title={selectedProfile.username}
-        />
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <Avatar>
+                <Media circle={selectedProfile.media} />
+              </Avatar>
+            </ListItemIcon>
+            <ListItemText primary={selectedProfile.username} />
+          </ListItem>
+        </List>
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <InvertColorsIcon />
+            </ListItemIcon>
+            <ListItemText
+              id="switch-list-label-dark-theme"
+              primary="Dark Theme"
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                edge="end"
+                onChange={handleToggleDarkTheme}
+                checked={darkTheme}
+                inputProps={{
+                  'aria-labelledby': 'switch-list-label-dark-theme',
+                }}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <HistoryIcon />
+            </ListItemIcon>
+            <ListItemText
+              id="switch-list-label-dark-theme"
+              primary="Add to History"
+              secondary="Everything you do in the system is logged for you to trace your steps"
+            />
+            <ListItemSecondaryAction>
+              <Switch
+                edge="end"
+                onChange={handleToggleDarkTheme}
+                checked={darkTheme}
+                inputProps={{
+                  'aria-labelledby': 'switch-list-label-dark-theme',
+                }}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
       </Card>
+
+      <Spacer />
+
+      <Typography variant="h5">All Profiles:</Typography>
+      <Card>
+        <ProfileSelector />
+      </Card>
+
       <DeleteAccountModal
         open={openDeleteAccountModal}
         handleCancel={handleCloseDeleteAccountModal}

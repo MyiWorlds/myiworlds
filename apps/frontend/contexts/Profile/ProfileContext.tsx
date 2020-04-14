@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
 import { getCookie, setCookie } from '../../functions/cookies';
 import { ProviderStore } from './profileContextTypes.d';
+import { Theme } from '@material-ui/core/styles';
 import { UserContext } from '../User/UserContext';
 import { UserProfileHydrated } from '@myiworlds/types';
 // import Card from '@material-ui/core/Card';
@@ -184,7 +185,7 @@ const ProfileProvider = ({ children }: any) => {
       // setShowSelectProfileModal(true);
     }
   };
-  console.log('rendered');
+
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);
   useEffect(handleUsernameToCreate, [usernameToCreate]);
   useEffect(updateProfileWithCreatedProfile, [createProfileData]);
@@ -203,7 +204,7 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   if (loadingGetProfile) {
-    return <h1>loading Get CreatedProfile</h1>;
+    console.log('Getting selected profile.');
   }
 
   if (errorGettingProfile) {
@@ -238,9 +239,9 @@ const ProfileProvider = ({ children }: any) => {
   }
 
   const handleSelectProfile = (profileId: string) => {
-    console.log('setCookie', profileId);
-    setProfileIdToSelect(profileId);
+    console.log('Selected new profile and setting cookie: ', profileId);
     setCookie('selectedProfileId', profileId);
+    setProfileIdToSelect(profileId);
   };
 
   // let content = null;
@@ -294,6 +295,7 @@ const ProfileProvider = ({ children }: any) => {
     content = <SelectProfileDialog onSelect={handleSelectProfile} />;
   }
 
+  console.log(selectedProfile);
   return (
     <ProfileContext.Provider
       value={{
@@ -303,7 +305,7 @@ const ProfileProvider = ({ children }: any) => {
         setUsernameToCreate: handleSetUsernameToCreate,
         createProfile,
         profileIdToSelect,
-        setProfileIdToSelect,
+        handleSelectProfile,
         createProfileLoading,
         usernameAvailable,
         usernameInvalid,
@@ -312,7 +314,17 @@ const ProfileProvider = ({ children }: any) => {
         searchTimeoutActive,
       }}
     >
-      <MaterialUiTheme>{content}</MaterialUiTheme>
+      <MaterialUiTheme
+        themeOverride={
+          selectedProfile.theme &&
+          selectedProfile.theme.data &&
+          selectedProfile.theme.data.theme
+            ? (selectedProfile.theme.data.theme as Theme)
+            : undefined
+        }
+      >
+        {content}
+      </MaterialUiTheme>
     </ProfileContext.Provider>
   );
 };

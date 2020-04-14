@@ -5,8 +5,8 @@ import Zoom from '@material-ui/core/Zoom';
 import { makeStyles } from '@material-ui/styles';
 
 interface Props {
-  size: number;
-  hideBackground: boolean;
+  size?: number;
+  hideBackground?: boolean;
   color?: 'primary' | 'secondary' | 'inherit' | undefined;
 }
 

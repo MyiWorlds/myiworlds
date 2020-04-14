@@ -128,6 +128,7 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
   const onDataChange = () => {
     if (getUserProfilesQuery && getUserProfilesQuery?.getUserProfiles && getUserProfilesQuery.getUserProfiles.length) {
       setProfiles(getUserProfilesQuery?.getUserProfiles as UserProfileHydrated[])
+      setShowCreateProfile(false);
     } else {
       if (!profiles.length || profiles[0].id === 'guest') {
         setShowCreateProfile(true);

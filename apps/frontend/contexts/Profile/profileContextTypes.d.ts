@@ -2,7 +2,7 @@ import { SelectedProfile } from '@myiworlds/types';
 
 export interface ProviderStore {
   setUsernameToCreate: (username: string) => void;
-  setProfileIdToSelect: (username: string | null) => void;
+  handleSelectProfile: (id: string | null) => void;
   createProfile: () => void;
   handleCancelCreateProfile: () => void;
   selectedProfile: SelectedProfile;

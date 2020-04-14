@@ -1,4 +1,4 @@
-import { Circle } from '@myiworlds/types';
+import { CircleHydrated } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 
 interface PublicProfileBase {
@@ -10,13 +10,13 @@ interface PublicProfileBase {
 }
 
 export interface PublicProfileHydrated extends PublicProfileBase {
-  media?: Circle;
-  theme?: Circle;
-  rating?: Circle;
-  following?: Circle;
-  level?: Circle;
-  publicHome?: Circle;
-  circleUIs?: Circle;
+  media?: CircleHydrated;
+  theme?: CircleHydrated;
+  rating?: CircleHydrated;
+  following?: CircleHydrated;
+  level?: CircleHydrated;
+  publicHome?: CircleHydrated;
+  circleUIs?: CircleHydrated;
 }
 
 export interface UserProfileData extends PublicProfileBase {
@@ -41,14 +41,14 @@ export interface UserProfileHydrated extends PublicProfileHydrated {
   history?: string;
   overrideCircleUIs?: boolean;
   userId: string | null;
-  media?: Circle;
-  theme?: Circle;
-  rating?: Circle;
-  following?: Circle;
-  level?: Circle;
-  publicHome?: Circle;
-  media?: Circle;
-  circleUIs?: Circle;
+  media?: CircleHydrated;
+  theme?: CircleHydrated;
+  rating?: CircleHydrated;
+  following?: CircleHydrated;
+  level?: CircleHydrated;
+  publicHome?: CircleHydrated;
+  media?: CircleHydrated;
+  circleUIs?: CircleHydrated;
 }
 
 export interface PublicProfileData extends PublicProfileBase {

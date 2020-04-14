@@ -70,6 +70,7 @@ export interface Circle extends Header {
     | QueryGetDocumentById
     | QueryGetDocumentsByIds
     | QueryGetDocumentsByFilters
+    | any
     | {
         [key: string]: any;
       };
