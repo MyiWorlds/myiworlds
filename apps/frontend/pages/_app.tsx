@@ -1,5 +1,5 @@
 import App from 'next/app';
-import MaterialUiTheme from './../lib/MaterialUiTheme';
+import MaterialUiTheme from '../components/Theme/MaterialUiTheme';
 import React from 'react';
 import withApollo from '../lib/apollo/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';

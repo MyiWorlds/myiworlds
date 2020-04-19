@@ -14,10 +14,6 @@ export interface User {
 
 export type LoggedInUser = GuestUser | User;
 
-// export interface UserDataObj extends User {
-//   // profiles: (string | never)[];
-// }
-
 export interface UserClone extends User {
   collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
   clonedFrom: string;

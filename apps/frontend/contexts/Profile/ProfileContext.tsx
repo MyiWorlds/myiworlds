@@ -1,32 +1,30 @@
 import Error from '../../components/Error';
+import firestoreClient from './../../lib/firebase/firestoreClient';
 import guestProfile from './guestProfile';
-import MaterialUiTheme from '../../lib/MaterialUiTheme';
+import MaterialUiTheme from '../../components/Theme/MaterialUiTheme';
 import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
+import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { getCookie, setCookie } from '../../functions/cookies';
 import { ProviderStore } from './profileContextTypes.d';
+import { SystemMessagesContext } from './../SystemMessages/SystemMessagesContext';
 import { Theme } from '@material-ui/core/styles';
 import { UserContext } from '../User/UserContext';
-import { UserProfileHydrated } from '@myiworlds/types';
-// import Card from '@material-ui/core/Card';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardHeader from '@material-ui/core/CardHeader';
-// import CreateProfile from './components/CreateProfile/CreateProfile';
-// import ExapandMoreIcon from '@material-ui/icons/ExpandMore';
-// import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-// import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-// import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-// import Typography from '@material-ui/core/Typography';
+import { UserProfileData, UserProfileHydrated } from '@myiworlds/types';
 import {
   useCreateProfileMutation,
   useGetProfileByIdQuery,
   useGetProfileByUsernameQuery,
+  useUpdateProfileMutation,
+  UpdateProfileMutationVariables,
 } from '../../generated/apolloComponents';
 
 export const ProfileContext = React.createContext({} as ProviderStore);
+type SubscriptionToSelecetedProfile = null | (() => void);
 
 const ProfileProvider = ({ children }: any) => {
   const { user } = useContext(UserContext);
+  const { setAppSnackbar } = useContext(SystemMessagesContext);
   const [profileIdToSelect, setProfileIdToSelect] = useState<null | string>(
     null,
   );
@@ -38,7 +36,16 @@ const ProfileProvider = ({ children }: any) => {
   const [checkUsername, setCheckUsername] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);
   const [usernameInvalid, setUsernameInvalid] = useState(false);
-  // const [showSelectProfileModal, setShowSelectProfileModal] = useState(false);
+  const [
+    selectedProfileSubscription,
+    setSelectedProfileSubscription,
+  ] = useState<SubscriptionToSelecetedProfile>(null);
+  const [updateProfileVariables, setUpdateProfileVariables] = useState<
+    UpdateProfileMutationVariables
+  >({
+    id: selectedProfile.id,
+    merge: true,
+  });
 
   const [
     createProfile,
@@ -52,6 +59,47 @@ const ProfileProvider = ({ children }: any) => {
       username: usernameToCreate,
     },
   });
+
+  const [
+    updateProfile,
+    {
+      data: updateProfileData,
+    },
+  ] = useUpdateProfileMutation({
+    variables: updateProfileVariables,
+  });
+
+  const profileUpdated = () => {
+    if (updateProfileData?.updateProfile?.status === RESPONSE_CODES.SUCCESS) {
+      setAppSnackbar({
+        title: updateProfileData.updateProfile.message || '',
+        autoHideDuration: 2000,
+      });
+    } else if (updateProfileData?.updateProfile?.status === RESPONSE_CODES.ERROR) {
+      setAppSnackbar({
+        title: updateProfileData.updateProfile.message || '',
+        autoHideDuration: 2000,
+      });
+    }
+  }
+
+  const updateSelectedProfileAddToHistory = () => {
+    setSelectedProfile({
+      ...selectedProfile,
+      addToHistory: !selectedProfile.addToHistory,
+    });
+    setUpdateProfileVariables({
+      id: selectedProfile.id,
+      merge: true,
+      addToHistory: !selectedProfile.addToHistory,
+    });
+  };
+
+  const updateProfileMutation = () => {
+    if (selectedProfile.id !== 'guest') {
+      updateProfile();
+    }
+  };
 
   const updateProfileWithCreatedProfile = () => {
     if (
@@ -72,7 +120,8 @@ const ProfileProvider = ({ children }: any) => {
     loading: loadingGetProfile,
     error: errorGettingProfile,
   } = useGetProfileByIdQuery({
-    skip: !profileIdToSelect || selectedProfile.id === profileIdToSelect,
+    fetchPolicy: 'no-cache',
+    skip: !profileIdToSelect,
     variables: {
       id: profileIdToSelect as string,
     },
@@ -80,7 +129,9 @@ const ProfileProvider = ({ children }: any) => {
 
   const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
+      console.log('Setting selected profile.')
       setSelectedProfile(getProfileQuery.getProfileById as UserProfileHydrated);
+      subscribeToProfile();
     }
     // If you want to change the theme you need to update the circle by id in the app
     return;
@@ -141,21 +192,6 @@ const ProfileProvider = ({ children }: any) => {
     setSearchTimeoutActive(true);
   };
 
-  // const updatedSelectedProfileOnUserChange = () => {
-  //   const loggedInUserHasSelectedProfile =
-  //     user.profiles &&
-  //     user.profiles.length &&
-  //     user.profiles.find(
-  //       (profile: CreatedProfile | CreatedProfile) =>
-  //         profile.id === selectedProfile.id,
-  //     );
-
-  //   if (!loggedInUserHasSelectedProfile) {
-  //     setSelectedProfile(guestProfile);
-  //     setProfileIdToSelect(null);
-  //   }
-  // };
-
   const handleAutoLogInToProfile = () => {
     const previousLoggedInProfile = getCookie('selectedProfileId');
 
@@ -164,25 +200,58 @@ const ProfileProvider = ({ children }: any) => {
       previousLoggedInProfile !== '' &&
       selectedProfile.id === 'guest'
     ) {
-      // const isOneOfUsersProfiles = user.profiles.find(
-      //   (profile: CreatedProfile | CreatedProfile) =>
-      //     profile.id === previousLoggedInProfile,
-      // );
-      // if (isOneOfUsersProfiles) {
       setProfileIdToSelect(previousLoggedInProfile);
-      // } else {
-      //   if (user.profiles[0].id !== 'guest') {
-      //     console.log(
-      //       'Erasing previously logged in profile cookie as it is not in your list of profiles, user must select profile',
-      //     );
-      //     eraseCookie('selectedProfileId');
-      //   }
-      // }
-    } else if (
-      (previousLoggedInProfile === '' || previousLoggedInProfile === null) &&
-      user.id
-    ) {
-      // setShowSelectProfileModal(true);
+    }
+  };
+
+  const subscribeToProfile = () => {
+    if (selectedProfile && selectedProfile.id && selectedProfile.id !== 'guest' && !selectedProfileSubscription) {
+      console.log(
+        'Subscribing to the selected profile: ',
+        selectedProfile.username,
+      );
+      const subscriptionToSelectedProfile = firestoreClient
+        .collection(FIRESTORE_COLLECTIONS.PROFILES)
+        .doc(selectedProfile.id)
+        .onSnapshot(
+          (docSnapshot: firebase.firestore.DocumentSnapshot) => {
+            const profileDoc:
+              | firebase.firestore.DocumentData
+              | UserProfileData
+              | undefined = docSnapshot.data();
+
+            if (profileDoc && docSnapshot.exists) {
+              console.log(
+                'Selected profile fields have changed and I am going to refetch the profile.',
+              );
+
+              setProfileIdToSelect(profileDoc.id);
+              return;
+            } else {
+              console.log(
+                'That user no longer exist.  You have been logged in as a guest.',
+              );
+              // setUser(guestUser);
+              // setUserIdToLogin(null);
+              return;
+            }
+          },
+          (error: Error) => {
+            console.error(
+              'There was an error subscribing to the logged in user',
+              error,
+            );
+            return;
+          },
+        );
+
+      if (subscriptionToSelectedProfile) {
+        // Used to cancel the subscription to the user
+        console.log(
+          'Subscribed to your selected profile.  Any changes made to the user will instantly update this app.',
+        );
+        setSelectedProfileSubscription(() => subscriptionToSelectedProfile);
+      }
     }
   };
 
@@ -190,16 +259,12 @@ const ProfileProvider = ({ children }: any) => {
   useEffect(handleUsernameToCreate, [usernameToCreate]);
   useEffect(updateProfileWithCreatedProfile, [createProfileData]);
   useEffect(updateSelectedProfile, [getProfileQuery]);
-  // useEffect(updatedSelectedProfileOnUserChange, [
-  //   selectedProfile,
-  //   selectedProfile.id,
-  //   user,
-  // ]);
   useEffect(handleAutoLogInToProfile, [user]);
+  useEffect(profileUpdated, [updateProfileData]);
+  useEffect(updateProfileMutation, [updateProfileVariables]);
 
   const handleCancelCreateProfile = () => {
     setUsernameToCreate('');
-    // setCheckUsername(false);
     setUsernameInvalid(false);
   };
 
@@ -244,46 +309,6 @@ const ProfileProvider = ({ children }: any) => {
     setProfileIdToSelect(profileId);
   };
 
-  // let content = null;
-
-  // if (user.id && selectedProfile.id !== 'guest') {
-  //   console.log('no profile');
-  //   if (!user.profiles || !user.profiles.length) {
-  //     console.log('Force user to create account before moving on');
-  //     content = (
-  //       <ExpansionPanel>
-  //         <ExpansionPanelSummary
-  //           expandIcon={<ExapandMoreIcon />}
-  //           aria-controls="panel1a-content"
-  //           id="panel1a-header"
-  //         >
-  //           <Typography>Create New CreatedProfile</Typography>
-  //         </ExpansionPanelSummary>
-  //         <ExpansionPanelDetails></ExpansionPanelDetails>
-  //       </ExpansionPanel>
-  //     );
-  //   }
-
-  //   console.log(
-  //     "Force user to select a profile to continue with or create a new profile (if they havn't maxed out)",
-  //   );
-
-  //   content = (
-  //     <div style={{ margin: '0px auto' }}>
-  //       <SelectProfileDialog onSelect={handleSelectProfile} />
-  //       <Card>
-  //         <CardHeader title="Create CreatedProfile" />
-  //         <CardContent>
-  //           <CreateProfile />
-  //         </CardContent>
-  //       </Card>
-  //     </div>
-  //   );
-  // } else {
-  //   // Guest is logged in
-  //   content = children;
-  // }
-
   let content = null;
 
   if (
@@ -295,7 +320,6 @@ const ProfileProvider = ({ children }: any) => {
     content = <SelectProfileDialog onSelect={handleSelectProfile} />;
   }
 
-  console.log(selectedProfile);
   return (
     <ProfileContext.Provider
       value={{
@@ -312,6 +336,8 @@ const ProfileProvider = ({ children }: any) => {
         handleCancelCreateProfile,
         getProfileByUsernameLoading,
         searchTimeoutActive,
+        updateProfile,
+        updateSelectedProfileAddToHistory,
       }}
     >
       <MaterialUiTheme

@@ -177,6 +177,7 @@ export type Mutation = {
   updateProfile?: Maybe<UpdateProfilePayload>;
   copyCircle?: Maybe<CopyCirclePayload>;
   createCircle?: Maybe<CreateCirclePayload>;
+  updateCircle?: Maybe<UpdateCirclePayload>;
 };
 
 export type MutationCreateUserArgs = {
@@ -190,8 +191,23 @@ export type MutationCreateProfileArgs = {
 };
 
 export type MutationUpdateProfileArgs = {
+  merge: Scalars['Boolean'];
   id: Scalars['String'];
   username?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  addToHistory?: Maybe<Scalars['Boolean']>;
+  home?: Maybe<Scalars['String']>;
+  history?: Maybe<Scalars['String']>;
+  overrideCircleUIs?: Maybe<Scalars['Boolean']>;
+  userId?: Maybe<Scalars['String']>;
+  media?: Maybe<Scalars['String']>;
+  theme?: Maybe<Scalars['String']>;
+  rating?: Maybe<Scalars['String']>;
+  following?: Maybe<Scalars['String']>;
+  level?: Maybe<Scalars['String']>;
+  publicHome?: Maybe<Scalars['String']>;
+  circleUIs?: Maybe<Scalars['String']>;
 };
 
 export type MutationCopyCircleArgs = {
@@ -202,6 +218,44 @@ export type MutationCreateCircleArgs = {
   id?: Maybe<Scalars['String']>;
   collection?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
+  parent?: Maybe<Scalars['String']>;
+  cached?: Maybe<Scalars['Boolean']>;
+  cache?: Maybe<Scalars['JSON']>;
+  pii?: Maybe<Scalars['Boolean']>;
+  copiedFrom?: Maybe<Scalars['String']>;
+  autoUpdate?: Maybe<Scalars['Boolean']>;
+  slug?: Maybe<Scalars['String']>;
+  public?: Maybe<Scalars['Boolean']>;
+  passwordRequired?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  media?: Maybe<Scalars['String']>;
+  creator?: Maybe<Scalars['String']>;
+  owner?: Maybe<Scalars['String']>;
+  viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
+  editors?: Maybe<Array<Maybe<Scalars['String']>>>;
+  ui?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  key?: Maybe<Scalars['String']>;
+  string?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  number?: Maybe<Scalars['Int']>;
+  bigNumber?: Maybe<Scalars['BigInt']>;
+  boolean?: Maybe<Scalars['Boolean']>;
+  date?: Maybe<Scalars['String']>;
+  geoPoint?: Maybe<Scalars['String']>;
+  line?: Maybe<Scalars['String']>;
+  lines?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type MutationUpdateCircleArgs = {
+  merge: Scalars['Boolean'];
+  id: Scalars['String'];
+  type?: Maybe<Scalars['String']>;
+  component?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['String']>;
   cached?: Maybe<Scalars['Boolean']>;
   cache?: Maybe<Scalars['JSON']>;
@@ -320,6 +374,13 @@ export type SeedFirestoreCirclesPayload = {
   edited?: Maybe<Array<Maybe<Circle>>>;
 };
 
+export type UpdateCirclePayload = {
+  __typename?: 'UpdateCirclePayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  updatedCircle?: Maybe<Circle>;
+};
+
 export type UpdateProfilePayload = {
   __typename?: 'UpdateProfilePayload';
   status?: Maybe<Scalars['String']>;
@@ -408,6 +469,35 @@ export type CreateProfileMutation = { __typename?: 'Mutation' } & {
     { __typename?: 'CreateProfilePayload' } & Pick<
       CreateProfilePayload,
       'status' | 'message' | 'createdDocumentId'
+    >
+  >;
+};
+
+export type UpdateProfileMutationVariables = {
+  id: Scalars['String'];
+  merge: Scalars['Boolean'];
+  username?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  addToHistory?: Maybe<Scalars['Boolean']>;
+  home?: Maybe<Scalars['String']>;
+  history?: Maybe<Scalars['String']>;
+  overrideCircleUIs?: Maybe<Scalars['Boolean']>;
+  userId?: Maybe<Scalars['String']>;
+  media?: Maybe<Scalars['String']>;
+  theme?: Maybe<Scalars['String']>;
+  rating?: Maybe<Scalars['String']>;
+  following?: Maybe<Scalars['String']>;
+  level?: Maybe<Scalars['String']>;
+  publicHome?: Maybe<Scalars['String']>;
+  circleUIs?: Maybe<Scalars['String']>;
+};
+
+export type UpdateProfileMutation = { __typename?: 'Mutation' } & {
+  updateProfile: Maybe<
+    { __typename?: 'UpdateProfilePayload' } & Pick<
+      UpdateProfilePayload,
+      'status' | 'message'
     >
   >;
 };
@@ -779,6 +869,109 @@ export type CreateProfileMutationResult = ApolloReactCommon.MutationResult<
 export type CreateProfileMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateProfileMutation,
   CreateProfileMutationVariables
+>;
+export const UpdateProfileDocument = gql`
+  mutation updateProfile(
+    $id: String!
+    $merge: Boolean!
+    $username: String
+    $dateCreated: BigInt
+    $dateUpdated: BigInt
+    $addToHistory: Boolean
+    $home: String
+    $history: String
+    $overrideCircleUIs: Boolean
+    $userId: String
+    $media: String
+    $theme: String
+    $rating: String
+    $following: String
+    $level: String
+    $publicHome: String
+    $circleUIs: String
+  ) {
+    updateProfile(
+      id: $id
+      merge: $merge
+      username: $username
+      dateCreated: $dateCreated
+      dateUpdated: $dateUpdated
+      addToHistory: $addToHistory
+      home: $home
+      history: $history
+      overrideCircleUIs: $overrideCircleUIs
+      userId: $userId
+      media: $media
+      theme: $theme
+      rating: $rating
+      following: $following
+      level: $level
+      publicHome: $publicHome
+      circleUIs: $circleUIs
+    ) {
+      status
+      message
+    }
+  }
+`;
+export type UpdateProfileMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateProfileMutation,
+  UpdateProfileMutationVariables
+>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      merge: // value for 'merge'
+ *      username: // value for 'username'
+ *      dateCreated: // value for 'dateCreated'
+ *      dateUpdated: // value for 'dateUpdated'
+ *      addToHistory: // value for 'addToHistory'
+ *      home: // value for 'home'
+ *      history: // value for 'history'
+ *      overrideCircleUIs: // value for 'overrideCircleUIs'
+ *      userId: // value for 'userId'
+ *      media: // value for 'media'
+ *      theme: // value for 'theme'
+ *      rating: // value for 'rating'
+ *      following: // value for 'following'
+ *      level: // value for 'level'
+ *      publicHome: // value for 'publicHome'
+ *      circleUIs: // value for 'circleUIs'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateProfileMutation,
+    UpdateProfileMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateProfileMutation,
+    UpdateProfileMutationVariables
+  >(UpdateProfileDocument, baseOptions);
+}
+export type UpdateProfileMutationHookResult = ReturnType<
+  typeof useUpdateProfileMutation
+>;
+export type UpdateProfileMutationResult = ApolloReactCommon.MutationResult<
+  UpdateProfileMutation
+>;
+export type UpdateProfileMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateProfileMutation,
+  UpdateProfileMutationVariables
 >;
 export const GetProfileByUsernameDocument = gql`
   query getProfileByUsername($username: String!) {

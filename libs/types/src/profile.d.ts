@@ -31,7 +31,6 @@ export interface UserProfileData extends PublicProfileBase {
   following?: string;
   level?: string;
   publicHome?: string;
-  media?: string;
   circleUIs?: string;
 }
 

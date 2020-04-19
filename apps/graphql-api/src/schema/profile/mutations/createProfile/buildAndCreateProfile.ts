@@ -3,11 +3,13 @@ import isUsernameTaken from '../shared/isUsernameTaken';
 import { Context, UserProfileData } from '@myiworlds/types';
 import { createCollectionId } from './../../../../services/firebase/firestore/functions/createCollectionId';
 import { CreateProfileResponse } from './createProfileTypes.d';
+import { firestore } from 'firebase-admin';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { isAllowedUsername } from '../shared/isAllowedUsername';
 import { ProfileFactory } from '@myiworlds/factories';
 import { updateDocumentById } from '../../../../services/firebase/firestore/mutations';
+import { updateDocumentById } from '.';
 
 export default async function buildAndCreateProfile(
   username: string,
@@ -119,6 +121,13 @@ export default async function buildAndCreateProfile(
       };
 
       await updateDocumentById(updatedProfile, updatedContext, true, false);
+
+      firestoreAdmin
+        .collection(FIRESTORE_COLLECTIONS.USERS)
+        .doc(context.userId)
+        .update({
+          profiles: firestore.FieldValue.arrayUnion(profile.id),
+        });
 
       response.status = RESPONSE_CODES.SUCCESS;
       response.message = 'I created that profile for you.';

@@ -1,1 +1,1 @@
-export { default } from './CreateEditor';
+export { default } from './CircleEditor';

@@ -9,6 +9,7 @@ export const theme = new CircleFactory().use('DATA').create({
     description:
       'The theme that this profile uses to interact with the application.',
     public: true,
+    component: 'THEME',
   },
   data: {
     theme: {

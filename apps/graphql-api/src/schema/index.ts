@@ -15,6 +15,7 @@ import getSeededCirclesByIdsQuery from './admin/queries/getSeededCirclesByIds/ge
 import getUserByIdQuery from './user/queries/getUserById/getUserByIdQuery';
 import getUserProfilesQuery from './profile/queries/getUserProfiles/getUserProfilesQuery';
 import seedFirestoreCirclesMutation from './admin/mutations/seedFirestoreCircles/seedFirestoreCirclesMutation';
+import updateCircleMutation from './circle/mutations/updateCircle/updateCircleMutation';
 import updateProfileMutation from './profile/mutations/updateProfile/updateProfileMutation';
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
@@ -45,6 +46,7 @@ export default new GraphQLSchema({
       updateProfile: updateProfileMutation,
       copyCircle: copyCircleMutation,
       createCircle: createCircleMutation,
+      updateCircle: updateCircleMutation,
     },
   }),
 });

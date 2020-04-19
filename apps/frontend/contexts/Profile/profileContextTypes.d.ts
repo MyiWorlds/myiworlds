@@ -5,6 +5,8 @@ export interface ProviderStore {
   handleSelectProfile: (id: string | null) => void;
   createProfile: () => void;
   handleCancelCreateProfile: () => void;
+  updateProfile: () => void;
+  updateSelectedProfileAddToHistory: () => void;
   selectedProfile: SelectedProfile;
   usernameToCreate: string;
   profileIdToSelect: string | null;

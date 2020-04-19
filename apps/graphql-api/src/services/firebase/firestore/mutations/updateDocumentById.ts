@@ -1,8 +1,11 @@
 import addToProfileHistory from './addToProfileHistory';
 import cloneDocument from './cloneDocument';
-import { FIRESTORE_COLLECTIONS } from './../../../../../../../libs/enums/src/firestoreCollections';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
-import { RESPONSE_CODES, SHARED_TYPES } from '@myiworlds/enums';
+import {
+  RESPONSE_CODES,
+  SHARED_TYPES,
+  FIRESTORE_COLLECTIONS,
+} from '@myiworlds/enums';
 import {
   isCreator,
   isEditor,
@@ -80,12 +83,6 @@ export default async function updateDocumentById(
   }
 
   try {
-    const documentToUpdate = await firestoreAdmin
-      .collection(updatedDocument.collection)
-      .doc(updatedDocument.id)
-      .get()
-      .then((res: any) => res.data());
-
     await firestoreAdmin
       .collection(updatedDocument.collection)
       .doc(updatedDocument.id)
@@ -93,19 +90,10 @@ export default async function updateDocumentById(
       .then(async (document: any) => {
         const doc = document.data();
         if (
-          isCreator(
-            documentToUpdate.creator,
-            context.selectedProfileId as string,
-          ) ||
-          isEditor(
-            documentToUpdate.editors,
-            context.selectedProfileId as string,
-          ) ||
-          isRequestingUser(
-            documentToUpdate.id,
-            context.selectedProfileId as string,
-          ) ||
-          isRequestingUser(documentToUpdate.id, context.userId as string)
+          isCreator(document.creator, context.selectedProfileId as string) ||
+          isEditor(document.editors, context.selectedProfileId as string) ||
+          isRequestingUser(document.id, context.selectedProfileId as string) ||
+          isRequestingUser(document.id, context.userId as string)
         ) {
           cloneDocument(doc);
           Object.keys(updatedDocument).forEach(

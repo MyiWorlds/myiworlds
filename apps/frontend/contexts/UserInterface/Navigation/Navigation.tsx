@@ -7,6 +7,7 @@ import Drawer from '@material-ui/core/Drawer';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Hidden from '@material-ui/core/Hidden';
+import HistoryIcon from '@material-ui/icons/History';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import List from '@material-ui/core/List';
@@ -215,6 +216,12 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
           <PublicIcon />
         </ListItemIcon>
         <ListItemText primary="Explore" />
+      </ListItem>
+      <ListItem button disabled={true}>
+        <ListItemIcon>
+          <HistoryIcon />
+        </ListItemIcon>
+        <ListItemText primary="History" />
       </ListItem>
       <ListItem button disabled={true}>
         <ListItemIcon>

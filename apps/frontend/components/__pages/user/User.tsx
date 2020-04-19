@@ -1,10 +1,12 @@
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import ButtonLink from '../../ButtonLink';
 import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import DeleteAccountModal from './DeleteAccountModal';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Header from '../../../components/Header/Header';
 import HistoryIcon from '@material-ui/icons/History';
 import InvertColorsIcon from '@material-ui/icons/InvertColors';
@@ -16,6 +18,7 @@ import LogoutIcon from '@material-ui/icons/ExitToApp';
 import Media from './../../Media/Media';
 import ProfileSelector from './ProfileSelector';
 import React, { useContext } from 'react';
+import Router from 'next/router';
 import Spacer from './../../Spacer/Spacer';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +28,9 @@ import { UserContext } from '../../../contexts/User/UserContext';
 
 const User = () => {
   const { user, handleLogout, handleDeleteAccount } = useContext(UserContext);
-  const { selectedProfile } = useContext(ProfileContext);
+  const { selectedProfile, updateSelectedProfileAddToHistory } = useContext(
+    ProfileContext,
+  );
   const [openDeleteAccountModal, setOpenDeleteAccountModal] = React.useState(
     false,
   );
@@ -71,6 +76,10 @@ const User = () => {
     console.log('Update Circle code needs to be written');
   };
 
+  if (!selectedProfile || selectedProfile.id === 'guest') {
+    return null;
+  }
+
   return (
     <Container maxWidth="lg">
       <Header
@@ -88,9 +97,10 @@ const User = () => {
         actions={user.id ? [logoutBtn, deleteAccountBtn] : undefined}
       />
 
-      <Spacer />
+      <Spacer multiplier={4} />
 
       <Typography variant="h5">Selected Profile:</Typography>
+      <Spacer />
       <Card>
         <List>
           <ListItem>
@@ -122,6 +132,19 @@ const User = () => {
               />
             </ListItemSecondaryAction>
           </ListItem>
+          <ListItem
+            button
+            component={ButtonLink}
+            href={`/edit/[id]?id=${selectedProfile.theme.id}`}
+            as={`/edit/${selectedProfile.theme.id}`}
+          >
+            <ListItemIcon>
+              <Avatar>
+                <EditIcon />
+              </Avatar>
+            </ListItemIcon>
+            <ListItemText primary="Edit Theme" />
+          </ListItem>
           <ListItem>
             <ListItemIcon>
               <HistoryIcon />
@@ -129,13 +152,13 @@ const User = () => {
             <ListItemText
               id="switch-list-label-dark-theme"
               primary="Add to History"
-              secondary="Everything you do in the system is logged for you to trace your steps"
+              secondary="Things you do in the application will be added to your history"
             />
             <ListItemSecondaryAction>
               <Switch
                 edge="end"
-                onChange={handleToggleDarkTheme}
-                checked={darkTheme}
+                onChange={updateSelectedProfileAddToHistory}
+                checked={selectedProfile.addToHistory}
                 inputProps={{
                   'aria-labelledby': 'switch-list-label-dark-theme',
                 }}
@@ -145,9 +168,10 @@ const User = () => {
         </List>
       </Card>
 
-      <Spacer />
+      <Spacer multiplier={4} />
 
       <Typography variant="h5">All Profiles:</Typography>
+      <Spacer />
       <Card>
         <ProfileSelector />
       </Card>
