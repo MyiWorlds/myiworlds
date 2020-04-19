@@ -90,10 +90,10 @@ export default async function updateDocumentById(
       .then(async (document: any) => {
         const doc = document.data();
         if (
-          isCreator(document.creator, context.selectedProfileId as string) ||
-          isEditor(document.editors, context.selectedProfileId as string) ||
-          isRequestingUser(document.id, context.selectedProfileId as string) ||
-          isRequestingUser(document.id, context.userId as string)
+          isCreator(doc.creator, context.selectedProfileId as string) ||
+          isEditor(doc.editors, context.selectedProfileId as string) ||
+          isRequestingUser(doc.id, context.selectedProfileId as string) ||
+          isRequestingUser(doc.id, context.userId as string)
         ) {
           cloneDocument(doc);
           Object.keys(updatedDocument).forEach(

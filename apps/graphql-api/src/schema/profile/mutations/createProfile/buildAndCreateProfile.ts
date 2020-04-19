@@ -9,7 +9,6 @@ import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { isAllowedUsername } from '../shared/isAllowedUsername';
 import { ProfileFactory } from '@myiworlds/factories';
 import { updateDocumentById } from '../../../../services/firebase/firestore/mutations';
-import { updateDocumentById } from '.';
 
 export default async function buildAndCreateProfile(
   username: string,

@@ -44,7 +44,7 @@ export const seedCircles = async () => {
             .then((res: any) => res.data());
 
           if (documentExists) {
-            await updateDocumentById(circle, context, true, false);
+            await updateDocumentById(circle, context, false, false);
             edited.push(circle.id);
           } else {
             await createDocument(circle, context, true);
