@@ -1,0 +1,49 @@
+fragment SelectedProfileFragment on CreatedProfile {
+  id
+  collection
+  username
+  media {
+    id
+    type
+    title
+    string
+  }
+  dateCreated
+  dateUpdated
+  level {
+    id
+    type
+  }
+  rating {
+    id
+    type
+  }
+  overrideCircleUIs
+  circleUIs {
+    id
+    type
+  }
+  overrideCircleUIs
+  theme {
+    id
+    type
+    data
+  }
+  publicHome {
+    id
+    type
+  }
+  home {
+    id
+    type
+  }
+  following {
+    id
+    type
+  }
+  addToHistory
+  history {
+    id
+    type
+  }
+}

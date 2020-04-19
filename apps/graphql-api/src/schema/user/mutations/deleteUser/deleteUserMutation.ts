@@ -8,14 +8,14 @@ import {
 } from 'graphql';
 
 const deleteUserMutation = {
-  name: 'deleteUser',
+  name: 'DeleteUser',
   resolve: (_: null, args: null, context: Context) => deleteUser(context),
   type: new GraphQLObjectType({
     name: 'DeleteUserPayload',
     fields: () => ({
       status: { type: GraphQLNonNull(GraphQLString) },
       message: { type: GraphQLNonNull(GraphQLString) },
-      userDeleted: { type: GraphQLNonNull(GraphQLBoolean) }
+      userDeleted: { type: GraphQLNonNull(GraphQLBoolean) },
     }),
   }),
 };

@@ -48,10 +48,7 @@
               "apps/frontend/tsconfig.json",
               "apps/frontend/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/frontend/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/frontend/**"]
           }
         },
         "test": {
@@ -96,13 +93,8 @@
           "options": {
             "linter": "eslint",
             "config": "apps/frontend-e2e/.eslintrc",
-            "tsConfig": [
-              "apps/frontend-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/frontend-e2e/**"
-            ]
+            "tsConfig": ["apps/frontend-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/frontend-e2e/**"]
           }
         }
       }
@@ -120,9 +112,7 @@
             "outputPath": "dist/apps/graphql-api",
             "main": "apps/graphql-api/src/index.ts",
             "tsConfig": "apps/graphql-api/tsconfig.app.json",
-            "assets": [
-              "apps/graphql-api/src/assets"
-            ]
+            "assets": ["apps/graphql-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -153,10 +143,7 @@
               "apps/graphql-api/tsconfig.app.json",
               "apps/graphql-api/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/graphql-api/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/graphql-api/**"]
           }
         },
         "test": {
@@ -193,10 +180,7 @@
               "libs/credentials/tsconfig.lib.json",
               "libs/credentials/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/credentials/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/credentials/**"]
           }
         },
         "test": {
@@ -223,10 +207,7 @@
               "libs/types/tsconfig.lib.json",
               "libs/types/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/types/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/types/**"]
           }
         },
         "test": {
@@ -253,10 +234,7 @@
               "libs/services/tsconfig.lib.json",
               "libs/services/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/services/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/services/**"]
           }
         },
         "test": {
@@ -283,10 +261,7 @@
               "libs/enums/tsconfig.lib.json",
               "libs/enums/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/enums/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/enums/**"]
           }
         },
         "test": {
@@ -311,9 +286,7 @@
             "outputPath": "dist/apps/functions",
             "main": "apps/functions/src/main.ts",
             "tsConfig": "apps/functions/tsconfig.app.json",
-            "assets": [
-              "apps/functions/src/assets"
-            ]
+            "assets": ["apps/functions/src/assets"]
           },
           "configurations": {
             "production": {
@@ -344,10 +317,7 @@
               "apps/functions/tsconfig.app.json",
               "apps/functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/functions/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/functions/**"]
           }
         },
         "test": {
@@ -355,6 +325,60 @@
           "options": {
             "jestConfig": "apps/functions/jest.config.js",
             "tsConfig": "apps/functions/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "factories": {
+      "root": "libs/factories",
+      "sourceRoot": "libs/factories/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "libs/factories/.eslintrc",
+            "tsConfig": [
+              "libs/factories/tsconfig.lib.json",
+              "libs/factories/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/factories/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/factories/jest.config.js",
+            "tsConfig": "libs/factories/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "helper-functions": {
+      "root": "libs/helper-functions",
+      "sourceRoot": "libs/helper-functions/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "libs/helper-functions/.eslintrc",
+            "tsConfig": [
+              "libs/helper-functions/tsconfig.lib.json",
+              "libs/helper-functions/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/helper-functions/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/helper-functions/jest.config.js",
+            "tsConfig": "libs/helper-functions/tsconfig.spec.json"
           }
         }
       }

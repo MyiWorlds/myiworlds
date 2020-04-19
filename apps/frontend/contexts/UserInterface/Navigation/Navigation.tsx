@@ -1,4 +1,3 @@
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import ButtonLink from '../../../components/ButtonLink/ButtonLink';
@@ -8,12 +7,14 @@ import Drawer from '@material-ui/core/Drawer';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Hidden from '@material-ui/core/Hidden';
+import HistoryIcon from '@material-ui/icons/History';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Media from './../../../components/Media/Media';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Paper from '@material-ui/core/Paper';
@@ -23,6 +24,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { ProfileContext } from './../../Profile/ProfileContext';
 import { UserContext } from '../../User/UserContext';
 import { UserInterfaceContext } from '../UserInterfaceContext';
 import React, {
@@ -96,8 +98,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     drawerPaper: {
-      height: '100%'
-    }
+      height: '100%',
+    },
   }),
 );
 
@@ -140,11 +142,10 @@ function useEventListener(eventName: any, handler: any, element = window) {
 
 const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
   const { user, handleLogin } = useContext(UserContext);
-  const {
-    creatingCircle,
-    navWidth,
-    setNavWidth,
-  } = useContext(UserInterfaceContext);
+  const { selectedProfile } = useContext(ProfileContext);
+  const { creatingCircle, navWidth, setNavWidth } = useContext(
+    UserInterfaceContext,
+  );
   const classes = useStyles({ navWidth });
   const [open, setOpen] = useState(false);
 
@@ -190,7 +191,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
 
   const navItems = (
     <List className={classes.list}>
-      <ListItem button component={ButtonLink} href="/" as="/">
+      <ListItem button component={ButtonLink} href="/">
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>
@@ -215,6 +216,12 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
           <PublicIcon />
         </ListItemIcon>
         <ListItemText primary="Explore" />
+      </ListItem>
+      <ListItem button disabled={true}>
+        <ListItemIcon>
+          <HistoryIcon />
+        </ListItemIcon>
+        <ListItemText primary="History" />
       </ListItem>
       <ListItem button disabled={true}>
         <ListItemIcon>
@@ -254,7 +261,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
         </ListItem>
       </Collapse>
 
-      {user.id ? (
+      {selectedProfile.id !== 'guest' ? (
         <ListItem
           className={classes.userBtn}
           button
@@ -262,26 +269,24 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
           href="/user"
         >
           <ListItemIcon>
-            {user.photoURL ? (
-              <Avatar alt={user.email} src={user.photoURL || ''} />
-            ) : (
-                <AccountCircleIcon />
-              )}
+            <Avatar>
+              <Media circle={selectedProfile.media} />
+            </Avatar>
           </ListItemIcon>
-          <ListItemText secondary={user.email} />
+          <ListItemText secondary={selectedProfile.username} />
         </ListItem>
       ) : (
-          <ListItem
-            className={classes.userBtn}
-            button
-            onClick={() => handleLogin()}
-          >
-            <ListItemIcon>
-              <InfoIcon />
-            </ListItemIcon>
-            <ListItemText primary="Login" />
-          </ListItem>
-        )}
+        <ListItem
+          className={classes.userBtn}
+          button
+          onClick={() => handleLogin()}
+        >
+          <ListItemIcon>
+            <InfoIcon />
+          </ListItemIcon>
+          <ListItemText primary="Login" />
+        </ListItem>
+      )}
     </List>
   );
 
@@ -291,7 +296,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
         <SwipeableDrawer
           variant="temporary"
           open={showNavigation && !creatingCircle}
-          onOpen={() => { }}
+          onOpen={() => {}}
           onClose={() => setShowNavigation(false)}
         >
           <div className={classes.mobileDrawer}>{navItems}</div>

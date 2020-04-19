@@ -82,6 +82,7 @@ const AppController: React.FC<Props> = ({
           </span>
         </Tooltip>
 
+        {/* Only show in editing */}
         <Tooltip title="Customize Layout">
           <span>
             <IconButton color="inherit" disabled={true}>

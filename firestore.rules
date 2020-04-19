@@ -1,82 +1,83 @@
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-  
+
   	match /circles/{circleId} {
     	allow create: if userIsAllowed();
-    	allow read: if  isPublic() || isCreator() || isViewer() || isEditor();
-      allow update: if isCreator() || isEditor();
-      allow delete: if isCreator();
+    	allow read: if  isPublic() || isCreator() || isOwner() || isViewer() || isEditor();
+      allow update: if isCreator() || isOwner()  || isEditor();
+      allow delete: if isCreator() || isOwner() ;
     }
-    
+
     match /circles-clones/{circleId} {
     	allow create: if userIsAllowed();
-    	allow read: if  isPublic() || isCreator() || isViewer() || isEditor();
-      allow update: if isCreator() || isEditor();
-      allow delete: if isCreator();
+    	allow read: if  isPublic() || isCreator() || isOwner()  || isViewer() || isEditor();
+      allow update: if isCreator() || isOwner()  || isEditor();
+      allow delete: if isCreator() || isOwner() ;
     }
-    
+
     match /profiles/{profileId} {
     	allow read;
       allow write: if isProfilesUser(profileId);
     }
-    
+
     match /profiles-clones/{profileId} {
     	allow read;
       allow write: if isProfilesUser(profileId);
     }
-  
+
   	match /users/{userId} {
     	allow read: if isUser(userId);
       allow write: if isUser(userId);
     }
-    
+
     match /users-clones/{userId} {
     	allow read: if isUser(userId);
       allow write: if isUser(userId);
     }
-    
-    
-  
+
+
+
     // Functions //
-     
+
     function isProfilesUser(profileId) {
-    return getUserData().profiles.hasAny(profileId)
+    	return incomingData().userId == profileId
     }
-    
+
     function userIsAllowed() {
     	return getUserData().canCreate == true
     }
-    
+
     function isPublic() {
-    	return resource.data.public == true
+    	return incomingData().public == true
     }
-    
+
     function isCreator() {
-    	return requestData().creator == request.auth.uid
+    	return incomingData().creator in getUserData().profiles
     }
-    
+
+    function isOwner() {
+    	return incomingData().owner in getUserData().profiles
+    }
+
     function isEditor() {
-    	return requestData().editors.hasAny(request.auth.uid)
+    	return incomingData().editors.hasAny(getUserData().profiles)
     }
-    
+
     function isViewer() {
-    	return requestData().viewers.hasAny(request.auth.uid)
+    	return incomingData().viewers.hasAny(getUserData().profiles)
     }
-    
+
     function isUser(userId) {
     	return request.auth.uid == userId
     }
-    
+
     function getUserData() {
     	return get(/databases/$(database)/documents/users/$(request.auth.uid)).data
     }
-    
+
     function incomingData() {
     	return resource.data;
-    }
-    
-    function requestData() {
-    	return request.resource.data
     }
   }
 }

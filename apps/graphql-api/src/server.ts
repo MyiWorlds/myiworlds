@@ -1,17 +1,20 @@
-import * as cors from 'cors';
-import * as express from 'express';
-import * as graphqlHTTP from 'express-graphql';
 import Context from './context';
+import cors from 'cors';
+import express from 'express';
+import graphqlHTTP from 'express-graphql';
 import schema from './schema';
 import { stackdriver } from '@myiworlds/services';
 import 'dotenv/config';
 
 const app = express();
 
-app.use(cors({
-  credentials: true,
-  origin: true,
-})); // enable `cors` to set HTTP response header: Access-Control-Allow-Origin: *
+// enable `cors` to set HTTP response header: Access-Control-Allow-Origin:
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  }),
+);
 
 app.use(
   '/graphql',
@@ -26,9 +29,8 @@ app.use(
         return new Error('Internal server error');
       }
       return error;
-    }
+    },
   })),
 );
-
 
 export default app;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import defaultMUITheme from '../lib/defaultMUITheme';
+import defaultMUITheme from '../components/Theme/defaultMUITheme';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 

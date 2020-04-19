@@ -1,11 +1,12 @@
 import AddIcon from '@material-ui/icons/Add';
 import AppController from './AppController';
+import CircleSelector from '../../components/Circle/CircleSelector/CircleSelector';
 import ContentArea from './ContentArea';
 import Fab from '@material-ui/core/Fab';
 import Navigation from './Navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import Zoom from '@material-ui/core/Zoom';
-import { CreateCircleProvider } from '../Circle/CreateCircleContext';
+import { ProfileProvider } from '../Profile/ProfileContext';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
 import {
@@ -75,41 +76,47 @@ const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
         setNavWidth,
       }}
     >
-      {
-        user && user.canCreate && (
-          <Zoom
-            in={true}
-            timeout={transitionDuration}
-            style={{
-              transitionDelay: `${transitionDuration.exit}ms`,
-            }}
-            unmountOnExit
+      {user && user.canCreate && (
+        <Zoom
+          in={true}
+          timeout={transitionDuration}
+          style={{
+            transitionDelay: `${transitionDuration.exit}ms`,
+          }}
+          unmountOnExit
+        >
+          <Fab
+            size="large"
+            color="secondary"
+            aria-label="add"
+            className={classes.fab}
+            onClick={() => setCreatingCircle(true)}
           >
-            <Fab size="large" color="secondary" aria-label="add" className={classes.fab}
-              onClick={() => setCreatingCircle(true)}
-            >
-              <AddIcon />
-            </Fab>
-          </Zoom>
-        )
-      }
+            <AddIcon />
+          </Fab>
+        </Zoom>
+      )}
 
-      <CreateCircleProvider />
-      <div className={classes.root}>
-        <AppController
-          setShowNavigation={setShowNavigation}
-          showNavigation={showNavigation}
-          navWidth={navWidth}
-          setNavWidth={setNavWidth}
-        />
-        <div className={classes.contentArea}>
-          <Navigation
-            showNavigation={showNavigation}
-            setShowNavigation={setShowNavigation}
-          />
-          <ContentArea children={children} />
+      <ProfileProvider>
+        <div>
+          <CircleSelector />
+          <div className={classes.root}>
+            <AppController
+              setShowNavigation={setShowNavigation}
+              showNavigation={showNavigation}
+              navWidth={navWidth}
+              setNavWidth={setNavWidth}
+            />
+            <div className={classes.contentArea}>
+              <Navigation
+                showNavigation={showNavigation}
+                setShowNavigation={setShowNavigation}
+              />
+              <ContentArea children={children} />
+            </div>
+          </div>
         </div>
-      </div>
+      </ProfileProvider>
     </UserInterfaceContext.Provider>
   );
 };

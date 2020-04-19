@@ -8,10 +8,7 @@ const UserType = new GraphQLObjectType({
 
   fields: () => ({
     id: { type: GraphQLString },
-    collection: {
-      type: GraphQLString,
-      description: 'Firestore Database model type'
-    },
+    collection: { type: GraphQLString },
     email: { type: GraphQLString },
     photoURL: { type: GraphQLString },
     dateCreated: { type: GraphQLBigInt },

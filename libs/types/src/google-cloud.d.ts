@@ -10,5 +10,7 @@ export interface GoogleCloudConfig {
   organizationId?: string;
   project: string;
   creatorGmail: string;
+  applicationCreatorUser: string;
+  applicationCreatorProfile: string;
   services: Service[];
 }

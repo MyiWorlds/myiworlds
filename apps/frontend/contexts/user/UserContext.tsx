@@ -2,14 +2,14 @@ import Error from '../../components/Error';
 import firebase from '../../lib/firebase/firebase';
 import firebaseAuth from '../../lib/firebase/firebaseAuth';
 import firestoreClient from './../../lib/firebase/firestoreClient';
+import guestUser from './guestUser';
 import ProgressWithMessage from '../../components/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
-import { LoggedInUser } from '@myiworlds/types';
+import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
+import { LoggedInUser, User } from '@myiworlds/types';
 import { ProviderStore, UserToCreate } from './userContextTypes';
-import { RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from '../SystemMessages/SystemMessagesContext';
 import { useGetUserByIdQuery } from './../../generated/apolloComponents';
-
 import {
   useCreateUserMutation,
   useDeleteUserMutation,
@@ -18,16 +18,6 @@ import {
 export const UserContext = React.createContext({} as ProviderStore);
 
 type SubscriptionToUser = null | (() => void);
-
-const guestUser = {
-  id: null,
-  email: 'guest@email.com',
-  photoURL: null,
-  isSystemAdmin: false,
-  canCreate: false,
-  dateCreated: Date.now(),
-  dateUpdated: Date.now(),
-};
 
 const UserProvider = ({ children }: any) => {
   const [user, setUser] = useState<LoggedInUser>(guestUser);
@@ -80,15 +70,18 @@ const UserProvider = ({ children }: any) => {
     isSystemAdmin,
     canCreate,
   }: LoggedInUser) => {
-    setUser({
-      id,
-      email,
-      photoURL,
-      dateCreated,
-      dateUpdated,
-      isSystemAdmin,
-      canCreate,
-    });
+    if (id) {
+      setUser({
+        id,
+        email,
+        collection: FIRESTORE_COLLECTIONS.USERS,
+        photoURL,
+        dateCreated,
+        dateUpdated,
+        isSystemAdmin,
+        canCreate,
+      });
+    }
   };
 
   const handleLogin = () => {
@@ -126,7 +119,6 @@ const UserProvider = ({ children }: any) => {
   const didMount = () => {
     document.cookie = 'token=;path=/';
     document.cookie = 'userId=;path=/';
-    document.cookie = 'selectedProfileId=;path=/';
 
     firebaseAuth
       .getRedirectResult()
@@ -146,6 +138,7 @@ const UserProvider = ({ children }: any) => {
                 photoURL: redirectUserCredential.user.photoURL,
               });
             } else {
+              document.cookie = 'selectedProfileId=;path=/';
               setAppSnackbar({
                 title:
                   'That email did not exist, try again or use a different email.',
@@ -197,18 +190,20 @@ const UserProvider = ({ children }: any) => {
     if (user && user.id && !userSubscription) {
       console.log('Subscribing to the user with email: ', user.email);
       const subscriptionToUser = firestoreClient
-        .collection('users')
+        .collection(FIRESTORE_COLLECTIONS.USERS)
         .doc(user.id)
         .onSnapshot(
           (docSnapshot: firebase.firestore.DocumentSnapshot) => {
             const userDoc:
               | firebase.firestore.DocumentData
+              | User
               | undefined = docSnapshot.data();
 
             if (userDoc && docSnapshot.exists) {
               console.log(
                 'Users fields have changed and I am going to update them.',
               );
+
               saveUser(userDoc as LoggedInUser);
               return;
             } else {

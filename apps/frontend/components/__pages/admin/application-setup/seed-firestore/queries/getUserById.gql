@@ -1,0 +1,12 @@
+query getSeededCirclesByIds {
+  getSeededCirclesByIds {
+    id
+    title
+    media {
+      id
+      type
+      title
+      string
+    }
+  }
+}

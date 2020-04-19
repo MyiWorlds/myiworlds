@@ -2,21 +2,17 @@ import createUser from './createUser';
 import getUserById from '../../queries/getUserById/getUserById';
 import UserType from '../../UserType';
 import { CreateUserResponse } from './createUserTypes.d';
-import {
-  GraphQLString,
-  GraphQLObjectType,
-  GraphQLNonNull,
-} from 'graphql';
+import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 
 const createUserMutation = {
-  name: 'createUser',
+  name: 'CreateUser',
   args: {
     id: { type: GraphQLNonNull(GraphQLString) },
     email: { type: GraphQLNonNull(GraphQLString) },
     photoURL: { type: GraphQLString },
   },
   resolve: (_: null, args: any) => {
-    return createUser(args.id, args.email, args.photoURL)
+    return createUser(args.id, args.email, args.photoURL);
   },
   type: new GraphQLObjectType({
     name: 'CreateUserPayload',
@@ -32,7 +28,7 @@ const createUserMutation = {
             return null;
           }
         },
-      }
+      },
     }),
   }),
 };

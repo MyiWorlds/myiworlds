@@ -32,6 +32,12 @@
     },
     "functions": {
       "tags": []
+    },
+    "factories": {
+      "tags": []
+    },
+    "helper-functions": {
+      "tags": []
     }
   }
 }

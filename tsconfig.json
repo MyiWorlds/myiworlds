@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "sourceMap": false,
+    "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -23,7 +23,9 @@
       "@myiworlds/credentials": ["libs/credentials/src/index.ts"],
       "@myiworlds/types": ["libs/types/src/index.ts"],
       "@myiworlds/services": ["libs/services/src/index.ts"],
-      "@myiworlds/enums": ["libs/enums/src/index.ts"]
+      "@myiworlds/enums": ["libs/enums/src/index.ts"],
+      "@myiworlds/factories": ["libs/factories/src/index.ts"],
+      "@myiworlds/helper-functions": ["libs/helper-functions/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
