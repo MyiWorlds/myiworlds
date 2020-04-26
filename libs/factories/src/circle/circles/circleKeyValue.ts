@@ -1,7 +1,8 @@
 import { Circle, Header } from '@myiworlds/types';
+import { HeaderFactory } from './headerFactory';
 
 export class CircleKeyValue implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'KEY_VALUE';
   title: string;
@@ -9,16 +10,29 @@ export class CircleKeyValue implements Circle {
   string: string;
 
   constructor() {
-    this.id = null;
+    // this.id = null;
     this.type = 'KEY_VALUE';
     this.collection = 'circles';
   }
 
-  create(creator: string, header: Header, key: string, string: string) {
+  create({
+    selectedProfileId,
+    header,
+    key,
+    string,
+  }: {
+    selectedProfileId: string;
+    header: Header;
+    key: string;
+    string: string;
+  }) {
+    header = new HeaderFactory().create({
+      selectedProfileId,
+      defaultValues: header,
+    });
     return {
       ...this,
       ...header,
-      creator,
       key,
       string,
     };

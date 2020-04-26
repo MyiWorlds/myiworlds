@@ -35,6 +35,7 @@ export default (App: any) => {
           getToken: () => parseCookies(req).token,
           getUserId: () => parseCookies(req).userId,
           getSelectedProfileId: () => parseCookies(req).selectedProfileId,
+          getIsSystemAdmin: () => parseCookies(req).isSystemAdmin,
         },
       );
 
@@ -98,6 +99,9 @@ export default (App: any) => {
         },
         getSelectedProfileId: () => {
           return parseCookies().selectedProfileId;
+        },
+        getIsSystemAdmin: () => {
+          return parseCookies().isSystemAdmin;
         },
       });
     }

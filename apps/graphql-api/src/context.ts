@@ -15,6 +15,7 @@ const Context = async (req: ExpressContext['req']) => {
     let profileHistoryId = null;
     const decodedUserId = await getUserId(cookies.token);
     const userIdFromClient = cookies.userId;
+    const isSystemAdmin = cookies.isSystemAdmin === 'true';
     const decodedUserIdIsSameAsClientId = decodedUserId === userIdFromClient;
     let userId = null;
 
@@ -36,6 +37,7 @@ const Context = async (req: ExpressContext['req']) => {
       selectedProfileId,
       addToHistory: userId && cookies.addToHistory ? true : false,
       profileHistoryId,
+      isSystemAdmin,
 
       // Data loaders
       circleLoader: new DataLoader(async (keys: string[]) =>

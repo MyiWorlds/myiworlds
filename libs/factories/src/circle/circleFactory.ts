@@ -29,6 +29,7 @@ export class CircleFactory {
   use(type: 'DATE'): CircleDate;
   use(type: 'DATA'): CircleData;
   use(type: 'GEO_POINT'): CircleGeoPoint;
+  use(type: 'KEY_VALUE'): CircleKeyValue;
   use(type: 'LINE' | 'UPDATED' | 'CREATED' | 'VIEWED'): CircleLine;
   use(type: 'VIEWED_BY_IDS'): CircleViewedByIds;
   use(type: 'LINES'): CircleLines;

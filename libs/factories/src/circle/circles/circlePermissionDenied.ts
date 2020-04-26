@@ -1,7 +1,7 @@
 import { Circle } from '@myiworlds/types';
 
 export class CirclePermssionDenied implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'PERMISSION_DENIED';
   title: string;

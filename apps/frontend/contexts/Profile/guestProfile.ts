@@ -7,7 +7,7 @@ const guestProfile: CreatedProfile = {
   media: undefined,
   dateCreated: Date.now(),
   dateUpdated: Date.now(),
-  theme: undefined,
+  theme: 'theme',
   publicHome: undefined,
   userId: null,
 };

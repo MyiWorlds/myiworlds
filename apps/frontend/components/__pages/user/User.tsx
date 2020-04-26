@@ -9,7 +9,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Header from '../../../components/Header/Header';
 import HistoryIcon from '@material-ui/icons/History';
-import InvertColorsIcon from '@material-ui/icons/InvertColors';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -18,15 +17,26 @@ import LogoutIcon from '@material-ui/icons/ExitToApp';
 import Media from './../../Media/Media';
 import ProfileSelector from './ProfileSelector';
 import React, { useContext } from 'react';
-import Router from 'next/router';
 import Spacer from './../../Spacer/Spacer';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import { ListItemSecondaryAction } from '@material-ui/core';
 import { ProfileContext } from '../../../contexts/Profile/ProfileContext';
 import { UserContext } from '../../../contexts/User/UserContext';
+import {
+  ListItemSecondaryAction,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    profileSelectorCard: { position: 'relative', minHeight: 100 },
+  }),
+);
 
 const User = () => {
+  const classes = useStyles();
   const { user, handleLogout, handleDeleteAccount } = useContext(UserContext);
   const { selectedProfile, updateSelectedProfileAddToHistory } = useContext(
     ProfileContext,
@@ -65,17 +75,6 @@ const User = () => {
     </Button>
   );
 
-  const currentTheme =
-    selectedProfile.theme &&
-    selectedProfile.theme.palette &&
-    selectedProfile.theme.palette.type
-      ? selectedProfile.theme.palette.type
-      : 'dark';
-  const darkTheme = currentTheme === 'dark';
-  const handleToggleDarkTheme = () => {
-    console.log('Update Circle code needs to be written');
-  };
-
   if (!selectedProfile || selectedProfile.id === 'guest') {
     return null;
   }
@@ -113,25 +112,6 @@ const User = () => {
           </ListItem>
         </List>
         <List>
-          <ListItem>
-            <ListItemIcon>
-              <InvertColorsIcon />
-            </ListItemIcon>
-            <ListItemText
-              id="switch-list-label-dark-theme"
-              primary="Dark Theme"
-            />
-            <ListItemSecondaryAction>
-              <Switch
-                edge="end"
-                onChange={handleToggleDarkTheme}
-                checked={darkTheme}
-                inputProps={{
-                  'aria-labelledby': 'switch-list-label-dark-theme',
-                }}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
           <ListItem
             button
             component={ButtonLink}
@@ -172,9 +152,11 @@ const User = () => {
 
       <Typography variant="h5">All Profiles:</Typography>
       <Spacer />
-      <Card>
+      <Card className={classes.profileSelectorCard}>
         <ProfileSelector />
       </Card>
+
+      <Spacer multiplier={4} />
 
       <DeleteAccountModal
         open={openDeleteAccountModal}

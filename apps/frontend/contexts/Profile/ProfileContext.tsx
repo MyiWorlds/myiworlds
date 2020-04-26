@@ -4,13 +4,14 @@ import guestProfile from './guestProfile';
 import MaterialUiTheme from '../../components/Theme/MaterialUiTheme';
 import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
+import { CircleHydrated, UserProfileData, UserProfileHydrated } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { getCookie, setCookie } from '../../functions/cookies';
 import { ProviderStore } from './profileContextTypes.d';
 import { SystemMessagesContext } from './../SystemMessages/SystemMessagesContext';
 import { Theme } from '@material-ui/core/styles';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext } from '../User/UserContext';
-import { UserProfileData, UserProfileHydrated } from '@myiworlds/types';
 import {
   useCreateProfileMutation,
   useGetProfileByIdQuery,
@@ -46,6 +47,10 @@ const ProfileProvider = ({ children }: any) => {
     id: selectedProfile.id,
     merge: true,
   });
+
+  const [themeData, loadingTheme, errorTheme] = useDocument(
+    firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(selectedProfile.theme && selectedProfile.theme.id ? selectedProfile.theme.id : 'theme'),
+  );
 
   const [
     createProfile,
@@ -158,7 +163,7 @@ const ProfileProvider = ({ children }: any) => {
         getProfileByUsernameData.getProfileByUsername;
       isUsernameAvailable =
         usernameAvailabilityResponse &&
-        usernameAvailabilityResponse.usernameAvailable
+          usernameAvailabilityResponse.usernameAvailable
           ? true
           : false;
       isUsernameInvalid =
@@ -255,6 +260,29 @@ const ProfileProvider = ({ children }: any) => {
     }
   };
 
+  if (loadingTheme) {
+    console.log("Subscription to theme loading");
+  }
+  if (errorTheme) {
+    console.log('Subscription to theme had an error');
+  }
+
+  const handleUpdateThemeSubscription = () => {
+    const theme: CircleHydrated | null = themeData && themeData.data() ? (themeData.data() as CircleHydrated) : null;
+    if (theme) {
+      setSelectedProfile({
+        ...selectedProfile,
+        theme,
+      })
+      setAppSnackbar({
+        title: 'Your theme has updated.',
+        autoHideDuration: 2000,
+      });
+    }
+  }
+
+  useEffect(handleUpdateThemeSubscription, [themeData, loadingTheme]);
+
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);
   useEffect(handleUsernameToCreate, [usernameToCreate]);
   useEffect(updateProfileWithCreatedProfile, [createProfileData]);
@@ -343,8 +371,8 @@ const ProfileProvider = ({ children }: any) => {
       <MaterialUiTheme
         themeOverride={
           selectedProfile.theme &&
-          selectedProfile.theme.data &&
-          selectedProfile.theme.data.theme
+            selectedProfile.theme.data &&
+            selectedProfile.theme.data.theme
             ? (selectedProfile.theme.data.theme as Theme)
             : undefined
         }

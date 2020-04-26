@@ -1,8 +1,12 @@
 import batchDeleteClonesAndDocument from '../functions/batchDeleteClonesAndDocument';
 import { Context } from '@myiworlds/types';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
-import { isCreator, isRequestingUser } from '@myiworlds/helper-functions';
 import { RESPONSE_CODES } from '@myiworlds/enums';
+import {
+  isOwner,
+  isCreator,
+  isRequestingUser,
+} from '@myiworlds/helper-functions';
 
 // import getDocumentsByFilters from '../queries/getDocumentsByFilters';
 
@@ -55,6 +59,7 @@ export default async function deleteDocument(
     }
 
     if (
+      isOwner(documentExists.owner, context.selectedProfileId) ||
       isCreator(documentExists.creator, context.selectedProfileId) ||
       isRequestingUser(documentExists.id, context.userId)
     ) {

@@ -6,6 +6,7 @@ import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { googleCloud } from '@myiworlds/credentials';
 
 const addToEdge = (
+  id: string,
   parentId: string,
   tags: string[],
   document: Circle | CircleClone,
@@ -19,7 +20,7 @@ const addToEdge = (
   const edgeItem = new CircleFactory().use(CIRCLE_TYPES.EDGE_NODE).create({
     selectedProfileId: googleCloud.applicationCreatorProfile,
     header: {
-      id: null,
+      id,
       type: CIRCLE_TYPES.EDGE_NODE,
       collection: FIRESTORE_COLLECTIONS.CIRCLES,
       tags,

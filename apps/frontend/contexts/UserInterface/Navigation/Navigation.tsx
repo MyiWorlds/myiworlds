@@ -38,6 +38,8 @@ import React, {
 interface Props {
   showNavigation: boolean;
   setShowNavigation: (value: boolean) => void;
+  navItems: null | React.ReactElement;
+  isResizingNav: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -99,6 +101,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawerPaper: {
       height: '100%',
+      overflow: 'auto',
     },
   }),
 );
@@ -140,16 +143,22 @@ function useEventListener(eventName: any, handler: any, element = window) {
   }, [eventName, element]); // Re-run if eventName or element changes
 }
 
-const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
+const Navigation: React.FC<Props> = ({
+  showNavigation,
+  setShowNavigation,
+  navItems,
+}) => {
   const { user, handleLogin } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
-  const { creatingCircle, navWidth, setNavWidth } = useContext(
-    UserInterfaceContext,
-  );
+  const {
+    creatingCircle,
+    navWidth,
+    setNavWidth,
+    setIsResizingNav,
+    isResizingNav,
+  } = useContext(UserInterfaceContext);
   const classes = useStyles({ navWidth });
   const [open, setOpen] = useState(false);
-
-  const [isResizing, setIsResizing] = useState(false);
 
   const handleShowMoreMenuItems = () => {
     if (!showNavigation) {
@@ -162,7 +171,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
   // ... so that reference never changes.
   const handleMouseMove = (e: MouseEvent) => {
     // we don't want to do anything if we aren't resizing.
-    if (!isResizing) {
+    if (!isResizingNav) {
       return;
     }
     const offsetLeft = e.clientX - 20;
@@ -175,21 +184,17 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
   };
 
   const handleMouseup = (e: MouseEvent) => {
-    setIsResizing(false);
+    setIsResizingNav(false);
   };
 
   const handleMousedown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!showNavigation) {
       setShowNavigation(true);
     }
-    setIsResizing(true);
+    setIsResizingNav(true);
   };
 
-  useCallback(handleMouseMove, [setNavWidth]);
-  useEventListener('mousemove', handleMouseMove);
-  useEventListener('mouseup', handleMouseup);
-
-  const navItems = (
+  const defaultNavItems = (
     <List className={classes.list}>
       <ListItem button component={ButtonLink} href="/">
         <ListItemIcon>
@@ -290,6 +295,12 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
     </List>
   );
 
+  const displayedNavItems = navItems ? navItems : defaultNavItems;
+
+  useCallback(handleMouseMove, [setNavWidth]);
+  useEventListener('mousemove', handleMouseMove);
+  useEventListener('mouseup', handleMouseup);
+
   return (
     <>
       <Hidden mdUp>
@@ -299,7 +310,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
           onOpen={() => {}}
           onClose={() => setShowNavigation(false)}
         >
-          <div className={classes.mobileDrawer}>{navItems}</div>
+          <div className={classes.mobileDrawer}>{displayedNavItems}</div>
         </SwipeableDrawer>
       </Hidden>
       <Hidden smDown>
@@ -324,7 +335,7 @@ const Navigation: React.FC<Props> = ({ showNavigation, setShowNavigation }) => {
           />
           <div className={classes.toolbar} />
           <Paper className={classes.drawerPaper} elevation={3}>
-            {navItems}
+            {displayedNavItems}
           </Paper>
         </Drawer>
       </Hidden>

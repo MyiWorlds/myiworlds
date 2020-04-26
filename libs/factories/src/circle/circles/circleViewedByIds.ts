@@ -3,7 +3,7 @@ import { FirestoreCollectionTypes } from '../../../../types/src/firebase';
 import { HeaderFactory } from './headerFactory';
 
 export class CircleViewedByIds implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'VIEWED_BY_IDS';
   data: ViewedByIds;

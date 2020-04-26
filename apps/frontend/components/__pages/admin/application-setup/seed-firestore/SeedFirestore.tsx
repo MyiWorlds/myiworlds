@@ -1,5 +1,6 @@
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import ButtonLink from '../../../../ButtonLink';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -82,7 +83,13 @@ const SeedFirestore: React.FunctionComponent<Props> = () => {
     list = getSeededCirclesByIdsQuery.getSeededCirclesByIds.map(
       (circle: CircleHydrated) => {
         return (
-          <ListItem button key={circle.id}>
+          <ListItem
+            button
+            key={circle.id}
+            component={ButtonLink}
+            href={`/id/[id]?id=${circle.id}`}
+            as={`/id/${circle.id}`}
+          >
             <ListItemAvatar>
               <Avatar>
                 {circle.media ? (

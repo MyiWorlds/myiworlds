@@ -5,7 +5,7 @@ import { HeaderFactory } from './headerFactory';
   Takes code that is put to string and saves it as string
 */
 export class CircleUI implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'UI';
   string: string;

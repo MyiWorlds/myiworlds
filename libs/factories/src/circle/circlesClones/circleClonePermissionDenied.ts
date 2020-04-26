@@ -1,7 +1,7 @@
 import { CircleClone } from '@myiworlds/types';
 
 export class CircleClonePermssionDenied implements CircleClone {
-  id: string | null;
+  id: string;
   collection: 'circles-clones';
   type: 'PERMISSION_DENIED';
   title: string;

@@ -1,5 +1,7 @@
 import addToEdge from './addToEdge';
 import { Circle, CircleClone, Context } from '@myiworlds/types';
+import { createCollectionId } from '../functions/createCollectionId';
+import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 
 const addToProfileHistory = (
   interactionType: string,
@@ -8,6 +10,7 @@ const addToProfileHistory = (
 ) => {
   if (context.userId && context.profileHistoryId && document) {
     addToEdge(
+      createCollectionId(FIRESTORE_COLLECTIONS.CIRCLES),
       context.profileHistoryId,
       [interactionType],
       document,

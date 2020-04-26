@@ -8,6 +8,10 @@ const defaultMUITheme = createMuiTheme({
     secondary: {
       main: '#f44336',
     },
+    background: {
+      default: '#303030',
+      paper: '#424242',
+    },
     type: 'dark',
   },
 });

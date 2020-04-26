@@ -6,10 +6,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "@nrwl/nx"
-  ],
+  "plugins": ["@typescript-eslint", "@nrwl/nx"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -22,6 +19,17 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-parameter-properties": "off",
+    "semi": [2, "always"],
+    "max-len": [
+      "error",
+      { "code": 80 },
+      { "ignoreStrings": true },
+      { "ignoreTemplateLiterals": true },
+      { "ignoreUrls": true },
+      { "ignoreTrailingComments": true },
+      { "ignoreComments": true },
+      { "ignorePattern": "^\\s*var\\s.+=\\s*require\\s*\\(" }
+    ],
     "@nrwl/nx/enforce-module-boundaries": [
       "error",
       {
@@ -29,9 +37,7 @@
         "depConstraints": [
           {
             "sourceTag": "*",
-            "onlyDependOnLibsWithTags": [
-              "*"
-            ]
+            "onlyDependOnLibsWithTags": ["*"]
           }
         ],
         "enforceBuildableLibDependency": true
@@ -40,9 +46,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "*.tsx"
-      ],
+      "files": ["*.tsx"],
       "rules": {
         "@typescript-eslint/no-unused-vars": "off"
       }

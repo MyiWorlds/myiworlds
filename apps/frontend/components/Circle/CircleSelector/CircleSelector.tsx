@@ -137,7 +137,7 @@ const Transition = React.forwardRef<unknown, TransitionProps>(
   },
 );
 
-export default function CircleSelector() {
+const CircleSelector = React.memo(() => {
   const classes = useStyles();
   const { creatingCircle, setCreatingCircle } = useContext(
     UserInterfaceContext,
@@ -212,4 +212,6 @@ export default function CircleSelector() {
       </div>
     </Dialog>
   );
-}
+});
+
+export default CircleSelector;

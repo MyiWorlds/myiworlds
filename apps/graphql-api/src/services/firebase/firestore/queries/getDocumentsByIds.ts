@@ -9,6 +9,7 @@ import {
   UserProfileData
   } from '@myiworlds/types';
 import { CircleFactory, factoriesSwitch } from '@myiworlds/factories';
+import { createCollectionId } from '../functions/createCollectionId';
 import { FIRESTORE_COLLECTIONS, SHARED_TYPES } from '@myiworlds/enums';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { userCanView } from '@myiworlds/helper-functions';
@@ -45,7 +46,7 @@ export default async function getDocumentsByIds(
         const circle = new CircleFactory().use('VIEWED_BY_IDS').create({
           selectedProfileId: context.selectedProfileId,
           header: {
-            id: null,
+            id: createCollectionId(FIRESTORE_COLLECTIONS.CIRCLES),
             collection: FIRESTORE_COLLECTIONS.CIRCLES,
           },
           collection,

@@ -3,7 +3,7 @@ import { googleCloud } from '@myiworlds/credentials';
 import { HeaderFactory } from './headerFactory';
 
 export class CircleEdge implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'EDGE';
 

@@ -2,10 +2,12 @@ import AddIcon from '@material-ui/icons/Add';
 import AppController from './AppController';
 import CircleSelector from '../../components/Circle/CircleSelector/CircleSelector';
 import ContentArea from './ContentArea';
+import DraggableDialog from './DraggableDialog';
 import Fab from '@material-ui/core/Fab';
 import Navigation from './Navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import Zoom from '@material-ui/core/Zoom';
+import { Circle } from '@myiworlds/types';
 import { ProfileProvider } from '../Profile/ProfileContext';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'fixed',
       width: '100%',
       height: '100%',
+      background: theme.palette.background.default,
     },
     contentArea: {
       display: 'flex',
@@ -40,18 +43,28 @@ const useStyles = makeStyles((theme: Theme) =>
     fab: {
       position: 'absolute',
       bottom: theme.spacing(2),
-      right: theme.spacing(2),
+      right: theme.spacing(3),
       zIndex: 1300,
     },
   }),
 );
 
-const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
+const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   const { user } = useContext(UserContext);
   const classes = useStyles();
   const [showNavigation, setShowNavigation] = useState(false);
   const [creatingCircle, setCreatingCircle] = useState(false);
   const [navWidth, setNavWidth] = useState(240);
+  const [isResizingNav, setIsResizingNav] = useState(false);
+  const [contentViewing, setContentViewing] = useState<null | Circle>(null);
+  const [navItems, setNavItems] = useState<React.ReactElement | null>(null);
+  const [
+    draggableDialogContent,
+    setDraggableDialogContent,
+  ] = useState<React.ReactElement | null>(null);
+  const [appBarItems, setAppBarItems] = useState<React.ReactElement | null>(
+    null,
+  );
   const theme = useTheme();
 
   const didMount = () => {
@@ -74,6 +87,13 @@ const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
         setCreatingCircle,
         navWidth,
         setNavWidth,
+        contentViewing,
+        setContentViewing,
+        setNavItems,
+        setAppBarItems,
+        setDraggableDialogContent,
+        isResizingNav,
+        setIsResizingNav,
       }}
     >
       {user && user.canCreate && (
@@ -99,6 +119,9 @@ const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
 
       <ProfileProvider>
         <div>
+          {draggableDialogContent && (
+            <DraggableDialog draggableDialogContent={draggableDialogContent} />
+          )}
           <CircleSelector />
           <div className={classes.root}>
             <AppController
@@ -106,11 +129,14 @@ const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
               showNavigation={showNavigation}
               navWidth={navWidth}
               setNavWidth={setNavWidth}
+              appBarItems={appBarItems}
             />
             <div className={classes.contentArea}>
               <Navigation
                 showNavigation={showNavigation}
                 setShowNavigation={setShowNavigation}
+                navItems={navItems}
+                isResizingNav={isResizingNav}
               />
               <ContentArea children={children} />
             </div>
@@ -119,7 +145,7 @@ const UserInterfaceProvider: React.FC<Props> = ({ children }) => {
       </ProfileProvider>
     </UserInterfaceContext.Provider>
   );
-};
+});
 
 const UserInterfaceConsumer = UserInterfaceContext.Consumer;
 

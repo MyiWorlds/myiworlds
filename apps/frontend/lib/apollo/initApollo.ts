@@ -20,11 +20,12 @@ interface Options {
   getToken: () => string;
   getSelectedProfileId: () => string;
   getUserId: () => string;
+  getIsSystemAdmin: () => string;
 }
 
 function create(
   initialState: any,
-  { getToken, getSelectedProfileId, getUserId }: Options,
+  { getToken, getSelectedProfileId, getUserId, getIsSystemAdmin }: Options,
 ) {
   const httpLink = createHttpLink({
     uri:
@@ -38,12 +39,13 @@ function create(
     const token = getToken();
     const selectedProfileId = getSelectedProfileId();
     const userId = getUserId();
+    const isSystemAdmin = getIsSystemAdmin();
     return {
       headers: {
         ...headers,
         cookies: token
-          ? `token=${token};selectedProfileId=${selectedProfileId};userId=${userId}`
-          : 'token=;path=/;selectedProfileId=;path=/;userId=;path=/;',
+          ? `token=${token};selectedProfileId=${selectedProfileId};userId=${userId};isSystemAdmin=${isSystemAdmin}`
+          : 'token=;path=/;selectedProfileId=;path=/;userId=;path=/;isSystemAdmin=/;',
       },
     };
   });

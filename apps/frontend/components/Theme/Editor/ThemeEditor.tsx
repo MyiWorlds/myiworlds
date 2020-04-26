@@ -1,19 +1,34 @@
-import * as React from 'react';
-import Button from '@material-ui/core/Button';
-import MaterialUiTheme from '../MaterialUiTheme';
+import BasicThemeEditor from './BasicThemeEditor';
+import React, { useContext, useEffect } from 'react';
+import ThemeViewer from './../Viewer/ThemeViewer';
+import { Circle } from '@myiworlds/types';
+import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 
 interface Props {
-  circleId: string;
+  circle: Circle;
+  updateCircle: (newValues: any) => void;
 }
 
-const ThemeEditor: React.FunctionComponent<Props> = ({ circleId }) => {
-  return (
-    <MaterialUiTheme>
-      <Button variant="contained" color="primary">
-        Primary
-      </Button>
-    </MaterialUiTheme>
-  );
+const ThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
+  const { setNavItems, setNavWidth } = useContext(UserInterfaceContext);
+
+  const updateEditor = () => {
+    const navItems = (
+      <BasicThemeEditor circle={circle} updateCircle={updateCircle} />
+    );
+    setNavWidth(600);
+    setNavItems(navItems);
+
+    return () => {
+      if (setNavItems) {
+        setNavItems(null);
+      }
+    };
+  };
+
+  useEffect(updateEditor, [circle.data.theme]);
+
+  return <ThemeViewer circle={circle} />;
 };
 
 export default ThemeEditor;

@@ -1,7 +1,7 @@
 import CircleType from '../../CircleType';
 import getDocumentById from '../../../../services/firebase/firestore/queries/getDocumentById';
 import updateDocumentById from '../../../../services/firebase/firestore/mutations/updateDocumentById';
-import { Circle, Context } from '@myiworlds/types';
+import { Context, UpdateCircleMutation } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { UpdateCircleResponse } from './updateCircleTypes';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -18,10 +18,6 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const GraphQLBigInt = require('graphql-bigint');
 
-interface UpdateCircleMutation extends Circle {
-  merge: boolean;
-}
-
 const updateCircleMutation = {
   name: 'UpdateCircle',
   args: {
@@ -31,7 +27,7 @@ const updateCircleMutation = {
     component: { type: GraphQLString },
     parent: { type: GraphQLString },
     cached: { type: GraphQLBoolean },
-    cache: { type: GraphQLJSON },
+    // cache: { type: GraphQLJSON }, // Created by backend
     pii: { type: GraphQLBoolean },
     copiedFrom: { type: GraphQLString },
     autoUpdate: { type: GraphQLBoolean },
@@ -56,20 +52,23 @@ const updateCircleMutation = {
     number: { type: GraphQLInt },
     bigNumber: { type: GraphQLBigInt },
     boolean: { type: GraphQLBoolean },
-    date: { type: GraphQLString },
+    date: { type: GraphQLBigInt },
     geoPoint: { type: GraphQLString },
     line: { type: GraphQLString },
     lines: { type: GraphQLList(GraphQLString) },
   },
-  resolve: (_: null, args: UpdateCircleMutation, context: Context) =>
-    updateDocumentById(
+  resolve: (_: null, args: UpdateCircleMutation, context: Context) => {
+    const merge = args.merge ? args.merge : false;
+    delete args.merge;
+    return updateDocumentById(
       {
         ...args,
         collection: FIRESTORE_COLLECTIONS.CIRCLES,
       },
       context,
-      args.merge,
-    ),
+      merge,
+    );
+  },
   type: new GraphQLObjectType({
     name: 'UpdateCirclePayload',
     fields: () => ({

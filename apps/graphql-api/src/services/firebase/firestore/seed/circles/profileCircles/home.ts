@@ -5,7 +5,7 @@ export const home = new CircleFactory().use('EDGE').createCounterEdge({
   selectedProfileId: googleCloud.applicationCreatorProfile,
   header: {
     id: 'home',
-    title: 'Home',
+    title: 'My Home',
     public: true,
   },
 });

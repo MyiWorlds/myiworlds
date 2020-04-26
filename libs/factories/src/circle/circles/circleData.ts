@@ -2,7 +2,7 @@ import { Circle, Header } from '@myiworlds/types';
 import { HeaderFactory } from './headerFactory';
 
 export class CircleData implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'DATA';
   data: {

@@ -258,7 +258,6 @@ export type MutationUpdateCircleArgs = {
   component?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['String']>;
   cached?: Maybe<Scalars['Boolean']>;
-  cache?: Maybe<Scalars['JSON']>;
   pii?: Maybe<Scalars['Boolean']>;
   copiedFrom?: Maybe<Scalars['String']>;
   autoUpdate?: Maybe<Scalars['Boolean']>;
@@ -283,7 +282,7 @@ export type MutationUpdateCircleArgs = {
   number?: Maybe<Scalars['Int']>;
   bigNumber?: Maybe<Scalars['BigInt']>;
   boolean?: Maybe<Scalars['Boolean']>;
-  date?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['BigInt']>;
   geoPoint?: Maybe<Scalars['String']>;
   line?: Maybe<Scalars['String']>;
   lines?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -399,6 +398,52 @@ export type User = {
   dateUpdated?: Maybe<Scalars['BigInt']>;
   isSystemAdmin?: Maybe<Scalars['Boolean']>;
   canCreate?: Maybe<Scalars['Boolean']>;
+};
+
+export type UpdateCircleMutationVariables = {
+  id: Scalars['String'];
+  merge: Scalars['Boolean'];
+  type?: Maybe<Scalars['String']>;
+  component?: Maybe<Scalars['String']>;
+  parent?: Maybe<Scalars['String']>;
+  cached?: Maybe<Scalars['Boolean']>;
+  pii?: Maybe<Scalars['Boolean']>;
+  copiedFrom?: Maybe<Scalars['String']>;
+  autoUpdate?: Maybe<Scalars['Boolean']>;
+  slug?: Maybe<Scalars['String']>;
+  public?: Maybe<Scalars['Boolean']>;
+  passwordRequired?: Maybe<Scalars['Boolean']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  media?: Maybe<Scalars['String']>;
+  creator?: Maybe<Scalars['String']>;
+  owner?: Maybe<Scalars['String']>;
+  viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
+  editors?: Maybe<Array<Maybe<Scalars['String']>>>;
+  ui?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  key?: Maybe<Scalars['String']>;
+  string?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  number?: Maybe<Scalars['Int']>;
+  bigNumber?: Maybe<Scalars['BigInt']>;
+  boolean?: Maybe<Scalars['Boolean']>;
+  date?: Maybe<Scalars['BigInt']>;
+  geoPoint?: Maybe<Scalars['String']>;
+  line?: Maybe<Scalars['String']>;
+  lines?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type UpdateCircleMutation = { __typename?: 'Mutation' } & {
+  updateCircle: Maybe<
+    { __typename?: 'UpdateCirclePayload' } & Pick<
+      UpdateCirclePayload,
+      'status' | 'message'
+    >
+  >;
 };
 
 export type SeedFirestoreCirclesMutationVariables = {};
@@ -686,6 +731,160 @@ export const LoggedInUserFragmentFragmentDoc = gql`
     canCreate
   }
 `;
+export const UpdateCircleDocument = gql`
+  mutation updateCircle(
+    $id: String!
+    $merge: Boolean!
+    $type: String
+    $component: String
+    $parent: String
+    $cached: Boolean
+    $pii: Boolean
+    $copiedFrom: String
+    $autoUpdate: Boolean
+    $slug: String
+    $public: Boolean
+    $passwordRequired: Boolean
+    $tags: [String]
+    $title: String
+    $subtitle: String
+    $description: String
+    $media: String
+    $creator: String
+    $owner: String
+    $viewers: [String]
+    $editors: [String]
+    $ui: String
+    $dateCreated: BigInt
+    $dateUpdated: BigInt
+    $key: String
+    $string: String
+    $data: JSON
+    $number: Int
+    $bigNumber: BigInt
+    $boolean: Boolean
+    $date: BigInt
+    $geoPoint: String
+    $line: String
+    $lines: [String]
+  ) {
+    updateCircle(
+      id: $id
+      merge: $merge
+      type: $type
+      component: $component
+      parent: $parent
+      cached: $cached
+      pii: $pii
+      copiedFrom: $copiedFrom
+      autoUpdate: $autoUpdate
+      slug: $slug
+      public: $public
+      passwordRequired: $passwordRequired
+      tags: $tags
+      title: $title
+      subtitle: $subtitle
+      description: $description
+      media: $media
+      creator: $creator
+      owner: $owner
+      viewers: $viewers
+      editors: $editors
+      ui: $ui
+      dateCreated: $dateCreated
+      dateUpdated: $dateUpdated
+      key: $key
+      string: $string
+      data: $data
+      number: $number
+      bigNumber: $bigNumber
+      boolean: $boolean
+      date: $date
+      geoPoint: $geoPoint
+      line: $line
+      lines: $lines
+    ) {
+      status
+      message
+    }
+  }
+`;
+export type UpdateCircleMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateCircleMutation,
+  UpdateCircleMutationVariables
+>;
+
+/**
+ * __useUpdateCircleMutation__
+ *
+ * To run a mutation, you first call `useUpdateCircleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCircleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCircleMutation, { data, loading, error }] = useUpdateCircleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      merge: // value for 'merge'
+ *      type: // value for 'type'
+ *      component: // value for 'component'
+ *      parent: // value for 'parent'
+ *      cached: // value for 'cached'
+ *      pii: // value for 'pii'
+ *      copiedFrom: // value for 'copiedFrom'
+ *      autoUpdate: // value for 'autoUpdate'
+ *      slug: // value for 'slug'
+ *      public: // value for 'public'
+ *      passwordRequired: // value for 'passwordRequired'
+ *      tags: // value for 'tags'
+ *      title: // value for 'title'
+ *      subtitle: // value for 'subtitle'
+ *      description: // value for 'description'
+ *      media: // value for 'media'
+ *      creator: // value for 'creator'
+ *      owner: // value for 'owner'
+ *      viewers: // value for 'viewers'
+ *      editors: // value for 'editors'
+ *      ui: // value for 'ui'
+ *      dateCreated: // value for 'dateCreated'
+ *      dateUpdated: // value for 'dateUpdated'
+ *      key: // value for 'key'
+ *      string: // value for 'string'
+ *      data: // value for 'data'
+ *      number: // value for 'number'
+ *      bigNumber: // value for 'bigNumber'
+ *      boolean: // value for 'boolean'
+ *      date: // value for 'date'
+ *      geoPoint: // value for 'geoPoint'
+ *      line: // value for 'line'
+ *      lines: // value for 'lines'
+ *   },
+ * });
+ */
+export function useUpdateCircleMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCircleMutation,
+    UpdateCircleMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateCircleMutation,
+    UpdateCircleMutationVariables
+  >(UpdateCircleDocument, baseOptions);
+}
+export type UpdateCircleMutationHookResult = ReturnType<
+  typeof useUpdateCircleMutation
+>;
+export type UpdateCircleMutationResult = ApolloReactCommon.MutationResult<
+  UpdateCircleMutation
+>;
+export type UpdateCircleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateCircleMutation,
+  UpdateCircleMutationVariables
+>;
 export const SeedFirestoreCirclesDocument = gql`
   mutation seedFirestoreCircles {
     seedFirestoreCircles {

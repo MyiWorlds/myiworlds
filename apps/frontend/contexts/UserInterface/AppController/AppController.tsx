@@ -1,17 +1,11 @@
 import AppBar from '@material-ui/core/AppBar';
-import EditIcon from '@material-ui/icons/Edit';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import React from 'react';
 import SearchIcon from '@material-ui/icons/Search';
-import ShareIcon from '@material-ui/icons/Share';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import ViewQuiltIcon from '@material-ui/icons/ViewQuilt';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 /*
@@ -24,6 +18,7 @@ interface Props {
   showNavigation: boolean;
   navWidth: number;
   setNavWidth: (value: number) => void;
+  appBarItems: null | React.ReactElement;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,6 +41,7 @@ const AppController: React.FC<Props> = ({
   showNavigation,
   navWidth,
   setNavWidth,
+  appBarItems,
 }) => {
   const classes = useStyles();
 
@@ -58,8 +54,23 @@ const AppController: React.FC<Props> = ({
     }
   };
 
+  const defaultAppBarItems = [
+    <Typography key="title" variant="h6" className={classes.title}>
+      MyiWorlds
+      </Typography>,
+    <Tooltip title="Search" key="search">
+      <span>
+        <IconButton color="inherit" disabled={true}>
+          <SearchIcon />
+        </IconButton>
+      </span>
+    </Tooltip>,
+  ];
+
+  const displayedAppBarItems = appBarItems ? appBarItems : defaultAppBarItems;
+
   return (
-    <AppBar position="static" className={classes.appBar}>
+    <AppBar position="static" color="default" className={classes.appBar}>
       <Toolbar variant="dense">
         <IconButton
           edge="start"
@@ -70,66 +81,7 @@ const AppController: React.FC<Props> = ({
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          MyiWorlds
-        </Typography>
-
-        <Tooltip title="Search">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <SearchIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        {/* Only show in editing */}
-        <Tooltip title="Customize Layout">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <ViewQuiltIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Edit">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <EditIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Copy">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <FileCopyIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Share">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <ShareIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Fullscreen">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <FullscreenIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="More">
-          <span>
-            <IconButton color="inherit" disabled={true}>
-              <MoreVertIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
+        {displayedAppBarItems}
       </Toolbar>
     </AppBar>
   );

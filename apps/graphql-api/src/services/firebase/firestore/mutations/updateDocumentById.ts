@@ -1,5 +1,6 @@
 import addToProfileHistory from './addToProfileHistory';
 import cloneDocument from './cloneDocument';
+import isSystemAdmin from './../../../../schema/circle/functions/isSystemAdmin';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import {
   RESPONSE_CODES,
@@ -7,6 +8,7 @@ import {
   FIRESTORE_COLLECTIONS,
 } from '@myiworlds/enums';
 import {
+  isOwner,
   isCreator,
   isEditor,
   isRequestingUser,
@@ -18,6 +20,7 @@ import {
   PublicProfileCloneHydrated,
   Circle,
   CircleClone,
+  UpdateCircleMutation,
   User,
   UserClone,
 } from '@myiworlds/types';
@@ -32,8 +35,9 @@ interface Response {
 export default async function updateDocumentById(
   updatedDocument:
     | Circle
-    | User
     | CircleClone
+    | UpdateCircleMutation
+    | User
     | UserClone
     | PublicProfileCloneHydrated
     | UserProfileData
@@ -89,12 +93,20 @@ export default async function updateDocumentById(
       .get()
       .then(async (document: any) => {
         const doc = document.data();
-        if (
+
+        let canEdit =
+          isOwner(doc.owner, context.selectedProfileId as string) ||
           isCreator(doc.creator, context.selectedProfileId as string) ||
           isEditor(doc.editors, context.selectedProfileId as string) ||
           isRequestingUser(doc.id, context.selectedProfileId as string) ||
-          isRequestingUser(doc.id, context.userId as string)
-        ) {
+          isRequestingUser(doc.id, context.userId as string);
+
+        if (!canEdit && context.isSystemAdmin) {
+          const adminCanEdit = await isSystemAdmin(context.userId);
+          canEdit = adminCanEdit;
+        }
+
+        if (canEdit) {
           cloneDocument(doc);
           Object.keys(updatedDocument).forEach(
             (

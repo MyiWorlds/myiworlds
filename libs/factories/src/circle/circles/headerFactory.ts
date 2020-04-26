@@ -1,7 +1,7 @@
 import { Header } from '@myiworlds/types';
 
 export class HeaderFactory implements Header {
-  id: string | null;
+  id: string;
 
   create({
     defaultValues,

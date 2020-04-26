@@ -40,7 +40,7 @@ export type PossibleCircleTypes =
 export type PossibleComponents = 'THEME';
 
 export interface Header {
-  id: string | null;
+  id: string;
   collection?: FIRESTORE_COLLECTIONS.CIRCLES;
   type?: PossibleCircleTypes;
   component?: PossibleComponents;
@@ -81,10 +81,14 @@ export interface Circle extends Header {
   number?: number;
   bigNumber?: bigint;
   boolean?: boolean;
-  date?: any;
+  date?: number;
   geoPoint?: string;
   line?: string;
   lines?: string[];
+}
+
+export interface UpdateCircleMutation extends Circle {
+  merge: boolean;
 }
 
 export interface CircleHydrated extends Circle {

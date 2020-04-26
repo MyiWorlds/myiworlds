@@ -2,7 +2,7 @@ import { Circle, Header, QueryGetDocumentById } from '@myiworlds/types';
 import { HeaderFactory } from './headerFactory';
 
 export class CircleQueryGetDocumentById implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'QUERY_GET_DOCUMENT_BY_ID';
   data: QueryGetDocumentById;

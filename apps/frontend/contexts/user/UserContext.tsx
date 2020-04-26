@@ -8,6 +8,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { LoggedInUser, User } from '@myiworlds/types';
 import { ProviderStore, UserToCreate } from './userContextTypes';
+import { setCookie } from './../../functions/cookies';
 import { SystemMessagesContext } from '../SystemMessages/SystemMessagesContext';
 import { useGetUserByIdQuery } from './../../generated/apolloComponents';
 import {
@@ -102,6 +103,7 @@ const UserProvider = ({ children }: any) => {
   const resetBrowserCookies = () => {
     document.cookie = 'token=;path=/';
     document.cookie = 'userId=;path=/';
+    document.cookie = 'isSystemAdmin=;path=/';
   };
 
   const handleLogout = () => {
@@ -119,7 +121,7 @@ const UserProvider = ({ children }: any) => {
   const didMount = () => {
     document.cookie = 'token=;path=/';
     document.cookie = 'userId=;path=/';
-
+    document.cookie = 'isSystemAdmin=;path=/';
     firebaseAuth
       .getRedirectResult()
       .then((redirectUserCredential: firebase.auth.UserCredential) => {
@@ -139,6 +141,7 @@ const UserProvider = ({ children }: any) => {
               });
             } else {
               document.cookie = 'selectedProfileId=;path=/';
+              document.cookie = 'isSystemAdmin=;path=/';
               setAppSnackbar({
                 title:
                   'That email did not exist, try again or use a different email.',
@@ -205,6 +208,10 @@ const UserProvider = ({ children }: any) => {
               );
 
               saveUser(userDoc as LoggedInUser);
+              setCookie(
+                'isSystemAdmin',
+                userDoc.isSystemAdmin,
+              )
               return;
             } else {
               console.log(

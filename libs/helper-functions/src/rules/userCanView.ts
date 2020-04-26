@@ -2,6 +2,7 @@ import { Context } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { isCreator } from './isCreator';
 import { isEditor } from './isEditor';
+import { isOwner } from './isOwner';
 import { isPublic } from './isPublic';
 import { isRequestingUser } from './isRequestingUser';
 import { isUser } from './isUser';
@@ -21,6 +22,7 @@ export const userCanView = (document: any, context: Context) => {
 
     if (userId && selectedProfileId) {
       return (
+        isOwner(document.owner, selectedProfileId) ||
         isCreator(document.creator, selectedProfileId) ||
         isEditor(document.editors, selectedProfileId) ||
         isUser(document.users, selectedProfileId) ||

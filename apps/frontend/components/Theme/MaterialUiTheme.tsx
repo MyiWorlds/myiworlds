@@ -1,6 +1,7 @@
 import Card from '@material-ui/core/Card';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import defaultMUITheme from './defaultMUITheme';
+import ErrorBoundary from './../ErrorBoundry/ErrorBoundary';
 import React from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import {
@@ -34,6 +35,21 @@ const MaterialUiTheme = ({ themeOverride, children }: Props) => {
   let theme = defaultMUITheme;
   if (themeOverride) {
     theme = createMuiTheme(themeOverride);
+
+    const backupThemeDisplay = (
+      <ThemeProvider theme={responsiveFontSizes(defaultMUITheme)}>
+        <CssBaseline />
+        <Card className={classes.appRoot}>{children}</Card>
+      </ThemeProvider>
+    );
+    return (
+      <ErrorBoundary backupErrorRenderComponent={backupThemeDisplay}>
+        <ThemeProvider theme={responsiveFontSizes(theme)}>
+          <CssBaseline />
+          <Card className={classes.appRoot}>{children}</Card>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
   }
 
   return (

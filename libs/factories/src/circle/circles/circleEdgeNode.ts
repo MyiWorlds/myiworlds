@@ -4,7 +4,7 @@ import { HeaderFactory } from './headerFactory';
 import { isEditor } from '@myiworlds/helper-functions';
 
 export class CircleEdgeNode implements Circle {
-  id: string | null;
+  id: string;
   collection: 'circles';
   type: 'EDGE_NODE';
   parent?: string;
