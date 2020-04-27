@@ -6,7 +6,6 @@ import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import DeleteAccountModal from './DeleteAccountModal';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import Header from '../../../components/Header/Header';
 import HistoryIcon from '@material-ui/icons/History';
 import List from '@material-ui/core/List';
@@ -15,6 +14,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import Media from './../../Media/Media';
+import PaletteIcon from '@material-ui/icons/Palette';
 import ProfileSelector from './ProfileSelector';
 import React, { useContext } from 'react';
 import Spacer from './../../Spacer/Spacer';
@@ -120,7 +120,7 @@ const User = () => {
           >
             <ListItemIcon>
               <Avatar>
-                <EditIcon />
+                <PaletteIcon />
               </Avatar>
             </ListItemIcon>
             <ListItemText primary="Edit Theme" />

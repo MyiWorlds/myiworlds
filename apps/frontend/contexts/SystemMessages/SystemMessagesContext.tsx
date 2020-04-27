@@ -1,5 +1,6 @@
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import React, {
   MouseEvent,
   SyntheticEvent,
@@ -19,6 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const SystemMessagesProvider = ({ children }: any) => {
   const classes = useStyles();
@@ -63,7 +68,11 @@ const SystemMessagesProvider = ({ children }: any) => {
         ContentProps={{
           'aria-describedby': 'message-id',
         }}
-        message={<span id="message-id">{snackbar.title}</span>}
+        message={
+          snackbar.severity ? null : (
+            <span id="message-id">{snackbar.title}</span>
+          )
+        }
         action={[
           <IconButton
             key="close"
@@ -75,7 +84,13 @@ const SystemMessagesProvider = ({ children }: any) => {
             <CloseIcon />
           </IconButton>,
         ]}
-      />
+      >
+        {snackbar.severity ? (
+          <Alert severity={snackbar.severity} variant="filled">
+            <span id="message-id">{snackbar.title}</span>
+          </Alert>
+        ) : null}
+      </Snackbar>
       {children}
     </SystemMessagesContext.Provider>
   );

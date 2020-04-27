@@ -113,6 +113,7 @@ const ProfileProvider = ({ children }: any) => {
       createProfileData.createProfile &&
       createProfileData.createProfile.createdDocumentId
     ) {
+      console.log('Profile created and telling app to get the new selected profile');
       setCookie(
         'selectedProfileId',
         createProfileData.createProfile.createdDocumentId,
@@ -135,11 +136,15 @@ const ProfileProvider = ({ children }: any) => {
 
   const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
-      console.log('Setting selected profile.')
+      console.log('Setting selected profile.', getProfileQuery.getProfileById.username)
+      if (selectedProfileSubscription) {
+        selectedProfileSubscription();
+      }
+      // setSelectedProfileSubscription(null);
+      setProfileIdToSelect(null);
       setSelectedProfile(getProfileQuery.getProfileById as UserProfileHydrated);
       subscribeToProfile();
     }
-    // If you want to change the theme you need to update the circle by id in the app
     return;
   };
 
@@ -211,7 +216,7 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   const subscribeToProfile = () => {
-    if (selectedProfile && selectedProfile.id && selectedProfile.id !== 'guest' && !selectedProfileSubscription) {
+    if (selectedProfile && selectedProfile.id && selectedProfile.id !== 'guest' && !selectedProfileSubscription && !profileIdToSelect) {
       console.log(
         'Subscribing to the selected profile: ',
         selectedProfile.username,
@@ -265,7 +270,11 @@ const ProfileProvider = ({ children }: any) => {
     console.log("Subscription to theme loading");
   }
   if (errorTheme) {
-    console.log('Subscription to theme had an error');
+    setAppSnackbar({
+      title: 'The subscription to your theme had an error',
+      autoHideDuration: 2000,
+      severity: 'error',
+    });
   }
 
   const handleUpdateThemeSubscription = () => {
@@ -282,7 +291,6 @@ const ProfileProvider = ({ children }: any) => {
     }
   }
 
-  useEffect(handleUpdateThemeSubscription, [themeData, loadingTheme]);
 
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);
   useEffect(handleUsernameToCreate, [usernameToCreate]);
@@ -291,6 +299,7 @@ const ProfileProvider = ({ children }: any) => {
   useEffect(handleAutoLogInToProfile, [user]);
   useEffect(profileUpdated, [updateProfileData]);
   useEffect(updateProfileMutation, [updateProfileVariables]);
+  useEffect(handleUpdateThemeSubscription, [themeData, loadingTheme]);
 
   const handleCancelCreateProfile = () => {
     setUsernameToCreate('');
