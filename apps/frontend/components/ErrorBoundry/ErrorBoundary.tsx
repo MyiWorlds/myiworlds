@@ -3,12 +3,16 @@ import Typography from '@material-ui/core/Typography';
 
 interface Props {
   backupErrorRenderComponent?: React.ReactElement;
+  setCanSave?: (bool: boolean) => void;
 }
 
 class ErrorBoundary extends React.Component<Props> {
   state = { error: null, errorInfo: null };
 
   componentDidCatch(error: Error, errorInfo: any) {
+    if (this.props.setCanSave) {
+      this.props.setCanSave(false);
+    }
     this.setState({
       error: error,
       errorInfo: errorInfo,
@@ -17,6 +21,9 @@ class ErrorBoundary extends React.Component<Props> {
 
   componentDidUpdate(prevProps: any, prevState: any) {
     if (prevProps !== this.props && prevState.error) {
+      if (this.props.setCanSave) {
+        this.props.setCanSave(true);
+      }
       this.setState({
         error: null,
         errorInfo: null,

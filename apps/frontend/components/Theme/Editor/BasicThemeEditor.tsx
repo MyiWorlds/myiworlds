@@ -1,8 +1,9 @@
+import cloneDeep from 'lodash.clonedeep';
 import ObjectEditor from '../../Object/Editor/ObjectEditor';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Circle } from '@myiworlds/types';
-import { deepClone, deepMerge } from '@myiworlds/helper-functions';
-
+import { deepMerge } from '@myiworlds/helper-functions';
+import { UserContext } from './../../../contexts/User/UserContext';
 import {
   List,
   ListItem,
@@ -55,6 +56,8 @@ interface Props {
 const BasicThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
   const classes = useStyles();
   const muiTheme = useTheme();
+  const { user } = useContext(UserContext);
+
   const theme = circle.data.theme;
   const currentThemeColor =
     theme && theme.palette && theme.palette.type ? theme.palette.type : 'dark';
@@ -90,7 +93,11 @@ const BasicThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
     updateCircle(updatedCircle);
   };
 
-  const combinedTheme = deepMerge(deepClone(circle.data.theme), muiTheme);
+  let combinedTheme = cloneDeep(circle.data.theme);
+
+  if (user.isSystemAdmin) {
+    combinedTheme = deepMerge(cloneDeep(circle.data.theme), muiTheme);
+  }
 
   return (
     <List className={classes.list}>

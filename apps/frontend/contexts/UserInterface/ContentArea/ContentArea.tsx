@@ -10,6 +10,8 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       flexGrow: 1,
       zIndex: theme.zIndex.drawer - 1,
+      overflow: 'auto',
+      background: theme.palette.background.default,
     },
   }),
 );

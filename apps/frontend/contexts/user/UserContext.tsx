@@ -208,10 +208,7 @@ const UserProvider = ({ children }: any) => {
               );
 
               saveUser(userDoc as LoggedInUser);
-              setCookie(
-                'isSystemAdmin',
-                userDoc.isSystemAdmin,
-              )
+              setCookie('isSystemAdmin', userDoc.isSystemAdmin);
               return;
             } else {
               console.log(
@@ -305,12 +302,12 @@ const UserProvider = ({ children }: any) => {
     return <ProgressWithMessage message="Logging in" />;
   }
 
-  if (deleteUserLoading) {
-    return <ProgressWithMessage message="Deleting your User account" />;
-  }
-
   if (appLoading) {
     return <ProgressWithMessage message="Loading Application" />;
+  }
+
+  if (deleteUserLoading) {
+    return <ProgressWithMessage message="Deleting your User account" />;
   }
 
   if (deleteUserError) {

@@ -12,6 +12,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import PersonIcon from '@material-ui/icons/Person';
+import ProgressWithMessage from './../../../../components/ProgressWithMessage/ProgressWithMessage';
 import React, { useEffect, useState } from 'react';
 import { blue } from '@material-ui/core/colors';
 import { Icon } from '@material-ui/core';
@@ -140,7 +141,7 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
   useEffect(onDataChange, [getUserProfilesQuery])
 
   if (getUserProfilesLoading) {
-    return <h1>Loading get Profiles</h1>;
+    return <ProgressWithMessage message="Loading your profiles" />;
   }
 
   if (getUserProfilesError) {

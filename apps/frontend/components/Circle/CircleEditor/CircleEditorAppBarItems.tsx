@@ -26,6 +26,7 @@ interface Props {
   updateCircleLoading: boolean;
   handleSave: () => void;
   handleCancel: () => void;
+  canSave: boolean;
 }
 
 export default function CircleEditorAppBarItems({
@@ -33,6 +34,7 @@ export default function CircleEditorAppBarItems({
   updateCircleLoading,
   handleSave,
   handleCancel,
+  canSave,
 }: Props) {
   const classes = useStyles();
   const router = useRouter();
@@ -55,7 +57,7 @@ export default function CircleEditorAppBarItems({
         autoFocus
         color="primary"
         onClick={handleSave}
-        disabled={updateCircleLoading}
+        disabled={updateCircleLoading || !canSave}
         variant="contained"
       >
         Save

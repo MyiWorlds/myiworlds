@@ -1,21 +1,26 @@
 import CircleEditorAppBarItems from './CircleEditorAppBarItems';
 import Error from '../../Error';
 import firestoreClient from './../../../lib/firebase/firestoreClient';
-import Progress from './../../Progress/Progress';
+import LoginModal from './LoginModal';
+import ProgressWithMessage from './../../ProgressWithMessage/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
+import RequestCreationModal from './RequestCreationModal';
 import ThemeEditor from './../../Theme/Editor/ThemeEditor';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
 import { useDocument } from 'react-firebase-hooks/firestore';
+import { UserContext } from './../../../contexts/User/UserContext';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
 import { useUpdateCircleMutation } from '../../../generated/apolloComponents';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      overflow: 'auto',
+    },
     appBar: {
       position: 'relative',
     },
@@ -32,7 +37,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const classes = useStyles();
   const router = useRouter();
   const { setAppSnackbar } = useContext(SystemMessagesContext);
-  const { setAppBarItems } = useContext(UserInterfaceContext);
+  const { setAppBarItems, setAppDialog } = useContext(UserInterfaceContext);
+  const { user } = useContext(UserContext);
+  const [canSave, setCanSave] = useState(user.canCreate);
 
   const [circleData, loadingCircle, errorCircle] = useDocument(
     firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
@@ -68,7 +75,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
         console.log('Changing path to one requested.');
         router.push(onSavePath);
       } else {
-        console.log('Changing path to view saved circle.');
+        console.log('Changing path to view saved circle.', `/id/${id}`);
         router.push(`/id/[id]?=${id}`, `/id/${id}`);
       }
     } else if (
@@ -111,12 +118,19 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const componentDidUpdate = () => {
     const circle: Circle | null =
       circleData && circleData.data() ? (circleData.data() as Circle) : null;
+    if (user.id && !user.canCreate) {
+      setAppDialog(<RequestCreationModal />);
+    } else {
+      setAppDialog(null);
+    }
+
     if (updateCircleVariables.id === '' && circle) {
       setUpdateCircleVariables(circle);
 
       setAppBarItems(
         <CircleEditorAppBarItems
           circle={circle}
+          canSave={canSave}
           handleSave={handleSave}
           handleCancel={handleCancel}
           updateCircleLoading={updateCircleLoading}
@@ -125,15 +139,22 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if (setAppBarItems) {
-        setAppBarItems(null);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(componentDidUpdate, [circleData, loadingCircle]);
+  const componentDidMount = () => {
+    if (!user.id) {
+      setCanSave(false);
+      setAppDialog(<LoginModal />);
+    }
+    // Was being used for slow pulling off screen causing crash that wouldnt allow refresh
+    // return () => {
+    //   if (setAppBarItems) {
+    //     setAppDialog(null);
+    //   }
+    // };
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(componentDidMount, []);
+  useEffect(componentDidUpdate, [circleData, loadingCircle, user]);
   useEffect(circleUpdated, [updateCircleData]);
 
   if (errorCircle) {
@@ -141,7 +162,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   }
 
   if (loadingCircle) {
-    return <Progress />;
+    return <ProgressWithMessage message="Loading Circle" />;
   }
 
   if (circleData) {
@@ -155,6 +176,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
             editor = (
               <ThemeEditor
                 circle={updateCircleVariables}
+                setCanSave={setCanSave}
                 updateCircle={handleUpdateCircle}
               />
             );

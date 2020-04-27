@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     root: {
       width: '100%',
+      minHeight: 100,
       backgroundColor: theme.palette.background.paper,
     },
   }),

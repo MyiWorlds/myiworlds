@@ -334,9 +334,7 @@ const Navigation: React.FC<Props> = ({
             className={classes.dragger}
           />
           <div className={classes.toolbar} />
-          <Paper className={classes.drawerPaper} elevation={3}>
-            {displayedNavItems}
-          </Paper>
+          <div className={classes.drawerPaper}>{displayedNavItems}</div>
         </Drawer>
       </Hidden>
     </>

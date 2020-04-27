@@ -7,9 +7,10 @@ import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInte
 interface Props {
   circle: Circle;
   updateCircle: (newValues: any) => void;
+  setCanSave: (bool: boolean) => void;
 }
 
-const ThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
+const ThemeEditor: React.FC<Props> = ({ circle, updateCircle, setCanSave }) => {
   const { setNavItems, setNavWidth } = useContext(UserInterfaceContext);
 
   const updateEditor = () => {
@@ -28,7 +29,7 @@ const ThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
 
   useEffect(updateEditor, [circle.data.theme]);
 
-  return <ThemeViewer circle={circle} />;
+  return <ThemeViewer circle={circle} setCanSave={setCanSave} />;
 };
 
 export default ThemeEditor;

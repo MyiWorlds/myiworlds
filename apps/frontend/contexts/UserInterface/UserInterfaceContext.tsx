@@ -1,5 +1,6 @@
 import AddIcon from '@material-ui/icons/Add';
 import AppController from './AppController';
+import AppDialog from './AppDialog/AppDialog';
 import CircleSelector from '../../components/Circle/CircleSelector/CircleSelector';
 import ContentArea from './ContentArea';
 import DraggableDialog from './DraggableDialog';
@@ -52,9 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   const { user } = useContext(UserContext);
   const classes = useStyles();
+  const defaultNavWidth = 240;
   const [showNavigation, setShowNavigation] = useState(false);
   const [creatingCircle, setCreatingCircle] = useState(false);
-  const [navWidth, setNavWidth] = useState(240);
+  const [navWidth, setNavWidth] = useState(defaultNavWidth);
   const [isResizingNav, setIsResizingNav] = useState(false);
   const [contentViewing, setContentViewing] = useState<null | Circle>(null);
   const [navItems, setNavItems] = useState<React.ReactElement | null>(null);
@@ -62,13 +64,14 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
     draggableDialogContent,
     setDraggableDialogContent,
   ] = useState<React.ReactElement | null>(null);
+  const [appDialog, setAppDialog] = useState<React.ReactElement | null>(null);
   const [appBarItems, setAppBarItems] = useState<React.ReactElement | null>(
     null,
   );
   const theme = useTheme();
 
   const didMount = () => {
-    if (window.innerWidth > theme.breakpoints.values.sm) {
+    if (window.innerWidth > theme.breakpoints.values.md) {
       setShowNavigation(true);
     }
   };
@@ -78,6 +81,13 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
     exit: theme.transitions.duration.leavingScreen,
   };
 
+  const updateNavWidth = () => {
+    if (!navItems) {
+      setNavWidth(defaultNavWidth);
+    }
+  };
+
+  useEffect(updateNavWidth, [navItems]);
   useEffect(didMount, []);
 
   return (
@@ -92,33 +102,34 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
         setNavItems,
         setAppBarItems,
         setDraggableDialogContent,
+        setAppDialog,
         isResizingNav,
         setIsResizingNav,
       }}
     >
-      {user && user.canCreate && (
-        <Zoom
-          in={true}
-          timeout={transitionDuration}
-          style={{
-            transitionDelay: `${transitionDuration.exit}ms`,
-          }}
-          unmountOnExit
-        >
-          <Fab
-            size="large"
-            color="secondary"
-            aria-label="add"
-            className={classes.fab}
-            onClick={() => setCreatingCircle(true)}
-          >
-            <AddIcon />
-          </Fab>
-        </Zoom>
-      )}
-
       <ProfileProvider>
         <div>
+          {user && user.canCreate && (
+            <Zoom
+              in={true}
+              timeout={transitionDuration}
+              style={{
+                transitionDelay: `${transitionDuration.exit}ms`,
+              }}
+              unmountOnExit
+            >
+              <Fab
+                size="large"
+                color="secondary"
+                aria-label="add"
+                className={classes.fab}
+                onClick={() => setCreatingCircle(true)}
+              >
+                <AddIcon />
+              </Fab>
+            </Zoom>
+          )}
+          {appDialog && <AppDialog appDialog={appDialog} />}
           {draggableDialogContent && (
             <DraggableDialog draggableDialogContent={draggableDialogContent} />
           )}

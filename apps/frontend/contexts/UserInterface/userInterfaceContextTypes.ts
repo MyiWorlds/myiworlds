@@ -13,4 +13,5 @@ export interface ProviderStore {
   setDraggableDialogContent: (
     draggableDialogContent: React.ReactElement | null,
   ) => void;
+  setAppDialog: (appDialog: React.ReactElement | null) => void;
 }

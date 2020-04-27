@@ -2,6 +2,7 @@ import Error from '../../components/Error';
 import firestoreClient from './../../lib/firebase/firestoreClient';
 import guestProfile from './guestProfile';
 import MaterialUiTheme from '../../components/Theme/MaterialUiTheme';
+import ProgressWithMessage from './../../components/ProgressWithMessage/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
 import { CircleHydrated, UserProfileData, UserProfileHydrated } from '@myiworlds/types';
@@ -297,7 +298,7 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   if (loadingGetProfile) {
-    console.log('Getting selected profile.');
+    return <ProgressWithMessage message="Getting selected profile" />;
   }
 
   if (errorGettingProfile) {
@@ -310,7 +311,7 @@ const ProfileProvider = ({ children }: any) => {
   }
 
   if (createProfileLoading) {
-    return <h1>Saving CreatedProfile</h1>;
+    return <ProgressWithMessage message="Saving Created Profile" />;
   }
 
   if (createProfileError) {

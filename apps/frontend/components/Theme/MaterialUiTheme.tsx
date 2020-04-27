@@ -15,6 +15,7 @@ import {
 interface Props {
   children: React.ReactElement;
   themeOverride?: Theme;
+  setCanSave?: (bool: boolean) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const MaterialUiTheme = ({ themeOverride, children }: Props) => {
+const MaterialUiTheme = ({ themeOverride, children, setCanSave }: Props) => {
   const classes = useStyles();
 
   let theme = defaultMUITheme;
@@ -43,10 +44,13 @@ const MaterialUiTheme = ({ themeOverride, children }: Props) => {
       </ThemeProvider>
     );
     return (
-      <ErrorBoundary backupErrorRenderComponent={backupThemeDisplay}>
+      <ErrorBoundary
+        backupErrorRenderComponent={backupThemeDisplay}
+        setCanSave={setCanSave}
+      >
         <ThemeProvider theme={responsiveFontSizes(theme)}>
           <CssBaseline />
-          <Card className={classes.appRoot}>{children}</Card>
+          {children}
         </ThemeProvider>
       </ErrorBoundary>
     );
@@ -55,7 +59,7 @@ const MaterialUiTheme = ({ themeOverride, children }: Props) => {
   return (
     <ThemeProvider theme={responsiveFontSizes(theme)}>
       <CssBaseline />
-      <Card className={classes.appRoot}>{children}</Card>
+      {children}
     </ThemeProvider>
   );
 };

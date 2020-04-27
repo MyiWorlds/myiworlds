@@ -39,6 +39,10 @@ export default class MyDocument extends Document {
               width: 100%;
               position: fixed;
             }
+
+            .cm-s-monokai {
+              z-index: 9999 !important;
+            }
           `}</style>
         </Head>
         <body>

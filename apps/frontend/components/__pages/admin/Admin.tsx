@@ -81,7 +81,7 @@ const Admin = () => {
     <Container maxWidth="lg">
       <Header title="System Admin" />
       <Grid container spacing={3}>
-        <Grid item sm={4}>
+        <Grid item md={6}>
           <Card className={classes.root}>
             <CardMedia
               component="img"
@@ -112,7 +112,7 @@ const Admin = () => {
           </Card>
         </Grid>
 
-        <Grid item sm={4}>
+        <Grid item md={6}>
           <Card>
             <CardHeader title="Services Used Shortcuts" />
             <CardContent>

@@ -3,6 +3,7 @@ import BooleanEditor from './../../Boolean/Editor/BooleanEditor';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import FunctionEditor from './../../Function/Editor/FunctionEditor';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -199,7 +200,7 @@ const ObjectEditor: React.FC<Props> = ({
       } else if (isFunction(value)) {
         renderElements.push(
           <div key={`${parentStrings}-${property}`}>
-            <StringEditor
+            <FunctionEditor
               property={property}
               value={value && value.toString() ? value.toString() : ''}
               setValue={updateValue}
