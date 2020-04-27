@@ -97,6 +97,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   };
 
   const handleSave = () => {
+    setCanSave(false);
     updateCircle();
   };
 
@@ -126,7 +127,16 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
     if (updateCircleVariables.id === '' && circle) {
       setUpdateCircleVariables(circle);
-
+      setAppBarItems(
+        <CircleEditorAppBarItems
+          circle={circle}
+          canSave={canSave}
+          handleSave={handleSave}
+          handleCancel={handleCancel}
+          updateCircleLoading={updateCircleLoading}
+        />,
+      );
+    } else if (circle) {
       setAppBarItems(
         <CircleEditorAppBarItems
           circle={circle}
@@ -154,7 +164,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(componentDidMount, []);
-  useEffect(componentDidUpdate, [circleData, loadingCircle, user]);
+  useEffect(componentDidUpdate, [circleData, loadingCircle, user, canSave]);
   useEffect(circleUpdated, [updateCircleData]);
 
   if (errorCircle) {

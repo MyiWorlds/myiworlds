@@ -136,11 +136,10 @@ const ProfileProvider = ({ children }: any) => {
 
   const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
-      console.log('Setting selected profile.', getProfileQuery.getProfileById.username)
+      console.log('Setting selected profile: ', getProfileQuery.getProfileById.username)
       if (selectedProfileSubscription) {
         selectedProfileSubscription();
       }
-      // setSelectedProfileSubscription(null);
       setProfileIdToSelect(null);
       setSelectedProfile(getProfileQuery.getProfileById as UserProfileHydrated);
       subscribeToProfile();
@@ -266,9 +265,6 @@ const ProfileProvider = ({ children }: any) => {
     }
   };
 
-  if (loadingTheme) {
-    console.log("Subscription to theme loading");
-  }
   if (errorTheme) {
     setAppSnackbar({
       title: 'The subscription to your theme had an error',
@@ -280,6 +276,7 @@ const ProfileProvider = ({ children }: any) => {
   const handleUpdateThemeSubscription = () => {
     const theme: CircleHydrated | null = themeData && themeData.data() ? (themeData.data() as CircleHydrated) : null;
     if (theme) {
+      console.log('Updating profile with subscribed theme')
       setSelectedProfile({
         ...selectedProfile,
         theme,
@@ -288,6 +285,8 @@ const ProfileProvider = ({ children }: any) => {
         title: 'Your theme has updated.',
         autoHideDuration: 2000,
       });
+    } else if (loadingTheme) {
+      console.log('Subscription to theme loading')
     }
   }
 
