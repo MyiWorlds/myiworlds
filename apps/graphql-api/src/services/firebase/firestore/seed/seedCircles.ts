@@ -1,4 +1,5 @@
 import createDocument from './../mutations/createDocument';
+import { appProfile } from './profiles/appProfile';
 import { baseTypesList } from './circles/baseTypes.ts/baseTypesList';
 import { boolean } from './circles/baseTypes.ts/boolean';
 import { Circle } from '@myiworlds/types';
@@ -22,9 +23,10 @@ import { rating } from './circles/profileCircles/rating';
 import { string } from './circles/baseTypes.ts/string';
 import { theme } from './circles/profileCircles/theme';
 import { updateDocumentById } from '../mutations';
+import { UserProfileData } from '../../../../../../../libs/types/src/profile';
 
 // On edges have default tags which you can then
-// search based on parent id + tag that is in parent (and on child)
+// search based on PROFILES id + tag that is in parent (and on child)
 
 export const circlesToCreate: Circle[] = [
   boolean,
@@ -47,6 +49,8 @@ export const circlesToCreate: Circle[] = [
   defaultProfileMedia,
 ];
 
+const profilesToCreate: UserProfileData[] = [appProfile];
+
 export const seedCircles = async () => {
   try {
     const created: string[] = [];
@@ -67,6 +71,28 @@ export const seedCircles = async () => {
           } else {
             await createDocument(circle, context, true);
             created.push(circle.id);
+          }
+        }
+        return;
+      }),
+    );
+
+    // Data not returned for now because lazy
+    await Promise.all(
+      profilesToCreate.map(async (profile: UserProfileData) => {
+        if (profile.id) {
+          const documentExists = await firestoreAdmin
+            .collection(FIRESTORE_COLLECTIONS.PROFILES)
+            .doc(profile.id)
+            .get()
+            .then((res: any) => res.data());
+
+          if (documentExists) {
+            await updateDocumentById(profile, context, false, false);
+            // edited.push(profile.id);
+          } else {
+            await createDocument(profile, context, true);
+            // created.push(profile.id);
           }
         }
         return;

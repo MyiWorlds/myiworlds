@@ -8,4 +8,5 @@ export const context: Context = {
   profileHistoryId: null,
   circleLoader: null,
   profileLoader: null,
+  isSystemAdmin: true,
 };

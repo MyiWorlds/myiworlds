@@ -20,16 +20,16 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "semi": [2, "always"],
-    "max-len": [
-      "error",
-      { "code": 80 },
-      { "ignoreStrings": true },
-      { "ignoreTemplateLiterals": true },
-      { "ignoreUrls": true },
-      { "ignoreTrailingComments": true },
-      { "ignoreComments": true },
-      { "ignorePattern": "^\\s*var\\s.+=\\s*require\\s*\\(" }
-    ],
+    // "max-len": [
+    //   "error",
+    //   { "code": 80 },
+    //   { "ignoreStrings": true },
+    //   { "ignoreTemplateLiterals": true },
+    //   { "ignoreUrls": true },
+    //   { "ignoreTrailingComments": true },
+    //   { "ignoreComments": true },
+    //   { "ignorePattern": "^\\s*var\\s.+=\\s*require\\s*\\(" }
+    // ],
     "@nrwl/nx/enforce-module-boundaries": [
       "error",
       {

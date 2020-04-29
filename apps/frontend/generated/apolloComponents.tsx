@@ -328,6 +328,7 @@ export type Query = {
   getSeededCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
   getUserById?: Maybe<User>;
   getCircleById?: Maybe<Circle>;
+  getCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
   getCircleCloneById?: Maybe<CircleClone>;
   getCircleByProfileUsername?: Maybe<Circle>;
   getProfileById?: Maybe<CreatedProfile>;
@@ -339,6 +340,10 @@ export type Query = {
 
 export type QueryGetCircleByIdArgs = {
   id: Scalars['String'];
+};
+
+export type QueryGetCirclesByIdsArgs = {
+  ids: Array<Maybe<Scalars['String']>>;
 };
 
 export type QueryGetCircleCloneByIdArgs = {
@@ -443,6 +448,64 @@ export type UpdateCircleMutation = { __typename?: 'Mutation' } & {
       UpdateCirclePayload,
       'status' | 'message'
     >
+  >;
+};
+
+export type GetCircleByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetCircleByIdQuery = { __typename?: 'Query' } & {
+  getCircleById: Maybe<
+    { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+        media: Maybe<
+          { __typename?: 'Circle' } & Pick<
+            Circle,
+            'id' | 'type' | 'title' | 'string'
+          >
+        >;
+      }
+  >;
+};
+
+export type GetCirclesByIdsQueryVariables = {
+  ids: Array<Maybe<Scalars['String']>>;
+};
+
+export type GetCirclesByIdsQuery = { __typename?: 'Query' } & {
+  getCirclesByIds: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+            media: Maybe<
+              { __typename?: 'Circle' } & Pick<
+                Circle,
+                'id' | 'type' | 'title' | 'string'
+              >
+            >;
+          }
+      >
+    >
+  >;
+};
+
+export type GetPublicProfileByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetPublicProfileByIdQuery = { __typename?: 'Query' } & {
+  getPublicProfileById: Maybe<
+    { __typename?: 'PublicProfile' } & Pick<
+      PublicProfile,
+      'id' | 'username'
+    > & {
+        media: Maybe<
+          { __typename?: 'Circle' } & Pick<
+            Circle,
+            'id' | 'type' | 'title' | 'string'
+          >
+        >;
+      }
   >;
 };
 
@@ -884,6 +947,195 @@ export type UpdateCircleMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateCircleMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateCircleMutation,
   UpdateCircleMutationVariables
+>;
+export const GetCircleByIdDocument = gql`
+  query getCircleById($id: String!) {
+    getCircleById(id: $id) {
+      id
+      title
+      media {
+        id
+        type
+        title
+        string
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCircleByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCircleByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCircleByIdQuery,
+    GetCircleByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCircleByIdQuery,
+    GetCircleByIdQueryVariables
+  >(GetCircleByIdDocument, baseOptions);
+}
+export function useGetCircleByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCircleByIdQuery,
+    GetCircleByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCircleByIdQuery,
+    GetCircleByIdQueryVariables
+  >(GetCircleByIdDocument, baseOptions);
+}
+export type GetCircleByIdQueryHookResult = ReturnType<
+  typeof useGetCircleByIdQuery
+>;
+export type GetCircleByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCircleByIdLazyQuery
+>;
+export type GetCircleByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleByIdQuery,
+  GetCircleByIdQueryVariables
+>;
+export const GetCirclesByIdsDocument = gql`
+  query getCirclesByIds($ids: [String]!) {
+    getCirclesByIds(ids: $ids) {
+      id
+      title
+      media {
+        id
+        type
+        title
+        string
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCirclesByIdsQuery__
+ *
+ * To run a query within a React component, call `useGetCirclesByIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCirclesByIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCirclesByIdsQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetCirclesByIdsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCirclesByIdsQuery,
+    GetCirclesByIdsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCirclesByIdsQuery,
+    GetCirclesByIdsQueryVariables
+  >(GetCirclesByIdsDocument, baseOptions);
+}
+export function useGetCirclesByIdsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCirclesByIdsQuery,
+    GetCirclesByIdsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCirclesByIdsQuery,
+    GetCirclesByIdsQueryVariables
+  >(GetCirclesByIdsDocument, baseOptions);
+}
+export type GetCirclesByIdsQueryHookResult = ReturnType<
+  typeof useGetCirclesByIdsQuery
+>;
+export type GetCirclesByIdsLazyQueryHookResult = ReturnType<
+  typeof useGetCirclesByIdsLazyQuery
+>;
+export type GetCirclesByIdsQueryResult = ApolloReactCommon.QueryResult<
+  GetCirclesByIdsQuery,
+  GetCirclesByIdsQueryVariables
+>;
+export const GetPublicProfileByIdDocument = gql`
+  query getPublicProfileById($id: String!) {
+    getPublicProfileById(id: $id) {
+      id
+      username
+      media {
+        id
+        type
+        title
+        string
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPublicProfileByIdQuery__
+ *
+ * To run a query within a React component, call `useGetPublicProfileByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicProfileByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicProfileByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPublicProfileByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPublicProfileByIdQuery,
+    GetPublicProfileByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetPublicProfileByIdQuery,
+    GetPublicProfileByIdQueryVariables
+  >(GetPublicProfileByIdDocument, baseOptions);
+}
+export function useGetPublicProfileByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPublicProfileByIdQuery,
+    GetPublicProfileByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetPublicProfileByIdQuery,
+    GetPublicProfileByIdQueryVariables
+  >(GetPublicProfileByIdDocument, baseOptions);
+}
+export type GetPublicProfileByIdQueryHookResult = ReturnType<
+  typeof useGetPublicProfileByIdQuery
+>;
+export type GetPublicProfileByIdLazyQueryHookResult = ReturnType<
+  typeof useGetPublicProfileByIdLazyQuery
+>;
+export type GetPublicProfileByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetPublicProfileByIdQuery,
+  GetPublicProfileByIdQueryVariables
 >;
 export const SeedFirestoreCirclesDocument = gql`
   mutation seedFirestoreCircles {

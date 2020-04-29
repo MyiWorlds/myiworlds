@@ -3,32 +3,23 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import React, { useContext } from 'react';
-import Router from 'next/router';
-import Spacer from './../../Spacer/Spacer';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
-
+import { UserContext } from './../../User/UserContext';
 interface Props {}
 
 const useStyles = makeStyles({
   root: {
     zIndex: 99999,
   },
-  homeBtn: {
+  loginBtn: {
     margin: '0px auto',
-    display: 'table',
+    display: 'flex',
   },
 });
 
-const RequestCreationModal: React.FunctionComponent<Props> = () => {
+const LoginModal: React.FunctionComponent<Props> = () => {
   const classes = useStyles();
-  const { setAppDialog } = useContext(UserInterfaceContext);
-
-  const handleGoHome = () => {
-    setAppDialog(null);
-    Router.push(`/`, `/`);
-  };
+  const { handleLogin } = useContext(UserContext);
 
   return (
     <Dialog
@@ -41,24 +32,20 @@ const RequestCreationModal: React.FunctionComponent<Props> = () => {
       maxWidth={'md'}
     >
       <DialogTitle id="alert-dialog-title">
-        You are not allowed to create yet
+        You must login or create an account before you can edit
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body1">
-          You must wait for a system administrator to accept your account
-        </Typography>
-        <Spacer />
         <Button
           variant="contained"
           color="primary"
-          onClick={handleGoHome}
-          className={classes.homeBtn}
+          onClick={() => handleLogin()}
+          className={classes.loginBtn}
         >
-          Home Page
+          Login or Create Account
         </Button>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default RequestCreationModal;
+export default LoginModal;

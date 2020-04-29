@@ -190,6 +190,7 @@ const ObjectEditor: React.FC<Props> = ({
               property={property}
               value={value}
               setValue={updateValue}
+              isInList={true}
             />
           </div>,
         );

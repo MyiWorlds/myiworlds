@@ -87,7 +87,7 @@ const ProfileProvider = ({ children }: any) => {
         autoHideDuration: 2000,
       });
     }
-  }
+  };
 
   const updateSelectedProfileAddToHistory = () => {
     setSelectedProfile({
@@ -136,7 +136,7 @@ const ProfileProvider = ({ children }: any) => {
 
   const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
-      console.log('Setting selected profile: ', getProfileQuery.getProfileById.username)
+      console.log('Setting selected profile: ', getProfileQuery.getProfileById.username);
       if (selectedProfileSubscription) {
         selectedProfileSubscription();
       }
@@ -276,19 +276,19 @@ const ProfileProvider = ({ children }: any) => {
   const handleUpdateThemeSubscription = () => {
     const theme: CircleHydrated | null = themeData && themeData.data() ? (themeData.data() as CircleHydrated) : null;
     if (theme) {
-      console.log('Updating profile with subscribed theme')
+      console.log('Updating profile with subscribed theme');
       setSelectedProfile({
         ...selectedProfile,
         theme,
-      })
+      });
       setAppSnackbar({
         title: 'Your theme has updated.',
         autoHideDuration: 2000,
       });
     } else if (loadingTheme) {
-      console.log('Subscription to theme loading')
+      console.log('Subscription to theme loading');
     }
-  }
+  };
 
 
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);

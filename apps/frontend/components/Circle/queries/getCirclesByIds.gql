@@ -1,0 +1,12 @@
+query getCirclesByIds($ids: [String]!) {
+  getCirclesByIds(ids: $ids) {
+    id
+    title
+    media {
+      id
+      type
+      title
+      string
+    }
+  }
+}

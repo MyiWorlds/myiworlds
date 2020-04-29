@@ -7,10 +7,12 @@ import deleteUserMutation from './user/mutations/deleteUser/deleteUserMutation';
 import getCircleByIdQuery from './circle/queries/getCircleById/getCircleByIdQuery';
 import getCircleByProfileUsernameQuery from './circle/queries/getCircleByProfileUsername/getCircleByProfileUsernameQuery';
 import getCircleCloneByIdQuery from './circle/queries/getCircleCloneById/getCircleCloneByIdQuery';
+import getCirclesByIdsQuery from './circle/queries/getCirclesByIds/getCirclesByIdsQuery';
 import getProfileByIdQuery from './profile/queries/getProfileById/getProfileByIdQuery';
 import getProfileByUsernameQuery from './profile/queries/getProfileByUsername/getProfileByUsernameQuery';
 import getProfileCloneByIdQuery from './profile/queries/getProfileCloneById/getProfileCloneByIdQuery';
 import getPublicProfileByIdQuery from './profile/queries/getPublicProfileById/getPublicProfileByIdQuery';
+import getPublicProfilesByIdsQuery from './profile/queries/getPublicProfilesByIds/getPublicProfilesByIdsQuery';
 import getSeededCirclesByIdsQuery from './admin/queries/getSeededCirclesByIds/getSeededCirclesByIdsQuery';
 import getUserByIdQuery from './user/queries/getUserById/getUserByIdQuery';
 import getUserProfilesQuery from './profile/queries/getUserProfiles/getUserProfilesQuery';
@@ -26,10 +28,12 @@ export default new GraphQLSchema({
       getSeededCirclesByIds: getSeededCirclesByIdsQuery,
       getUserById: getUserByIdQuery,
       getCircleById: getCircleByIdQuery,
+      getCirclesByIds: getCirclesByIdsQuery,
       getCircleCloneById: getCircleCloneByIdQuery,
       getCircleByProfileUsername: getCircleByProfileUsernameQuery,
       getProfileById: getProfileByIdQuery,
       getPublicProfileById: getPublicProfileByIdQuery,
+      getPublicProfilesByIds: getPublicProfilesByIdsQuery,
       getProfileCloneById: getProfileCloneByIdQuery,
       getProfileByUsername: getProfileByUsernameQuery,
       getUserProfiles: getUserProfilesQuery,

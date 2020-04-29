@@ -3,23 +3,32 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import React, { useContext } from 'react';
+import Router from 'next/router';
+import Spacer from './../../../components/Spacer/Spacer';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from './../../../contexts/User/UserContext';
+import { Typography } from '@material-ui/core';
+import { UserInterfaceContext } from './../UserInterfaceContext';
+
 interface Props {}
 
 const useStyles = makeStyles({
   root: {
     zIndex: 99999,
   },
-  loginBtn: {
+  homeBtn: {
     margin: '0px auto',
-    display: 'flex',
+    display: 'table',
   },
 });
 
-const LoginModal: React.FunctionComponent<Props> = () => {
+const RequestCreationModal: React.FunctionComponent<Props> = () => {
   const classes = useStyles();
-  const { handleLogin } = useContext(UserContext);
+  const { setAppDialog } = useContext(UserInterfaceContext);
+
+  const handleGoHome = () => {
+    setAppDialog(null);
+    Router.push(`/`, `/`);
+  };
 
   return (
     <Dialog
@@ -32,20 +41,24 @@ const LoginModal: React.FunctionComponent<Props> = () => {
       maxWidth={'md'}
     >
       <DialogTitle id="alert-dialog-title">
-        You must login or create an account before you can edit
+        You are not allowed to create yet
       </DialogTitle>
       <DialogContent>
+        <Typography variant="body1">
+          You must wait for a system administrator to accept your account
+        </Typography>
+        <Spacer />
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleLogin()}
-          className={classes.loginBtn}
+          onClick={handleGoHome}
+          className={classes.homeBtn}
         >
-          Login or Create Account
+          Home Page
         </Button>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default LoginModal;
+export default RequestCreationModal;

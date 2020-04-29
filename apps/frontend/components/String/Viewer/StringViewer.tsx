@@ -1,13 +1,29 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Circle } from '@myiworlds/types';
 
 interface Props {
-  circle: Circle;
+  label?: string;
+  string: string;
 }
 
-const StringViewer: React.FunctionComponent<Props> = ({ circle }) => {
-  return <Typography>{circle.string !== '' ? '' : 'String value'}</Typography>;
+const StringViewer: React.FunctionComponent<Props> = ({ label, string }) => {
+  console.log(label, string);
+  if (label) {
+    return (
+      <span>
+        <Typography variant="caption">{label}</Typography>
+        <Typography variant="h4">
+          {string !== '' ? '' : 'String value'}
+        </Typography>
+      </span>
+    );
+  } else {
+    return (
+      <Typography variant="h4">
+        {string !== '' ? '' : 'String value'}
+      </Typography>
+    );
+  }
 };
 
 export default StringViewer;

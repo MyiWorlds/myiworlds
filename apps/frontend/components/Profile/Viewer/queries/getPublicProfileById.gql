@@ -1,0 +1,12 @@
+query getPublicProfileById($id: String!) {
+  getPublicProfileById(id: $id) {
+    id
+    username
+    media {
+      id
+      type
+      title
+      string
+    }
+  }
+}

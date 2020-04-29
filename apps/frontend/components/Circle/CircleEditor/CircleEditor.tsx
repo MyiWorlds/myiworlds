@@ -1,10 +1,11 @@
 import CircleEditorAppBarItems from './CircleEditorAppBarItems';
+import DefaultCircleEditor from './components/DefaultCircleEditor';
 import Error from '../../Error';
 import firestoreClient from './../../../lib/firebase/firestoreClient';
-import LoginModal from './LoginModal';
+import LoginModal from '../../../contexts/UserInterface/LoginModal';
 import ProgressWithMessage from './../../ProgressWithMessage/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
-import RequestCreationModal from './RequestCreationModal';
+import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
 import ThemeEditor from './../../Theme/Editor/ThemeEditor';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -197,7 +198,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       } else {
         switch (circle.type) {
           default:
-            editor = null;
+            editor = (
+              <DefaultCircleEditor
+                circle={updateCircleVariables}
+                updateCircle={handleUpdateCircle}
+              />
+            );
         }
       }
 

@@ -4,10 +4,9 @@ import Switch from '@material-ui/core/Switch';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 interface Props {
-  property: string;
-  value: boolean;
+  label: string;
+  boolean: boolean;
   isInList?: boolean;
-  setValue: (newValue: boolean) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,34 +21,29 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const BooleanEditor: React.FunctionComponent<Props> = ({
-  property,
-  value,
-  setValue,
+const BooleanViewer: React.FunctionComponent<Props> = ({
+  label,
+  boolean,
   isInList,
 }) => {
   const classes = useStyles();
-
-  const handleBooleanChange = () => {
-    setValue(!value);
-  };
 
   return (
     <FormControlLabel
       control={
         <Switch
+          disabled={true}
           className={isInList ? classes.listItemSwitch : classes.switch}
           edge="start"
-          onChange={handleBooleanChange}
-          checked={value}
+          checked={boolean}
           inputProps={{
             'aria-labelledby': 'switch-list-label-dark-theme',
           }}
         />
       }
-      label={property}
+      label={label}
     />
   );
 };
 
-export default BooleanEditor;
+export default BooleanViewer;

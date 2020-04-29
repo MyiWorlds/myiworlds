@@ -118,6 +118,51 @@ const UserProvider = ({ children }: any) => {
     setUser(guestUser);
   };
 
+  const firebaseAuthListener = (calledFromTimeout = false) => {
+    firebaseAuth.onAuthStateChanged(
+      async (firebaseUser: firebase.User | null) => {
+        if (firebaseUser) {
+          if (!firebaseUser.email) {
+            setAppSnackbar({
+              title:
+                'There was no email associated with the email that was attempting to login.',
+              autoHideDuration: 10000,
+            });
+            return;
+          }
+          const token = await firebaseUser.getIdToken();
+          setCookie('token', token);
+          setCookie('userId', firebaseUser.uid);
+          console.log(
+            'Added a new token cookie and setting your user id to login.',
+          );
+
+          if (!calledFromTimeout) {
+            setUserIdToLogin(firebaseUser.uid);
+            setAppLoading(false);
+            firebaseAuthRefreshTimeout();
+          }
+        } else {
+          console.log('Reseting your token.');
+          document.cookie = 'token=;path=/';
+          document.cookie = 'userId=;path=/';
+          document.cookie = 'selectedProfileId=;path=/';
+
+          setAppLoading(false);
+        }
+      },
+    );
+  };
+
+  const firebaseAuthRefreshTimeout = () => {
+    const timeout = setTimeout(() => {
+      console.log('Refreshing your authentication token.');
+      firebaseAuthListener(true);
+      firebaseAuthRefreshTimeout();
+    }, 3300000);
+    return () => clearTimeout(timeout);
+  };
+
   const didMount = () => {
     document.cookie = 'token=;path=/';
     document.cookie = 'userId=;path=/';
@@ -152,35 +197,7 @@ const UserProvider = ({ children }: any) => {
         }
       });
 
-    firebaseAuth.onAuthStateChanged(
-      async (firebaseUser: firebase.User | null) => {
-        if (firebaseUser) {
-          if (!firebaseUser.email) {
-            setAppSnackbar({
-              title:
-                'There was no email associated with the email that was attempting to login.',
-              autoHideDuration: 10000,
-            });
-            return;
-          }
-          const token = await firebaseUser.getIdToken();
-          document.cookie = `token=${token};path=/`;
-          document.cookie = `userId=${firebaseUser.uid};path=/`;
-          console.log(
-            'Added a new token cookie and setting your user id to login.',
-          );
-          setUserIdToLogin(firebaseUser.uid);
-          setAppLoading(false);
-        } else {
-          console.log('Reseting your token.');
-          document.cookie = 'token=;path=/';
-          document.cookie = 'userId=;path=/';
-          document.cookie = 'selectedProfileId=;path=/';
-
-          setAppLoading(false);
-        }
-      },
-    );
+    firebaseAuthListener();
 
     return () => {
       if (userSubscription) {

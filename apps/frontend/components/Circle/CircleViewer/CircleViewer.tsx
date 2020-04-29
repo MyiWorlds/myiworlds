@@ -1,9 +1,9 @@
+import CircleFieldsMapperViewer from './CircleFieldsMapperViewer';
 import CircleViewerAppBarItems from './CircleViewerAppBarItems';
 import Error from '../../Error';
 import firestoreClient from '../../../lib/firebase/firestoreClient';
 import Progress from '../../Progress/Progress';
 import React, { useContext, useEffect } from 'react';
-import StringViewer from './../../String/Viewer/StringViewer';
 import ThemeViewer from './../../Theme/Viewer/ThemeViewer';
 import { Circle } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
@@ -67,14 +67,7 @@ export default function CircleViewer({ id }: Props) {
             break;
         }
       } else {
-        switch (circle.type) {
-          case 'STRING':
-            viewer = <StringViewer circle={circle} />;
-            break;
-          default:
-            viewer = null;
-            break;
-        }
+        viewer = <CircleFieldsMapperViewer circle={circle} />;
       }
 
       return viewer;

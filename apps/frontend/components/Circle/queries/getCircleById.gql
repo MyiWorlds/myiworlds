@@ -1,0 +1,12 @@
+query getCircleById($id: String!) {
+  getCircleById(id: $id) {
+    id
+    title
+    media {
+      id
+      type
+      title
+      string
+    }
+  }
+}

@@ -51,7 +51,7 @@ export default async function getDocumentsByIds(
           },
           collection,
           ids,
-        })
+        });
 
         addToProfileHistory(
           SHARED_TYPES.VIEWED_BY_IDS,
