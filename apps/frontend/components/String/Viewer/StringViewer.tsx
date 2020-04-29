@@ -13,14 +13,14 @@ const StringViewer: React.FunctionComponent<Props> = ({ label, string }) => {
       <span>
         <Typography variant="caption">{label}</Typography>
         <Typography variant="h4">
-          {string !== '' ? '' : 'String value'}
+          {string !== '' ? string : 'String value'}
         </Typography>
       </span>
     );
   } else {
     return (
       <Typography variant="h4">
-        {string !== '' ? '' : 'String value'}
+        {string !== '' ? string : 'String value'}
       </Typography>
     );
   }

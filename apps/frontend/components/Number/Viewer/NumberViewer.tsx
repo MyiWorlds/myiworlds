@@ -34,7 +34,7 @@ const StringViewer: React.FunctionComponent<Props> = ({ label, number }) => {
       </span>
     );
   } else {
-    return <Typography>{number !== '' ? '' : 'String value'}</Typography>;
+    return <Typography>{number}</Typography>;
   }
 };
 
