@@ -29,11 +29,10 @@ export default function CircleListItemViewer({ id }: Props) {
     },
   });
 
-  console.log(loadingGetCircle, errorGettingCircle);
-
   let circle = null;
 
   if (errorGettingCircle) {
+    console.log('Error getting Circle list item.');
     return null;
   }
 
@@ -55,6 +54,7 @@ export default function CircleListItemViewer({ id }: Props) {
   }
 
   if (getCircleQuery && getCircleQuery.getCircleById) {
+    console.log('Rendering Circle list item.');
     circle = getCircleQuery.getCircleById as Circle;
     return (
       <ListItem

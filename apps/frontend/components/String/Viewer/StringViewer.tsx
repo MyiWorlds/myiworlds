@@ -7,7 +7,6 @@ interface Props {
 }
 
 const StringViewer: React.FunctionComponent<Props> = ({ label, string }) => {
-  console.log(label, string);
   if (label) {
     return (
       <span>

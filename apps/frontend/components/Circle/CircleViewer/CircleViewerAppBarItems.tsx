@@ -1,5 +1,7 @@
 import ButtonLink from '../../ButtonLink';
 import EditIcon from '@material-ui/icons/Edit';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import HistoryIcon from '@material-ui/icons/History';
 import IconButton from '@material-ui/core/IconButton';
 import React, { useContext } from 'react';
 import ShareIcon from '@material-ui/icons/Share';
@@ -67,6 +69,21 @@ export default function CircleViewerAppBarItems({ circle }: Props) {
       <Typography variant="h6" className={classes.title}>
         {circle.title || 'Untitled'}
       </Typography>
+      <IconButton
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        // onClick={handleViewHistory}
+      >
+        <HistoryIcon />
+      </IconButton>
+      <Tooltip title="Copy">
+        <span>
+          <IconButton color="inherit" onClick={copyUrl}>
+            <FileCopyIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
       <Tooltip title="Share">
         <span>
           <IconButton color="inherit" onClick={copyUrl}>

@@ -161,6 +161,14 @@ export type DeleteUserPayload = {
   userDeleted: Scalars['Boolean'];
 };
 
+export type GetCircleClonesByIdResponse = {
+  __typename?: 'GetCircleClonesByIdResponse';
+  status?: Maybe<Scalars['String']>;
+  hasMoreResults?: Maybe<Scalars['Boolean']>;
+  cursor?: Maybe<Scalars['String']>;
+  clones?: Maybe<Array<Maybe<CircleClone>>>;
+};
+
 export type GetProfileByUsernamePayload = {
   __typename?: 'GetProfileByUsernamePayload';
   usernameAvailable?: Maybe<Scalars['Boolean']>;
@@ -255,7 +263,6 @@ export type MutationUpdateCircleArgs = {
   merge: Scalars['Boolean'];
   id: Scalars['String'];
   type?: Maybe<Scalars['String']>;
-  component?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['String']>;
   cached?: Maybe<Scalars['Boolean']>;
   pii?: Maybe<Scalars['Boolean']>;
@@ -330,9 +337,11 @@ export type Query = {
   getCircleById?: Maybe<Circle>;
   getCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
   getCircleCloneById?: Maybe<CircleClone>;
+  getCircleClonesById?: Maybe<GetCircleClonesByIdResponse>;
   getCircleByProfileUsername?: Maybe<Circle>;
   getProfileById?: Maybe<CreatedProfile>;
   getPublicProfileById?: Maybe<PublicProfile>;
+  getPublicProfilesByIds?: Maybe<Array<Maybe<PublicProfile>>>;
   getProfileCloneById?: Maybe<ProfileClone>;
   getProfileByUsername?: Maybe<GetProfileByUsernamePayload>;
   getUserProfiles?: Maybe<Array<Maybe<CreatedProfile>>>;
@@ -350,6 +359,10 @@ export type QueryGetCircleCloneByIdArgs = {
   id: Scalars['String'];
 };
 
+export type QueryGetCircleClonesByIdArgs = {
+  id: Scalars['String'];
+};
+
 export type QueryGetCircleByProfileUsernameArgs = {
   username: Scalars['String'];
 };
@@ -360,6 +373,10 @@ export type QueryGetProfileByIdArgs = {
 
 export type QueryGetPublicProfileByIdArgs = {
   id: Scalars['String'];
+};
+
+export type QueryGetPublicProfilesByIdsArgs = {
+  ids: Array<Maybe<Scalars['String']>>;
 };
 
 export type QueryGetProfileCloneByIdArgs = {
@@ -405,11 +422,41 @@ export type User = {
   canCreate?: Maybe<Scalars['Boolean']>;
 };
 
+export type GetCircleClonesByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
+  getCircleClonesById: Maybe<
+    { __typename?: 'GetCircleClonesByIdResponse' } & Pick<
+      GetCircleClonesByIdResponse,
+      'status' | 'hasMoreResults' | 'cursor'
+    > & {
+        clones: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'CircleClone' } & Pick<
+                CircleClone,
+                'id' | 'title' | 'dateUpdated'
+              > & {
+                  media: Maybe<
+                    { __typename?: 'Circle' } & Pick<
+                      Circle,
+                      'id' | 'type' | 'title' | 'string'
+                    >
+                  >;
+                }
+            >
+          >
+        >;
+      }
+  >;
+};
+
 export type UpdateCircleMutationVariables = {
   id: Scalars['String'];
   merge: Scalars['Boolean'];
   type?: Maybe<Scalars['String']>;
-  component?: Maybe<Scalars['String']>;
   parent?: Maybe<Scalars['String']>;
   cached?: Maybe<Scalars['Boolean']>;
   pii?: Maybe<Scalars['Boolean']>;
@@ -794,12 +841,80 @@ export const LoggedInUserFragmentFragmentDoc = gql`
     canCreate
   }
 `;
+export const GetCircleClonesByIdDocument = gql`
+  query getCircleClonesById($id: String!) {
+    getCircleClonesById(id: $id) {
+      status
+      hasMoreResults
+      cursor
+      clones {
+        id
+        title
+        dateUpdated
+        media {
+          id
+          type
+          title
+          string
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCircleClonesByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCircleClonesByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleClonesByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleClonesByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleClonesByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCircleClonesByIdQuery,
+    GetCircleClonesByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCircleClonesByIdQuery,
+    GetCircleClonesByIdQueryVariables
+  >(GetCircleClonesByIdDocument, baseOptions);
+}
+export function useGetCircleClonesByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCircleClonesByIdQuery,
+    GetCircleClonesByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCircleClonesByIdQuery,
+    GetCircleClonesByIdQueryVariables
+  >(GetCircleClonesByIdDocument, baseOptions);
+}
+export type GetCircleClonesByIdQueryHookResult = ReturnType<
+  typeof useGetCircleClonesByIdQuery
+>;
+export type GetCircleClonesByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCircleClonesByIdLazyQuery
+>;
+export type GetCircleClonesByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleClonesByIdQuery,
+  GetCircleClonesByIdQueryVariables
+>;
 export const UpdateCircleDocument = gql`
   mutation updateCircle(
     $id: String!
     $merge: Boolean!
     $type: String
-    $component: String
     $parent: String
     $cached: Boolean
     $pii: Boolean
@@ -835,7 +950,6 @@ export const UpdateCircleDocument = gql`
       id: $id
       merge: $merge
       type: $type
-      component: $component
       parent: $parent
       cached: $cached
       pii: $pii
@@ -893,7 +1007,6 @@ export type UpdateCircleMutationFn = ApolloReactCommon.MutationFunction<
  *      id: // value for 'id'
  *      merge: // value for 'merge'
  *      type: // value for 'type'
- *      component: // value for 'component'
  *      parent: // value for 'parent'
  *      cached: // value for 'cached'
  *      pii: // value for 'pii'

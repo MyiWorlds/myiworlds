@@ -5,7 +5,9 @@ export interface Context {
   isSystemAdmin: boolean;
   profileHistoryId: string | null;
   circleLoader: any;
+  circleCloneLoader: any;
   profileLoader: any;
+  profileCloneLoader: any;
 }
 
 export type Environment = 'development' | 'qa' | 'production';

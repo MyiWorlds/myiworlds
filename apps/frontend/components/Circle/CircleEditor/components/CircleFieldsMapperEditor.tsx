@@ -1,5 +1,6 @@
 import BooleanEditor from '../../../Boolean/Editor/BooleanEditor';
 import CircleListItemViewer from './CircleListItemViewer';
+import CircleListViewer from './CircleListViewer';
 import List from '@material-ui/core/List';
 import NumberEditor from '../../../Number/Editor/NumberEditor';
 import ProfileListItemViewer from '../../../Profile/Viewer/ProfileListItemViewer';
@@ -130,14 +131,10 @@ const CircleFieldsMapperEditor: React.FC<Props> = ({
         ));
         renderElements.push(circleDisplay);
       } else if (circleListFields.includes(property) && value !== null) {
-        const circles = (value as string[]).map((id: string) => (
-          <CircleListItemViewer key={id} id={id} />
-        ));
-
         renderElements.push(
-          <span key={`${parentStrings}-${property}`}>
+          <span key={property}>
             <Typography variant="caption">{property}:</Typography>
-            <List>{circles}</List>
+            <CircleListViewer ids={value as string[]} />
           </span>,
         );
       } else if (profileFields.includes(property) && value !== null) {
@@ -145,7 +142,7 @@ const CircleFieldsMapperEditor: React.FC<Props> = ({
           <span key={`${parentStrings}-${property}`}>
             <Typography variant="caption">{property}:</Typography>
             <List>
-              <ProfileListItemViewer id={value} />
+              <ProfileListItemViewer id={value as string} />
             </List>
           </span>,
         );

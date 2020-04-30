@@ -24,7 +24,6 @@ const updateCircleMutation = {
     merge: { type: GraphQLNonNull(GraphQLBoolean) },
     id: { type: GraphQLNonNull(GraphQLString) },
     type: { type: GraphQLString },
-    component: { type: GraphQLString },
     parent: { type: GraphQLString },
     cached: { type: GraphQLBoolean },
     // cache: { type: GraphQLJSON }, // Created by backend

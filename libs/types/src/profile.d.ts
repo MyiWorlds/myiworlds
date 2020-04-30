@@ -61,6 +61,11 @@ export interface PublicProfileData extends PublicProfileBase {
   circleUIs?: string;
 }
 
+export interface PublicProfileCloneData extends PublicProfileData {
+  collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
+  clonedFrom: string;
+}
+
 export interface UserProfileCloneHydrated extends UserProfileCreated {
   collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
   clonedFrom: UserProfileCreated;

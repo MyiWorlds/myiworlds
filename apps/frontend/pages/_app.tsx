@@ -3,6 +3,7 @@ import MaterialUiTheme from '../components/Theme/MaterialUiTheme';
 import React from 'react';
 import withApollo from '../lib/apollo/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { ProfileProvider } from '../contexts/Profile/ProfileContext';
 import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
 import { UserInterfaceProvider } from '../contexts/UserInterface/UserInterfaceContext';
 import { UserProvider } from '../contexts/User/UserContext';
@@ -15,9 +16,11 @@ class MyApp extends App<any> {
         <MaterialUiTheme>
           <SystemMessagesProvider>
             <UserProvider>
-              <UserInterfaceProvider>
-                <Component {...pageProps} />
-              </UserInterfaceProvider>
+              <ProfileProvider>
+                <UserInterfaceProvider>
+                  <Component {...pageProps} />
+                </UserInterfaceProvider>
+              </ProfileProvider>
             </UserProvider>
           </SystemMessagesProvider>
         </MaterialUiTheme>

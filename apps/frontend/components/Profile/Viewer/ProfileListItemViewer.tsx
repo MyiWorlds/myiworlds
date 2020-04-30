@@ -17,7 +17,7 @@ interface Props {
   id: string;
 }
 
-export default function ProfileListItemViewer({ id }: Props) {
+const ProfileListItemViewer = React.memo(({ id }: Props) => {
   const {
     data: getPublicProfileQuery,
     loading: loadingGetProfile,
@@ -30,6 +30,7 @@ export default function ProfileListItemViewer({ id }: Props) {
   });
 
   if (errorGettingProfile) {
+    console.log('Error getting profile.');
     return null;
   }
 
@@ -52,6 +53,7 @@ export default function ProfileListItemViewer({ id }: Props) {
   let profile = null;
 
   if (getPublicProfileQuery && getPublicProfileQuery.getPublicProfileById) {
+    console.log('Profile list item rerendered.');
     profile = getPublicProfileQuery.getPublicProfileById as UserProfileData;
 
     return (
@@ -76,4 +78,6 @@ export default function ProfileListItemViewer({ id }: Props) {
   } else {
     return null;
   }
-}
+});
+
+export default ProfileListItemViewer;

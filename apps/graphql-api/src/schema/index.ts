@@ -7,6 +7,7 @@ import deleteUserMutation from './user/mutations/deleteUser/deleteUserMutation';
 import getCircleByIdQuery from './circle/queries/getCircleById/getCircleByIdQuery';
 import getCircleByProfileUsernameQuery from './circle/queries/getCircleByProfileUsername/getCircleByProfileUsernameQuery';
 import getCircleCloneByIdQuery from './circle/queries/getCircleCloneById/getCircleCloneByIdQuery';
+import getCircleClonesByIdQuery from './circle/queries/getCircleClonesById/getCircleClonesByIdQuery';
 import getCirclesByIdsQuery from './circle/queries/getCirclesByIds/getCirclesByIdsQuery';
 import getProfileByIdQuery from './profile/queries/getProfileById/getProfileByIdQuery';
 import getProfileByUsernameQuery from './profile/queries/getProfileByUsername/getProfileByUsernameQuery';
@@ -30,6 +31,7 @@ export default new GraphQLSchema({
       getCircleById: getCircleByIdQuery,
       getCirclesByIds: getCirclesByIdsQuery,
       getCircleCloneById: getCircleCloneByIdQuery,
+      getCircleClonesById: getCircleClonesByIdQuery,
       getCircleByProfileUsername: getCircleByProfileUsernameQuery,
       getProfileById: getProfileByIdQuery,
       getPublicProfileById: getPublicProfileByIdQuery,

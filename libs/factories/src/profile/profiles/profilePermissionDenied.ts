@@ -14,6 +14,6 @@ export class ProfilePermssionDenied implements PublicProfileData {
   }
 
   create() {
-    return this;
+    return this as PublicProfileData;
   }
 }

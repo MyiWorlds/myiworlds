@@ -7,6 +7,8 @@ export const context: Context = {
   addToHistory: true,
   profileHistoryId: null,
   circleLoader: null,
+  circleCloneLoader: null,
   profileLoader: null,
+  profileCloneLoader: null,
   isSystemAdmin: true,
 };

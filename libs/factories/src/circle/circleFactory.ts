@@ -17,6 +17,7 @@ import { CircleQueryGetDocumentById } from './circles/circleQueryGetDocumentById
 import { CircleQueryGetDocumentsByFilters } from './circles/circleQueryGetDocumentsByFilters';
 import { CircleQueryGetDocumentsByIds } from './circles/circleQueryGetDocumentsByIds';
 import { CircleString } from './circles/circleString';
+import { CircleTheme } from './circles/circleTheme';
 import { CircleUI } from './circles/circleUI';
 import { CircleViewedByIds } from './circles/circleViewedByIds';
 import { PossibleCircleTypes } from '@myiworlds/types';
@@ -38,6 +39,7 @@ export class CircleFactory {
   use(type: 'MEDIA_IMAGE_HREF'): CircleMediaImageHref;
   use(type: 'EDGE'): CircleEdge;
   use(type: 'EDGE_NODE'): CircleEdgeNode;
+  use(type: 'THEME'): CircleTheme;
   use(type: 'QUERY_GET_DOCUMENT_BY_ID'): CircleQueryGetDocumentById;
   use(type: 'QUERY_GET_DOCUMENTS_BY_IDS'): CircleQueryGetDocumentsByIds;
   use(type: 'QUERY_GET_DOCUMENTS_BY_FILTERS'): CircleQueryGetDocumentsByFilters;
@@ -93,6 +95,9 @@ export class CircleFactory {
 
       case 'EDGE':
         return new CircleEdge();
+
+      case 'THEME':
+        return new CircleTheme();
 
       case 'EDGE_NODE':
         return new CircleEdgeNode();

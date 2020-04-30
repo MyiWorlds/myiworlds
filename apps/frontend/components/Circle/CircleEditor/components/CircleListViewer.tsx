@@ -18,7 +18,7 @@ interface Props {
   ids: string[];
 }
 
-export default function CircleListViewer({ ids }: Props) {
+const CircleListViewer = React.memo(({ ids }: Props) => {
   const {
     data: getCirclesQuery,
     loading: loadingGetCircles,
@@ -30,9 +30,8 @@ export default function CircleListViewer({ ids }: Props) {
     },
   });
 
-  console.log(loadingGetCircles, errorGettingCircles);
-
   if (errorGettingCircles) {
+    console.log('There was an error getting the list of circles.');
     return null;
   }
 
@@ -56,6 +55,7 @@ export default function CircleListViewer({ ids }: Props) {
   }
 
   if (getCirclesQuery && getCirclesQuery.getCirclesByIds) {
+    console.log('Circles list viewer rendered.');
     const circles = getCirclesQuery.getCirclesByIds as Circle[];
     return (
       <List>
@@ -85,4 +85,6 @@ export default function CircleListViewer({ ids }: Props) {
   } else {
     return null;
   }
-}
+});
+
+export default CircleListViewer;

@@ -9,7 +9,6 @@ import Navigation from './Navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import Zoom from '@material-ui/core/Zoom';
 import { Circle } from '@myiworlds/types';
-import { ProfileProvider } from '../Profile/ProfileContext';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
 import {
@@ -90,6 +89,27 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   useEffect(updateNavWidth, [navItems]);
   useEffect(didMount, []);
 
+  const createFab = user && user.canCreate && (
+    <Zoom
+      in={true}
+      timeout={transitionDuration}
+      style={{
+        transitionDelay: `${transitionDuration.exit}ms`,
+      }}
+      unmountOnExit
+    >
+      <Fab
+        size="large"
+        color="secondary"
+        aria-label="add"
+        className={classes.fab}
+        onClick={() => setCreatingCircle(true)}
+      >
+        <AddIcon />
+      </Fab>
+    </Zoom>
+  );
+
   return (
     <UserInterfaceContext.Provider
       value={{
@@ -107,53 +127,32 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
         setIsResizingNav,
       }}
     >
-      <ProfileProvider>
-        <div>
-          {user && user.canCreate && (
-            <Zoom
-              in={true}
-              timeout={transitionDuration}
-              style={{
-                transitionDelay: `${transitionDuration.exit}ms`,
-              }}
-              unmountOnExit
-            >
-              <Fab
-                size="large"
-                color="secondary"
-                aria-label="add"
-                className={classes.fab}
-                onClick={() => setCreatingCircle(true)}
-              >
-                <AddIcon />
-              </Fab>
-            </Zoom>
-          )}
-          {appDialog && <AppDialog appDialog={appDialog} />}
-          {draggableDialogContent && (
-            <DraggableDialog draggableDialogContent={draggableDialogContent} />
-          )}
-          <CircleSelector />
-          <div className={classes.root}>
-            <AppController
-              setShowNavigation={setShowNavigation}
+      <div>
+        {appDialog && <AppDialog appDialog={appDialog} />}
+        {draggableDialogContent && (
+          <DraggableDialog draggableDialogContent={draggableDialogContent} />
+        )}
+        {createFab}
+        <CircleSelector />
+        <div className={classes.root}>
+          <AppController
+            setShowNavigation={setShowNavigation}
+            showNavigation={showNavigation}
+            navWidth={navWidth}
+            setNavWidth={setNavWidth}
+            appBarItems={appBarItems}
+          />
+          <div className={classes.contentArea}>
+            <Navigation
               showNavigation={showNavigation}
-              navWidth={navWidth}
-              setNavWidth={setNavWidth}
-              appBarItems={appBarItems}
+              setShowNavigation={setShowNavigation}
+              navItems={navItems}
+              isResizingNav={isResizingNav}
             />
-            <div className={classes.contentArea}>
-              <Navigation
-                showNavigation={showNavigation}
-                setShowNavigation={setShowNavigation}
-                navItems={navItems}
-                isResizingNav={isResizingNav}
-              />
-              <ContentArea children={children} />
-            </div>
+            <ContentArea children={children} />
           </div>
         </div>
-      </ProfileProvider>
+      </div>
     </UserInterfaceContext.Provider>
   );
 });

@@ -1,12 +1,15 @@
+import BasicThemeEditor from '../../Theme/Editor/BasicThemeEditor';
 import CircleEditorAppBarItems from './CircleEditorAppBarItems';
-import DefaultCircleEditor from './components/DefaultCircleEditor';
+import CircleFieldsMapperEditor from './components/CircleFieldsMapperEditor';
+import CircleFieldsMapperViewer from '../CircleViewer/CircleFieldsMapperViewer';
+import CircleHistoryEditor from './components/CircleHistoryEditor';
 import Error from '../../Error';
 import firestoreClient from './../../../lib/firebase/firestoreClient';
 import LoginModal from '../../../contexts/UserInterface/LoginModal';
 import ProgressWithMessage from './../../ProgressWithMessage/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
 import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
-import ThemeEditor from './../../Theme/Editor/ThemeEditor';
+import ThemeViewer from '../../Theme/Viewer';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
@@ -40,15 +43,17 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const { setAppSnackbar } = useContext(SystemMessagesContext);
   const { setAppBarItems, setAppDialog } = useContext(UserInterfaceContext);
   const { user } = useContext(UserContext);
-  const [canSave, setCanSave] = useState(user.canCreate);
+  const [canSave, setCanSave] = useState(false);
+  const { setNavItems, setNavWidth } = useContext(UserInterfaceContext);
+  const [editor, setEditor] = useState<null | React.ReactElement>(null);
+  const [viewingHistory, setViewingHistory] = useState(false);
+  const [updateCircleVariables, setUpdateCircleVariables] = useState<Circle>({
+    id: '',
+  });
 
   const [circleData, loadingCircle, errorCircle] = useDocument(
     firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
   );
-
-  const [updateCircleVariables, setUpdateCircleVariables] = useState<Circle>({
-    id: '',
-  });
 
   const [
     updateCircle,
@@ -59,6 +64,13 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       merge: false,
     },
   });
+
+  const componentDidMount = () => {
+    if (!user.id) {
+      setCanSave(false);
+      setAppDialog(<LoginModal />);
+    }
+  };
 
   const circleUpdated = () => {
     if (
@@ -98,6 +110,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   };
 
   const handleSave = () => {
+    console.log('Saving circle');
     setCanSave(false);
     updateCircle();
   };
@@ -117,7 +130,15 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
   };
 
+  const handleViewHistory = () => {
+    setViewingHistory(true);
+  };
+
   const componentDidUpdate = () => {
+    console.log(
+      'There was a change to the circleData or loadingCircle or user or canSave, updating the top navigation items.',
+    );
+
     const circle: Circle | null =
       circleData && circleData.data() ? (circleData.data() as Circle) : null;
     if (user.id && !user.canCreate) {
@@ -126,7 +147,20 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setAppDialog(null);
     }
 
-    if (updateCircleVariables.id === '' && circle) {
+    if (circle && circle.id === '') {
+      setUpdateCircleVariables(circle);
+      // do something else
+      setAppBarItems(
+        <CircleEditorAppBarItems
+          circle={circle}
+          canSave={canSave}
+          handleSave={handleSave}
+          handleCancel={handleCancel}
+          updateCircleLoading={updateCircleLoading}
+          handleViewHistory={handleViewHistory}
+        />,
+      );
+    } else if (circle) {
       setUpdateCircleVariables(circle);
       setAppBarItems(
         <CircleEditorAppBarItems
@@ -135,38 +169,68 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           handleSave={handleSave}
           handleCancel={handleCancel}
           updateCircleLoading={updateCircleLoading}
-        />,
-      );
-    } else if (circle) {
-      setAppBarItems(
-        <CircleEditorAppBarItems
-          circle={circle}
-          canSave={canSave}
-          handleSave={handleSave}
-          handleCancel={handleCancel}
-          updateCircleLoading={updateCircleLoading}
+          handleViewHistory={handleViewHistory}
         />,
       );
     }
   };
 
-  const componentDidMount = () => {
-    if (!user.id) {
-      setCanSave(false);
-      setAppDialog(<LoginModal />);
+  const updateEditorAndViewer = () => {
+    console.log('There was a change to the Circle, updating the editor.');
+    let navItems = null;
+    let navWidth = 0;
+    let editor = null;
+
+    if (updateCircleVariables) {
+      const circle = updateCircleVariables;
+      if (circle) {
+        switch (circle.type) {
+          case 'THEME': {
+            navWidth = 600;
+            navItems = (
+              <BasicThemeEditor
+                circle={updateCircleVariables}
+                updateCircle={handleUpdateCircle}
+              />
+            );
+            editor = <ThemeViewer circle={circle} setCanSave={setCanSave} />;
+            break;
+          }
+          default: {
+            editor = <CircleFieldsMapperViewer circle={circle} />;
+            navWidth = 400;
+            navItems = (
+              <CircleFieldsMapperEditor
+                circle={updateCircleVariables}
+                updateCircle={handleUpdateCircle}
+              />
+            );
+          }
+        }
+      }
     }
-    // Was being used for slow pulling off screen causing crash that wouldnt allow refresh
-    // return () => {
-    //   if (setAppBarItems) {
-    //     setAppDialog(null);
-    //   }
-    // };
+
+    if (user.canCreate) {
+      setCanSave(true);
+    }
+
+    setEditor(editor);
+    setNavWidth(navWidth);
+    setNavItems(navItems);
+  };
+
+  const showHistoryEditor = () => {
+    if (updateCircleVariables) {
+      setNavItems(<CircleHistoryEditor id={updateCircleVariables.id} />);
+    }
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(componentDidMount, []);
   useEffect(componentDidUpdate, [circleData, loadingCircle, user, canSave]);
   useEffect(circleUpdated, [updateCircleData]);
+  useEffect(updateEditorAndViewer, [updateCircleVariables]);
+  useEffect(showHistoryEditor, [viewingHistory]);
 
   if (errorCircle) {
     return <Error error={errorCircle} />;
@@ -176,41 +240,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     return <ProgressWithMessage message="Loading Circle" />;
   }
 
-  if (circleData) {
-    const circle = updateCircleVariables;
-    if (circle) {
-      let editor = null;
-
-      if (circle.component) {
-        switch (circle.component) {
-          case 'THEME':
-            editor = (
-              <ThemeEditor
-                circle={updateCircleVariables}
-                setCanSave={setCanSave}
-                updateCircle={handleUpdateCircle}
-              />
-            );
-            break;
-          default:
-            editor = null;
-        }
-      } else {
-        switch (circle.type) {
-          default:
-            editor = (
-              <DefaultCircleEditor
-                circle={updateCircleVariables}
-                updateCircle={handleUpdateCircle}
-              />
-            );
-        }
-      }
-
-      return <div className={classes.root}>{editor}</div>;
-    }
-  }
-  return null;
+  return <div className={classes.root}>{editor}</div>;
 };
 
 export default CircleEditor;

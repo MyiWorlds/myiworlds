@@ -37,13 +37,10 @@ export type PossibleCircleTypes =
   | 'QUERY_GET_DOCUMENTS_BY_FILTERS'
   | MediaTypes;
 
-export type PossibleComponents = 'THEME';
-
 export interface Header {
   id: string;
   collection?: FIRESTORE_COLLECTIONS.CIRCLES;
   type?: PossibleCircleTypes;
-  component?: PossibleComponents;
   parent?: string;
   cached?: boolean;
   cache?: Circle;

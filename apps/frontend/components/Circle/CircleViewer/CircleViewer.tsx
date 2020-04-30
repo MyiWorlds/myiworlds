@@ -57,17 +57,13 @@ export default function CircleViewer({ id }: Props) {
     if (circle) {
       let viewer = null;
 
-      if (circle.component) {
-        switch (circle.component) {
-          case 'THEME':
-            viewer = <ThemeViewer circle={circle} />;
-            break;
-          default:
-            viewer = null;
-            break;
-        }
-      } else {
-        viewer = <CircleFieldsMapperViewer circle={circle} />;
+      switch (circle.type) {
+        case 'THEME':
+          viewer = <ThemeViewer circle={circle} />;
+          break;
+        default:
+          viewer = <CircleFieldsMapperViewer circle={circle} />;
+          break;
       }
 
       return viewer;

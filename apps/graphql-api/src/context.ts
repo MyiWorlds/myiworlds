@@ -4,6 +4,7 @@ import getDocumentsByIds from './services/firebase/firestore/queries/getDocument
 import getUserId from './services/firebase/authentication/getUserId';
 import { Context } from '@myiworlds/types';
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { stackdriver } from '@myiworlds/services';
 
 const Context = async (req: ExpressContext['req']) => {
@@ -41,10 +42,26 @@ const Context = async (req: ExpressContext['req']) => {
 
       // Data loaders
       circleLoader: new DataLoader(async (keys: string[]) =>
-        getDocumentsByIds('circles', keys, context, false),
+        getDocumentsByIds(FIRESTORE_COLLECTIONS.CIRCLES, keys, context, false),
+      ),
+      circleCloneLoader: new DataLoader(async (keys: string[]) =>
+        getDocumentsByIds(
+          FIRESTORE_COLLECTIONS.CIRCLES_CLONES,
+          keys,
+          context,
+          false,
+        ),
       ),
       profileLoader: new DataLoader(async (keys: string[]) =>
-        getDocumentsByIds('profiles', keys, context, false),
+        getDocumentsByIds(FIRESTORE_COLLECTIONS.PROFILES, keys, context, false),
+      ),
+      profileCloneLoader: new DataLoader(async (keys: string[]) =>
+        getDocumentsByIds(
+          FIRESTORE_COLLECTIONS.PROFILES_CLONES,
+          keys,
+          context,
+          false,
+        ),
       ),
     };
 

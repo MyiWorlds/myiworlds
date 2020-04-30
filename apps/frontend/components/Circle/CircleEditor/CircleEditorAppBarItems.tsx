@@ -1,12 +1,13 @@
+import HistoryIcon from '@material-ui/icons/History';
 import React from 'react';
 import { Circle } from '@myiworlds/types';
-import { useRouter } from 'next/router';
 import {
   makeStyles,
   Theme,
   createStyles,
   Typography,
   Button,
+  IconButton,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,6 +27,7 @@ interface Props {
   updateCircleLoading: boolean;
   handleSave: () => void;
   handleCancel: () => void;
+  handleViewHistory: () => void;
   canSave: boolean;
 }
 
@@ -34,16 +36,25 @@ export default function CircleEditorAppBarItems({
   updateCircleLoading,
   handleSave,
   handleCancel,
+  handleViewHistory,
   canSave,
 }: Props) {
   const classes = useStyles();
-  const router = useRouter();
 
   return (
     <>
       <Typography variant="h6" className={classes.title}>
         {circle.title || 'Untitled'}
       </Typography>
+      <IconButton
+        edge="start"
+        className={classes.appBarBtn}
+        color="inherit"
+        aria-label="menu"
+        onClick={handleViewHistory}
+      >
+        <HistoryIcon />
+      </IconButton>
       <Button
         autoFocus
         color="inherit"

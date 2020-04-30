@@ -1,0 +1,18 @@
+query getCircleClonesById($id: String!) {
+  getCircleClonesById(id: $id) {
+    status
+    hasMoreResults
+    cursor
+    clones {
+      id
+      title
+      dateUpdated
+      media {
+        id
+        type
+        title
+        string
+      }
+    }
+  }
+}
