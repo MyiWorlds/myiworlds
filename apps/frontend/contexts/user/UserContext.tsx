@@ -62,7 +62,7 @@ const UserProvider = ({ children }: any) => {
     fetchPolicy: 'no-cache',
   });
 
-  const saveUser = ({
+  const updateCurrentUser = ({
     id,
     email,
     photoURL,
@@ -224,7 +224,7 @@ const UserProvider = ({ children }: any) => {
                 'Users fields have changed and I am going to update them.',
               );
 
-              saveUser(userDoc as LoggedInUser);
+              updateCurrentUser(userDoc as LoggedInUser);
               setCookie('isSystemAdmin', userDoc.isSystemAdmin);
               return;
             } else {
@@ -258,7 +258,7 @@ const UserProvider = ({ children }: any) => {
   const updateUserData = () => {
     if (getUserQuery && getUserQuery.getUserById) {
       console.log('The user was fetched and is being updated.');
-      saveUser(getUserQuery.getUserById as LoggedInUser);
+      updateCurrentUser(getUserQuery.getUserById as LoggedInUser);
       subscribeToUser();
       setUserIdToLogin(null);
       setAppLoading(false);
@@ -279,7 +279,7 @@ const UserProvider = ({ children }: any) => {
       createUserData.createUser.createdUser.id
     ) {
       console.log('User was created and updating the application with it.');
-      saveUser(createUserData.createUser.createdUser as LoggedInUser);
+      updateCurrentUser(createUserData.createUser.createdUser as LoggedInUser);
       subscribeToUser();
       setAppLoading(false);
       setUserToCreate(null);

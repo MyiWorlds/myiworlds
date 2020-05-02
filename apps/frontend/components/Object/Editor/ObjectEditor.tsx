@@ -203,7 +203,11 @@ const ObjectEditor: React.FC<Props> = ({
           <div key={`${parentStrings}-${property}`}>
             <FunctionEditor
               property={property}
-              value={value && value.toString() ? value.toString() : ''}
+              value={
+                value && (value as string).toString()
+                  ? (value as string).toString()
+                  : ''
+              }
               setValue={updateValue}
             />
           </div>,

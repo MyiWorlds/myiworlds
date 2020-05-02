@@ -1,7 +1,7 @@
-import BasicThemeEditor from '../../Theme/Editor/BasicThemeEditor';
 import CircleEditorAppBarItems from './CircleEditorAppBarItems';
 import CircleFieldsMapperEditor from './components/CircleFieldsMapperEditor';
 import CircleFieldsMapperViewer from '../CircleViewer/CircleFieldsMapperViewer';
+import CircleHistoryAppBarItems from './components/CircleHistoryAppBarItems';
 import CircleHistoryEditor from './components/CircleHistoryEditor';
 import Error from '../../Error';
 import firestoreClient from './../../../lib/firebase/firestoreClient';
@@ -9,6 +9,7 @@ import LoginModal from '../../../contexts/UserInterface/LoginModal';
 import ProgressWithMessage from './../../ProgressWithMessage/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
 import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
+import ThemeEditor from '../../Theme/Editor/ThemeEditor';
 import ThemeViewer from '../../Theme/Viewer';
 import { Circle, CircleClone } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -89,10 +90,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
     return () => {
       setNavItems(null);
+      setAppBarItems(null);
     };
   };
 
-  const circleUpdated = () => {
+  const circleWasUpdated = () => {
     if (
       updateCircleData &&
       updateCircleData.updateCircle &&
@@ -121,12 +123,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
         autoHideDuration: 2000,
       });
     }
-  };
-
-  const handleUpdateCircle = (newValues: any) => {
-    setUpdateCircleVariables({
-      ...newValues,
-    });
   };
 
   const handleSave = () => {
@@ -168,10 +164,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
   };
 
-  const componentDidUpdate = () => {
+  const circleBeingEditedChanged = () => {
     console.log(
       'There was a change to the circleData or loadingCircle or user or canSave, updating the top navigation items.',
     );
+
+    // Need to add if data changes and you have unsaved changes, merge with them
 
     const circle: Circle | null =
       circleData && circleData.data() ? (circleData.data() as Circle) : null;
@@ -181,53 +179,50 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setAppDialog(null);
     }
 
-    if (circle && circle.id === '') {
+    if (circle) {
       setUpdateCircleVariables(circle);
-      // do something else
-      setAppBarItems(
-        <CircleEditorAppBarItems
-          circle={circle}
-          canSave={canSave}
-          handleSave={handleSave}
-          handleCancel={handleCancel}
-          updateCircleLoading={updateCircleLoading}
-          setViewingHistory={setViewingHistory}
-          updateEditorAndViewer={updateEditorAndViewer}
-          viewingHistory={viewingHistory}
-        />,
-      );
-    } else if (circle) {
-      setUpdateCircleVariables(circle);
-      setAppBarItems(
-        <CircleEditorAppBarItems
-          circle={circle}
-          canSave={canSave}
-          handleSave={handleSave}
-          handleCancel={handleCancel}
-          updateCircleLoading={updateCircleLoading}
-          setViewingHistory={setViewingHistory}
-          updateEditorAndViewer={updateEditorAndViewer}
-          viewingHistory={viewingHistory}
-        />,
-      );
     }
   };
 
-  const updateEditorAndViewer = () => {
-    console.log('There was a change to the Circle, updating the editor.');
-    let navItems = null;
-    let navWidth = 0;
-    let newViewer = viewer;
+  const updateAppBarItems = (appBarItems?: React.ReactElement) => {
+    setAppBarItems(
+      viewingHistory ? (
+        <CircleHistoryAppBarItems
+          canSave={canSave && !loadingCircle}
+          handleSave={handleSave}
+          updateCircleLoading={updateCircleLoading}
+          setViewingHistory={setViewingHistory}
+          viewingClone={updateCircleVariables.clonedFrom ? true : false}
+        />
+      ) : (
+        <CircleEditorAppBarItems
+          circle={updateCircleVariables}
+          canSave={canSave}
+          handleSave={handleSave}
+          handleCancel={handleCancel}
+          updateCircleLoading={updateCircleLoading}
+          setViewingHistory={setViewingHistory}
+          updateNavItemsAndViewer={updateNavItemsAndViewer}
+          viewingHistory={viewingHistory}
+        />
+      ),
+    );
+  };
+
+  const updateNavItemsAndViewer = () => {
+    let newNavItems = null;
+    let newViewer = null;
 
     const circle = updateCircleVariables;
-    if (circle) {
+    if (circle && circle.id !== '') {
+      console.log('There was a change to the Circle, updating the editor.');
+      newViewer = viewer;
       switch (circle.type) {
         case 'THEME': {
-          navWidth = 600;
-          navItems = (
-            <BasicThemeEditor
+          newNavItems = (
+            <ThemeEditor
               circle={circle}
-              updateCircle={handleUpdateCircle}
+              updateCircle={setUpdateCircleVariables}
             />
           );
           newViewer = <ThemeViewer circle={circle} setCanSave={setCanSave} />;
@@ -235,11 +230,10 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
         }
         default: {
           newViewer = <CircleFieldsMapperViewer circle={circle} />;
-          navWidth = 400;
-          navItems = (
+          newNavItems = (
             <CircleFieldsMapperEditor
               circle={circle}
-              updateCircle={handleUpdateCircle}
+              updateCircle={setUpdateCircleVariables}
             />
           );
         }
@@ -247,8 +241,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
 
     if (viewingHistory) {
-      navWidth = 600;
-      navItems = (
+      newNavItems = (
         <CircleHistoryEditor
           circleId={circle.clonedFrom ? circle.clonedFrom : circle.id}
           clonedCircleIdViewing={
@@ -266,22 +259,47 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
 
     setViewer(newViewer);
-    setNavWidth(navWidth);
-    setNavItems(navItems);
+    setNavItems(newNavItems);
   };
 
-  useEffect(saveToDatabase, [save]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateNavWidth = () => {
+    console.log('Updating the editors navigation width.');
+    let navWidth = 0;
+
+    const circle = updateCircleVariables;
+    if (circle) {
+      switch (circle.type) {
+        case 'THEME': {
+          navWidth = 600;
+          break;
+        }
+        default: {
+          navWidth = 400;
+        }
+      }
+    }
+
+    if (viewingHistory) {
+      navWidth = 400;
+    }
+
+    setNavWidth(navWidth);
+  };
+
   useEffect(componentDidMount, []);
-  useEffect(componentDidUpdate, [
-    circleData,
-    loadingCircle,
-    user,
+  useEffect(circleBeingEditedChanged, [circleData, user, viewingHistory]);
+  useEffect(updateAppBarItems, [
     canSave,
+    circleData,
+    user,
     viewingHistory,
+    updateCircleVariables,
+    loadingCircle,
   ]);
-  useEffect(circleUpdated, [updateCircleData]);
-  useEffect(updateEditorAndViewer, [updateCircleVariables, viewingHistory]);
+  useEffect(updateNavItemsAndViewer, [updateCircleVariables, viewingHistory]);
+  useEffect(updateNavWidth, [viewingHistory, circleData]);
+  useEffect(circleWasUpdated, [updateCircleData]);
+  useEffect(saveToDatabase, [save]);
 
   if (errorCircle) {
     return <Error error={errorCircle} />;

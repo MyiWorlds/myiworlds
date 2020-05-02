@@ -197,7 +197,7 @@ const CircleFieldsMapperEditor: React.FC<Props> = ({
         );
       } else if (dateDisplayFields.includes(property)) {
         renderElements.push(
-          <span>
+          <span key={`${parentStrings}-${property}`}>
             <Typography variant="caption">{property}:</Typography>
             <Typography>
               {format(value as number, 'MMMM dd, yyyy h:mm a')}
@@ -205,7 +205,11 @@ const CircleFieldsMapperEditor: React.FC<Props> = ({
           </span>,
         );
       } else {
-        console.log('Returned nothing Editor.  Received: ', property, value);
+        console.log(
+          'CircleFieldsMapperEditor returned did not match anything.  Received: ',
+          property,
+          value,
+        );
         renderElements.push(
           <div key={`${parentStrings}-${property}`}>{property}</div>,
         );

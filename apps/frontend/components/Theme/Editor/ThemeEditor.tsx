@@ -3,7 +3,7 @@ import ObjectEditor from '../../Object/Editor/ObjectEditor';
 import React, { useContext } from 'react';
 import { Circle } from '@myiworlds/types';
 import { deepMerge } from '@myiworlds/helper-functions';
-import { UserContext } from './../../../contexts/User/UserContext';
+import { UserContext } from '../../../contexts/User/UserContext';
 import {
   List,
   ListItem,
@@ -53,7 +53,7 @@ interface Props {
   updateCircle: (newValues: any) => void;
 }
 
-const BasicThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
+const ThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
   const classes = useStyles();
   const muiTheme = useTheme();
   const { user } = useContext(UserContext);
@@ -81,9 +81,7 @@ const BasicThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
   };
 
   const handleUpdateCircle = (newValue: any) => {
-    const updatedCircle = {
-      ...circle,
-    };
+    const updatedCircle = cloneDeep(circle);
 
     updatedCircle.data.theme = {
       ...updatedCircle.data.theme,
@@ -124,4 +122,4 @@ const BasicThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
   );
 };
 
-export default BasicThemeEditor;
+export default ThemeEditor;

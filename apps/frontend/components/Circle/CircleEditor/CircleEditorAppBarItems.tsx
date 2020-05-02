@@ -30,7 +30,7 @@ interface Props {
   handleSave: () => void;
   handleCancel: () => void;
   setViewingHistory: (boolean: boolean) => void;
-  updateEditorAndViewer: () => void;
+  updateNavItemsAndViewer: () => void;
   canSave: boolean;
   viewingHistory: boolean;
 }
@@ -42,7 +42,7 @@ export default function CircleEditorAppBarItems({
   handleCancel,
   setViewingHistory,
   canSave,
-  updateEditorAndViewer,
+  updateNavItemsAndViewer,
   viewingHistory,
 }: Props) {
   const classes = useStyles();
@@ -60,7 +60,7 @@ export default function CircleEditorAppBarItems({
           aria-label="menu"
           onClick={() => {
             setViewingHistory(false);
-            updateEditorAndViewer();
+            updateNavItemsAndViewer();
           }}
         >
           <EditIcon />

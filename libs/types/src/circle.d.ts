@@ -43,7 +43,7 @@ export interface Header {
   type?: PossibleCircleTypes;
   parent?: string;
   cached?: boolean;
-  cache?: Circle;
+  cache?: string;
   pii?: boolean;
   copiedFrom?: string;
   autoUpdate?: boolean;
@@ -60,6 +60,33 @@ export interface Header {
   viewers?: string[];
   editors?: string[];
   ui?: string;
+  dateCreated?: number;
+  dateUpdated?: number;
+}
+
+export interface HeaderHydrated {
+  id: string;
+  collection?: FIRESTORE_COLLECTIONS.CIRCLES;
+  type?: PossibleCircleTypes;
+  parent?: CircleHydrated;
+  cached?: boolean;
+  cache?: CircleHydrated;
+  pii?: boolean;
+  copiedFrom?: CircleHydrated;
+  autoUpdate?: boolean;
+  slug?: string;
+  public?: boolean;
+  passwordRequired?: boolean;
+  tags?: string[];
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  media?: CircleHydrated;
+  creator?: PublicProfile;
+  owner?: PublicProfile;
+  viewers?: PublicProfile[];
+  editors?: PublicProfile[];
+  ui?: CircleHydrated;
   dateCreated?: number;
   dateUpdated?: number;
 }
@@ -84,13 +111,30 @@ export interface Circle extends Header {
   lines?: string[];
 }
 
-export interface UpdateCircleMutation extends Circle {
-  merge: boolean;
+export interface CircleHydrated extends HeaderHydrated {
+  id: string;
+  key?: string;
+  string?: string;
+  data?:
+    | QueryGetDocumentById
+    | QueryGetDocumentsByIds
+    | QueryGetDocumentsByFilters
+    | any
+    | {
+        [key: string]: any;
+      };
+  number?: number;
+  bigNumber?: bigint;
+  boolean?: boolean;
+  date?: number;
+  geoPoint?: string;
+  media?: CircleHydrated;
+  line?: CircleHydrated;
+  lines?: CircleHydrated[];
 }
 
-export interface CircleHydrated extends Circle {
-  id: string;
-  media?: CircleHydrated;
+export interface UpdateCircleMutation extends Circle {
+  merge: boolean;
 }
 
 export interface CircleClone extends Circle {

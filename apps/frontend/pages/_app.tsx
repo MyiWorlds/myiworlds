@@ -1,4 +1,5 @@
 import App from 'next/app';
+import AppBody from './../components/appBody';
 import MaterialUiTheme from '../components/Theme/MaterialUiTheme';
 import React from 'react';
 import withApollo from '../lib/apollo/withApollo';
@@ -15,13 +16,15 @@ class MyApp extends App<any> {
       <ApolloProvider client={apolloClient}>
         <MaterialUiTheme>
           <SystemMessagesProvider>
-            <UserProvider>
-              <ProfileProvider>
-                <UserInterfaceProvider>
-                  <Component {...pageProps} />
-                </UserInterfaceProvider>
-              </ProfileProvider>
-            </UserProvider>
+            <AppBody>
+              <UserProvider>
+                <ProfileProvider>
+                  <UserInterfaceProvider>
+                    <Component {...pageProps} />
+                  </UserInterfaceProvider>
+                </ProfileProvider>
+              </UserProvider>
+            </AppBody>
           </SystemMessagesProvider>
         </MaterialUiTheme>
       </ApolloProvider>

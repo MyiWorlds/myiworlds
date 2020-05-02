@@ -1,10 +1,7 @@
 import CircleListItemViewer from './CircleListItemViewer';
-import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
-import RestorePageIcon from '@material-ui/icons/RestorePage';
-import Tooltip from '@material-ui/core/Tooltip';
 import { Circle, CircleClone } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
@@ -15,7 +12,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  ListItemSecondaryAction,
 } from '@material-ui/core';
 
 interface Props {
@@ -119,15 +115,6 @@ const CircleHistoryEditor = React.memo(
                     'MMMM dd, yyyy h:mm a',
                   )}
                 />
-                {clonedCircleIdViewing === circle.id && (
-                  <ListItemSecondaryAction>
-                    <Tooltip title="Restore to latest">
-                      <IconButton onClick={() => handleSave()}>
-                        <RestorePageIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </ListItemSecondaryAction>
-                )}
               </ListItem>
             );
           })}
