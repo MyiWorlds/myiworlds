@@ -48,32 +48,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ProfileSelector = () => {
   const classes = useStyles();
-  const [getProfiles, {loading:  getUserProfilesLoading, data: getUserProfilesQuery, error: getUserProfilesError}] = useGetUserProfilesLazyQuery({
+  const [getProfiles, { loading: getUserProfilesLoading, data: getUserProfilesQuery, error: getUserProfilesError }] = useGetUserProfilesLazyQuery({
     fetchPolicy: 'no-cache',
   });
   const { selectedProfile, handleSelectProfile } = useContext(ProfileContext);
   const [showCreateProfile, setShowCreateProfile] = useState(false);
 
-  useEffect(getProfiles, [])
+  useEffect(getProfiles, []);
 
   let content = null;
 
   if (getUserProfilesLoading) {
-    content = <Progress />
+    content = <Progress />;
   }
 
   if (getUserProfilesError) {
     content = (
       <Error
-      error={getUserProfilesError}
-      message={'There was an error getting the Users profiles.'}
-    />
-    )
+        error={getUserProfilesError}
+        message={'There was an error getting the Users profiles.'}
+      />
+    );
   }
 
   const createProfileForm = (
     <Dialog
-      onClose={() => {}}
+      onClose={() => { }}
       aria-labelledby="select-profile-dialog"
       open={showCreateProfile}
       fullWidth={true}
@@ -98,42 +98,42 @@ const ProfileSelector = () => {
     const profiles = getUserProfilesQuery.getUserProfiles as UserProfileHydrated[];
     content = (
       <>
-      <List>
-        {profiles.map((profile: UserProfileHydrated) => (
-              <ListItem
-                button
-                onClick={() => handleSelectProfile(profile.id)}
-                key={profile.id}
-                selected={profile.id === selectedProfile.id}
-              >
-                {profile.media && (
-                  <ListItemAvatar>
+        <List>
+          {profiles.map((profile: UserProfileHydrated) => (
+            <ListItem
+              button
+              onClick={profile.id !== selectedProfile.id ? () => handleSelectProfile(profile.id) : () => { }}
+              key={profile.id}
+              selected={profile.id === selectedProfile.id}
+            >
+              {profile.media && (
+                <ListItemAvatar>
                   <Avatar>
                     <Media circle={profile.media} />
                   </Avatar>
                 </ListItemAvatar>
-                )}
-                <ListItemText primary={profile.username} />
-              </ListItem>
-            ))}
+              )}
+              <ListItemText primary={profile.username} />
+            </ListItem>
+          ))}
         </List>
         {showCreateProfile && createProfileForm}
         <div
           className={classes.createProfileBtn}
         >
-        <Button
-          color="primary"
-          onClick={() => setShowCreateProfile(true)}
-          startIcon={<AddIcon />}
-        >
-          Create New Profile
+          <Button
+            color="primary"
+            onClick={() => setShowCreateProfile(true)}
+            startIcon={<AddIcon />}
+          >
+            Create New Profile
         </Button>
         </div>
       </>
-    )
+    );
   }
 
   return content;
-}
+};
 
 export default ProfileSelector;

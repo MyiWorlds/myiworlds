@@ -10,7 +10,7 @@ import ProgressWithMessage from './../../ProgressWithMessage/ProgressWithMessage
 import React, { useContext, useEffect, useState } from 'react';
 import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
 import ThemeViewer from '../../Theme/Viewer';
-import { Circle } from '@myiworlds/types';
+import { Circle, CircleClone } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
@@ -40,20 +40,37 @@ interface Props {
 const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const classes = useStyles();
   const router = useRouter();
+  const { setNavItems, setNavWidth, setAppBarItems, setAppDialog } = useContext(
+    UserInterfaceContext,
+  );
   const { setAppSnackbar } = useContext(SystemMessagesContext);
-  const { setAppBarItems, setAppDialog } = useContext(UserInterfaceContext);
   const { user } = useContext(UserContext);
   const [canSave, setCanSave] = useState(false);
-  const { setNavItems, setNavWidth } = useContext(UserInterfaceContext);
-  const [editor, setEditor] = useState<null | React.ReactElement>(null);
+  const [viewer, setViewer] = useState<null | React.ReactElement>(null);
   const [viewingHistory, setViewingHistory] = useState(false);
-  const [updateCircleVariables, setUpdateCircleVariables] = useState<Circle>({
+  const [circleId, setCircleId] = useState(id);
+  const [save, setSave] = useState(false);
+  const [collection, setCollection] = useState<'circles' | 'circles-clones'>(
+    FIRESTORE_COLLECTIONS.CIRCLES,
+  );
+  const [updateCircleVariables, setUpdateCircleVariables] = useState<
+    CircleClone | Circle
+  >({
     id: '',
   });
-
   const [circleData, loadingCircle, errorCircle] = useDocument(
-    firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
+    firestoreClient.collection(collection).doc(circleId),
   );
+
+  const updateCircleToFetch = (
+    newId: string | null,
+    newCollection: 'circles' | 'circles-clones' | null,
+  ) => {
+    setCircleId(newId ? newId : id);
+    setCollection(
+      newCollection ? newCollection : FIRESTORE_COLLECTIONS.CIRCLES,
+    );
+  };
 
   const [
     updateCircle,
@@ -70,6 +87,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setCanSave(false);
       setAppDialog(<LoginModal />);
     }
+    return () => {
+      setNavItems(null);
+    };
   };
 
   const circleUpdated = () => {
@@ -112,13 +132,31 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const handleSave = () => {
     console.log('Saving circle');
     setCanSave(false);
-    updateCircle();
+    setNavItems(null);
+    if (
+      updateCircleVariables.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES
+    ) {
+      const circleToUdate = {
+        ...updateCircleVariables,
+        id: updateCircleVariables.clonedFrom,
+      };
+      setUpdateCircleVariables(circleToUdate);
+    }
+    setSave(true);
+  };
+
+  const saveToDatabase = () => {
+    if (save) {
+      updateCircle();
+    }
   };
 
   const handleCancel = () => {
     console.log(
       'Changing path to previous one as editing circle was canceled.',
     );
+    setViewingHistory(false);
+    setNavItems(null);
     setUpdateCircleVariables({ id: '' });
     if (
       // eslint-disable-next-line no-restricted-globals
@@ -128,10 +166,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     } else {
       router.push('/');
     }
-  };
-
-  const handleViewHistory = () => {
-    setViewingHistory(true);
   };
 
   const componentDidUpdate = () => {
@@ -157,7 +191,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           handleSave={handleSave}
           handleCancel={handleCancel}
           updateCircleLoading={updateCircleLoading}
-          handleViewHistory={handleViewHistory}
+          setViewingHistory={setViewingHistory}
+          updateEditorAndViewer={updateEditorAndViewer}
+          viewingHistory={viewingHistory}
         />,
       );
     } else if (circle) {
@@ -169,7 +205,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           handleSave={handleSave}
           handleCancel={handleCancel}
           updateCircleLoading={updateCircleLoading}
-          handleViewHistory={handleViewHistory}
+          setViewingHistory={setViewingHistory}
+          updateEditorAndViewer={updateEditorAndViewer}
+          viewingHistory={viewingHistory}
         />,
       );
     }
@@ -179,58 +217,71 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     console.log('There was a change to the Circle, updating the editor.');
     let navItems = null;
     let navWidth = 0;
-    let editor = null;
+    let newViewer = viewer;
 
-    if (updateCircleVariables) {
-      const circle = updateCircleVariables;
-      if (circle) {
-        switch (circle.type) {
-          case 'THEME': {
-            navWidth = 600;
-            navItems = (
-              <BasicThemeEditor
-                circle={updateCircleVariables}
-                updateCircle={handleUpdateCircle}
-              />
-            );
-            editor = <ThemeViewer circle={circle} setCanSave={setCanSave} />;
-            break;
-          }
-          default: {
-            editor = <CircleFieldsMapperViewer circle={circle} />;
-            navWidth = 400;
-            navItems = (
-              <CircleFieldsMapperEditor
-                circle={updateCircleVariables}
-                updateCircle={handleUpdateCircle}
-              />
-            );
-          }
+    const circle = updateCircleVariables;
+    if (circle) {
+      switch (circle.type) {
+        case 'THEME': {
+          navWidth = 600;
+          navItems = (
+            <BasicThemeEditor
+              circle={circle}
+              updateCircle={handleUpdateCircle}
+            />
+          );
+          newViewer = <ThemeViewer circle={circle} setCanSave={setCanSave} />;
+          break;
+        }
+        default: {
+          newViewer = <CircleFieldsMapperViewer circle={circle} />;
+          navWidth = 400;
+          navItems = (
+            <CircleFieldsMapperEditor
+              circle={circle}
+              updateCircle={handleUpdateCircle}
+            />
+          );
         }
       }
+    }
+
+    if (viewingHistory) {
+      navWidth = 600;
+      navItems = (
+        <CircleHistoryEditor
+          circleId={circle.clonedFrom ? circle.clonedFrom : circle.id}
+          clonedCircleIdViewing={
+            viewingHistory && circle.clonedFrom ? circle.id : null
+          }
+          updateCircleToFetch={updateCircleToFetch}
+          handleSave={handleSave}
+          contentCircle={circle}
+        />
+      );
     }
 
     if (user.canCreate) {
       setCanSave(true);
     }
 
-    setEditor(editor);
+    setViewer(newViewer);
     setNavWidth(navWidth);
     setNavItems(navItems);
   };
 
-  const showHistoryEditor = () => {
-    if (updateCircleVariables) {
-      setNavItems(<CircleHistoryEditor id={updateCircleVariables.id} />);
-    }
-  };
-
+  useEffect(saveToDatabase, [save]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(componentDidMount, []);
-  useEffect(componentDidUpdate, [circleData, loadingCircle, user, canSave]);
+  useEffect(componentDidUpdate, [
+    circleData,
+    loadingCircle,
+    user,
+    canSave,
+    viewingHistory,
+  ]);
   useEffect(circleUpdated, [updateCircleData]);
-  useEffect(updateEditorAndViewer, [updateCircleVariables]);
-  useEffect(showHistoryEditor, [viewingHistory]);
+  useEffect(updateEditorAndViewer, [updateCircleVariables, viewingHistory]);
 
   if (errorCircle) {
     return <Error error={errorCircle} />;
@@ -240,7 +291,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     return <ProgressWithMessage message="Loading Circle" />;
   }
 
-  return <div className={classes.root}>{editor}</div>;
+  return <div className={classes.root}>{viewer}</div>;
 };
 
 export default CircleEditor;

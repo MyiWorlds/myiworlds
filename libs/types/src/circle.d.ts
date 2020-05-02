@@ -100,7 +100,7 @@ export interface CircleClone extends Circle {
 
 export interface CircleCloneHydrated extends Circle {
   collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
-  clonedFrom: string;
+  clonedFrom: Circle;
 }
 
 export interface Filter {

@@ -205,7 +205,7 @@ const CircleFieldsMapperEditor: React.FC<Props> = ({
           </span>,
         );
       } else {
-        console.log('Returned nothing.  Received: ', property, value);
+        console.log('Returned nothing Editor.  Received: ', property, value);
         renderElements.push(
           <div key={`${parentStrings}-${property}`}>{property}</div>,
         );

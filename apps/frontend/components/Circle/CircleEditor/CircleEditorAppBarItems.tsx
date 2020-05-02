@@ -1,5 +1,7 @@
+import EditIcon from '@material-ui/icons/Edit';
 import HistoryIcon from '@material-ui/icons/History';
 import React from 'react';
+import Tooltip from '@material-ui/core/Tooltip';
 import { Circle } from '@myiworlds/types';
 import {
   makeStyles,
@@ -27,8 +29,10 @@ interface Props {
   updateCircleLoading: boolean;
   handleSave: () => void;
   handleCancel: () => void;
-  handleViewHistory: () => void;
+  setViewingHistory: (boolean: boolean) => void;
+  updateEditorAndViewer: () => void;
   canSave: boolean;
+  viewingHistory: boolean;
 }
 
 export default function CircleEditorAppBarItems({
@@ -36,8 +40,10 @@ export default function CircleEditorAppBarItems({
   updateCircleLoading,
   handleSave,
   handleCancel,
-  handleViewHistory,
+  setViewingHistory,
   canSave,
+  updateEditorAndViewer,
+  viewingHistory,
 }: Props) {
   const classes = useStyles();
 
@@ -46,15 +52,32 @@ export default function CircleEditorAppBarItems({
       <Typography variant="h6" className={classes.title}>
         {circle.title || 'Untitled'}
       </Typography>
-      <IconButton
-        edge="start"
-        className={classes.appBarBtn}
-        color="inherit"
-        aria-label="menu"
-        onClick={handleViewHistory}
-      >
-        <HistoryIcon />
-      </IconButton>
+      {viewingHistory ? (
+        <IconButton
+          edge="start"
+          className={classes.appBarBtn}
+          color="inherit"
+          aria-label="menu"
+          onClick={() => {
+            setViewingHistory(false);
+            updateEditorAndViewer();
+          }}
+        >
+          <EditIcon />
+        </IconButton>
+      ) : (
+        <Tooltip title="History">
+          <IconButton
+            edge="start"
+            className={classes.appBarBtn}
+            color="inherit"
+            aria-label="menu"
+            onClick={() => setViewingHistory(true)}
+          >
+            <HistoryIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       <Button
         autoFocus
         color="inherit"

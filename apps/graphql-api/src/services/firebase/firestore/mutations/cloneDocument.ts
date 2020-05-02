@@ -17,6 +17,7 @@ export default async function cloneDocument(
     clonedFrom: doc.id,
     id: newUid,
     collection: newCollection,
+    dateUpdated: Date.now(),
   };
 
   try {

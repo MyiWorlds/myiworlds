@@ -1,5 +1,3 @@
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -11,13 +9,33 @@ import {
   ListItemAvatar,
   ListItemText,
   ListItemSecondaryAction,
+  ListItemClassKey,
+  ListItemTextClassKey,
 } from '@material-ui/core';
 
 interface Props {
   id: string;
+  secondary?: string | React.ReactNode;
+  selected?: boolean;
+  disabled?: boolean;
+  listItemClasses?: Partial<Record<ListItemClassKey, string>> | undefined;
+  listItemTextClasses?:
+    | Partial<Record<ListItemTextClassKey, string>>
+    | undefined;
+  listItemSecondaryAction?: React.ReactNode;
+  onSelect?: () => void;
 }
 
-export default function CircleListItemViewer({ id }: Props) {
+export default function CircleListItemViewer({
+  id,
+  secondary,
+  listItemClasses,
+  listItemTextClasses,
+  selected,
+  disabled,
+  listItemSecondaryAction,
+  onSelect,
+}: Props) {
   const {
     data: getCircleQuery,
     loading: loadingGetCircle,
@@ -38,11 +56,7 @@ export default function CircleListItemViewer({ id }: Props) {
 
   if (loadingGetCircle) {
     return (
-      <ListItem
-        button
-        // onClick={() => onSelect(profile.id)}
-        key={id}
-      >
+      <ListItem button key={id}>
         <ListItemAvatar>
           <Avatar>
             <Skeleton variant="circle" width={40} height={40} />
@@ -58,21 +72,28 @@ export default function CircleListItemViewer({ id }: Props) {
     circle = getCircleQuery.getCircleById as Circle;
     return (
       <ListItem
-        button
-        // onClick={() => onSelect(profile.id)}
         key={circle.id}
+        button
+        onClick={() => (onSelect ? onSelect() : null)}
+        selected={selected || false}
+        disabled={disabled || false}
+        classes={listItemClasses || {}}
       >
         <ListItemAvatar>
           <Avatar>
             <PersonIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={circle.title} />
-        <ListItemSecondaryAction>
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
+        <ListItemText
+          primary={circle.title}
+          secondary={secondary}
+          classes={listItemTextClasses || {}}
+        />
+        {listItemSecondaryAction ? (
+          <ListItemSecondaryAction>
+            {listItemSecondaryAction}
+          </ListItemSecondaryAction>
+        ) : null}
       </ListItem>
     );
   } else {

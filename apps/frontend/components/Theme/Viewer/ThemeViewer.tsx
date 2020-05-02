@@ -142,7 +142,7 @@ const ThemeViewer: React.FunctionComponent<Props> = ({ circle, setCanSave }) => 
 
       </div>
     </MaterialUiTheme>
-  )
-}
+  );
+};
 
 export default ThemeViewer;

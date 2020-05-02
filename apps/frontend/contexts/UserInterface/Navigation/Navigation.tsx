@@ -17,7 +17,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Media from './../../../components/Media/Media';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import Paper from '@material-ui/core/Paper';
 import PeopleIcon from '@material-ui/icons/People';
 import PublicIcon from '@material-ui/icons/Public';
 import SettingsIcon from '@material-ui/icons/Settings';

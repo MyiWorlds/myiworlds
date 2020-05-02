@@ -5,8 +5,12 @@ query getCircleClonesById($id: String!) {
     cursor
     clones {
       id
+      clonedFrom {
+        id
+      }
       title
       dateUpdated
+      data
       media {
         id
         type

@@ -67,6 +67,7 @@ export type CircleClone = {
   pii?: Maybe<Scalars['Boolean']>;
   autoUpdate?: Maybe<Scalars['Boolean']>;
   parent?: Maybe<Circle>;
+  clonedFrom?: Maybe<Circle>;
   copiedFrom?: Maybe<Circle>;
   slug?: Maybe<Scalars['String']>;
   public?: Maybe<Scalars['Boolean']>;
@@ -437,8 +438,11 @@ export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
             Maybe<
               { __typename?: 'CircleClone' } & Pick<
                 CircleClone,
-                'id' | 'title' | 'dateUpdated'
+                'id' | 'title' | 'dateUpdated' | 'data'
               > & {
+                  clonedFrom: Maybe<
+                    { __typename?: 'Circle' } & Pick<Circle, 'id'>
+                  >;
                   media: Maybe<
                     { __typename?: 'Circle' } & Pick<
                       Circle,
@@ -849,8 +853,12 @@ export const GetCircleClonesByIdDocument = gql`
       cursor
       clones {
         id
+        clonedFrom {
+          id
+        }
         title
         dateUpdated
+        data
         media {
           id
           type

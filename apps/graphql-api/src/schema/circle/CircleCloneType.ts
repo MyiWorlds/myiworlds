@@ -32,6 +32,15 @@ const CircleCloneType: any = new GraphQLObjectType({
         return null;
       },
     },
+    clonedFrom: {
+      type: CircleType,
+      resolve: async (circle, args, context: Context) => {
+        if (circle.clonedFrom) {
+          return context.circleLoader.load(circle.clonedFrom);
+        }
+        return null;
+      },
+    },
     copiedFrom: {
       type: CircleType,
       resolve: async (circle, args, context: Context) => {

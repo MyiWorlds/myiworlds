@@ -94,10 +94,20 @@ export default async function updateDocumentById(
       .then(async (document: any) => {
         const doc = document.data();
 
+        if (!doc) {
+          response = {
+            status: RESPONSE_CODES.SUCCESS,
+            message: 'Sorry, that document does not exist.',
+            updatedDocumentId: null,
+            previousCloneId: null,
+          };
+          return response;
+        }
+
         let canEdit =
-          isOwner(doc.owner, context.selectedProfileId as string) ||
-          isCreator(doc.creator, context.selectedProfileId as string) ||
-          isEditor(doc.editors, context.selectedProfileId as string) ||
+          isOwner(doc.owner || null, context.selectedProfileId as string) ||
+          isCreator(doc.creator || null, context.selectedProfileId as string) ||
+          isEditor(doc.editors || null, context.selectedProfileId as string) ||
           isRequestingUser(doc.id, context.selectedProfileId as string) ||
           isRequestingUser(doc.id, context.userId as string);
 

@@ -15,10 +15,9 @@ interface Props {
 }
 
 export default function CircleViewer({ id }: Props) {
-  const { setContentViewing, contentViewing } = useContext(
+  const { setContentViewing, contentViewing, setAppBarItems } = useContext(
     UserInterfaceContext,
   );
-  const { setAppBarItems } = useContext(UserInterfaceContext);
 
   const [circleData, loadingCircle, errorCircle] = useDocument(
     firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
