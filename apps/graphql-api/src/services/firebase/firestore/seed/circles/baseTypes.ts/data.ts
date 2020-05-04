@@ -7,6 +7,7 @@ export const data = new CircleFactory().use('DATA').create({
     id: 'data',
     title: 'Data',
     public: true,
+    media: 'default-data-media',
   },
   data: {},
 });

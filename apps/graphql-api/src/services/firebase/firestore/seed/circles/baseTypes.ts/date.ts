@@ -7,6 +7,7 @@ export const date = new CircleFactory().use('DATE').create({
     id: 'date',
     title: 'Date',
     public: true,
+    media: 'default-date-media',
   },
   date: Date.now(),
 });

@@ -7,6 +7,7 @@ export const line = new CircleFactory().use('LINE').create({
     id: 'line',
     title: 'Line',
     public: true,
+    media: 'default-line-media',
   },
   line: '',
 });

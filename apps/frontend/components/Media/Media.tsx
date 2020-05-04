@@ -6,19 +6,20 @@ import { CircleHydrated } from '@myiworlds/types';
 
 interface Props {
   circle: CircleHydrated;
+  classes: { [key: string]: string };
 }
 
-const Media: React.FunctionComponent<Props> = ({ circle }) => {
+const Media: React.FunctionComponent<Props> = ({ circle, classes }) => {
   if (circle) {
     switch (circle.type) {
       case 'MEDIA_VIDEO_GCS':
       case 'MEDIA_VIDEO_HREF':
-        return <Video circle={circle} />;
+        return <Video circle={circle} classes={classes} />;
       case 'MEDIA_IMAGE_GCS':
       case 'MEDIA_IMAGE_HREF':
-        return <Image circle={circle} />;
+        return <Image circle={circle} classes={classes} />;
       case 'MEDIA_FONT_ICON':
-        return <FontIcon circle={circle} />;
+        return <FontIcon circle={circle} classes={classes} />;
       default:
         return null;
     }

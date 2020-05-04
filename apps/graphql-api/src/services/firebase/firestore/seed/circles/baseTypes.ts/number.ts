@@ -7,6 +7,7 @@ export const number = new CircleFactory().use('NUMBER').create({
     id: 'number',
     title: 'Number',
     public: true,
+    media: 'default-number-media',
   },
   number: 0,
 });

@@ -7,6 +7,7 @@ export const string = new CircleFactory().use('STRING').create({
     id: 'string',
     title: 'String',
     public: true,
+    media: 'default-string-media',
   },
   string: '',
 });

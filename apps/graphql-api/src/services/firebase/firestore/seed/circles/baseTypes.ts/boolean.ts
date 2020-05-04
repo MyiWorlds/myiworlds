@@ -7,6 +7,7 @@ export const boolean = new CircleFactory().use('BOOLEAN').create({
     id: 'boolean',
     title: 'Boolean',
     public: true,
+    media: 'default-boolean-media',
   },
   boolean: false,
 });

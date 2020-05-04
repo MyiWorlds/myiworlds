@@ -460,6 +460,40 @@ export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type GetCircleAndLinesByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetCircleAndLinesByIdQuery = { __typename?: 'Query' } & {
+  getCircleById: Maybe<
+    { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+        media: Maybe<
+          { __typename?: 'Circle' } & Pick<
+            Circle,
+            'id' | 'type' | 'title' | 'string'
+          >
+        >;
+        lines: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Circle' } & Pick<
+                Circle,
+                'id' | 'type' | 'title' | 'description'
+              > & {
+                  media: Maybe<
+                    { __typename?: 'Circle' } & Pick<
+                      Circle,
+                      'id' | 'type' | 'title' | 'string'
+                    >
+                  >;
+                }
+            >
+          >
+        >;
+      }
+  >;
+};
+
 export type CopyCircleMutationVariables = {
   id: Scalars['String'];
   collection: Scalars['String'];
@@ -951,6 +985,81 @@ export type GetCircleClonesByIdLazyQueryHookResult = ReturnType<
 export type GetCircleClonesByIdQueryResult = ApolloReactCommon.QueryResult<
   GetCircleClonesByIdQuery,
   GetCircleClonesByIdQueryVariables
+>;
+export const GetCircleAndLinesByIdDocument = gql`
+  query getCircleAndLinesById($id: String!) {
+    getCircleById(id: $id) {
+      id
+      title
+      media {
+        id
+        type
+        title
+        string
+      }
+      lines {
+        id
+        type
+        title
+        description
+        media {
+          id
+          type
+          title
+          string
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCircleAndLinesByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCircleAndLinesByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleAndLinesByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleAndLinesByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleAndLinesByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCircleAndLinesByIdQuery,
+    GetCircleAndLinesByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCircleAndLinesByIdQuery,
+    GetCircleAndLinesByIdQueryVariables
+  >(GetCircleAndLinesByIdDocument, baseOptions);
+}
+export function useGetCircleAndLinesByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCircleAndLinesByIdQuery,
+    GetCircleAndLinesByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCircleAndLinesByIdQuery,
+    GetCircleAndLinesByIdQueryVariables
+  >(GetCircleAndLinesByIdDocument, baseOptions);
+}
+export type GetCircleAndLinesByIdQueryHookResult = ReturnType<
+  typeof useGetCircleAndLinesByIdQuery
+>;
+export type GetCircleAndLinesByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCircleAndLinesByIdLazyQuery
+>;
+export type GetCircleAndLinesByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleAndLinesByIdQuery,
+  GetCircleAndLinesByIdQueryVariables
 >;
 export const CopyCircleDocument = gql`
   mutation copyCircle($id: String!, $collection: String!) {

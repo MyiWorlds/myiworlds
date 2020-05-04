@@ -7,6 +7,7 @@ export const keyValue = new CircleFactory().use('KEY_VALUE').create({
     id: 'keyValue',
     title: 'Key Value',
     public: true,
+    media: 'default-keyvalue-media',
   },
   key: '',
   string: '',

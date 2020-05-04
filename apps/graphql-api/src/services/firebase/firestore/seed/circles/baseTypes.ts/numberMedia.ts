@@ -1,13 +1,12 @@
 import { CircleFactory } from '@myiworlds/factories';
 import { googleCloud } from '@myiworlds/credentials';
 
-export const geoPoint = new CircleFactory().use('GEO_POINT').create({
+export const numberMedia = new CircleFactory().use('MEDIA_FONT_ICON').create({
   selectedProfileId: googleCloud.applicationCreatorProfile,
   header: {
-    id: 'geoPoint',
-    title: 'Geo Point',
+    id: 'default-number-media',
+    title: 'Default number media',
     public: true,
-    media: 'default-geopoint-media',
   },
-  geoPoint: '',
+  string: 'dialpad',
 });

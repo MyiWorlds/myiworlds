@@ -7,6 +7,7 @@ export const baseTypesList = new CircleFactory().use('LINES').create({
     id: 'baseTypesList',
     title: 'Base content types',
     public: true,
+    media: 'default-base-types-list-media',
   },
   lines: [
     'string',

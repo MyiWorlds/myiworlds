@@ -3,6 +3,7 @@ import { CircleHydrated } from '@myiworlds/types';
 
 interface Props {
   circle: CircleHydrated;
+  classes?: { [key: string]: string };
 }
 
 // const test: CircleHydrated = {
@@ -16,7 +17,8 @@ interface Props {
 // };
 // console.log(test);
 
-const Image: React.FunctionComponent<Props> = ({ circle }) => {
+const Image: React.FunctionComponent<Props> = ({ circle, classes }) => {
+  console.log('Classes need to be added to images after made up');
   return <img src={circle.string} alt={circle.title} />;
 };
 
