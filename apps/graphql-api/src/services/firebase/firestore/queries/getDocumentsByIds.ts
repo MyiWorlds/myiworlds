@@ -1,7 +1,6 @@
 import addToProfileHistory from '../mutations/addToProfileHistory';
 import {
   Circle,
-  CircleClone,
   Context,
   FirestoreCollectionTypes,
   PublicProfileCloneHydrated,
@@ -20,7 +19,7 @@ export default async function getDocumentsByIds(
   context: Context,
   addToHistory?: boolean,
 ) {
-  let response: (Circle | CircleClone | UserProfileData | PublicProfileData | PublicProfileCloneHydrated)[] = [];
+  let response: (Circle | UserProfileData | PublicProfileData | PublicProfileCloneHydrated)[] = [];
 
   if (addToHistory === undefined) {
     addToHistory = context.addToHistory;
@@ -101,7 +100,7 @@ export default async function getDocumentsByIds(
           response.push(document);
         } else {
           document.type = SHARED_TYPES.PERMISSION_DENIED;
-          const doc: Circle| CircleClone | UserProfileData | PublicProfileData| PublicProfileCloneHydrated | null = factoriesSwitch(document)
+          const doc: Circle | UserProfileData | PublicProfileData| PublicProfileCloneHydrated | null = factoriesSwitch(document)
           .use('PERMISSION_DENIED')
           .create();
 

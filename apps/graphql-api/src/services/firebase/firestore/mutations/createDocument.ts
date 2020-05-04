@@ -1,8 +1,8 @@
 import addToProfileHistory from './addToProfileHistory';
+import { circleFieldsFilter } from './../functions/circleFieldsFilter';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import {
   Circle,
-  CircleClone,
   Context,
   UserProfileData,
   UserProfileCloneData,
@@ -21,12 +21,7 @@ interface CreateDocumentResponse {
 }
 
 const createDocument = async (
-  documentToCreate:
-    | Circle
-    | CircleClone
-    | UserProfileData
-    | UserProfileCloneData
-    | User,
+  documentToCreate: Circle | UserProfileData | UserProfileCloneData | User,
   context: Context,
   addToHistory?: boolean,
 ): Promise<CreateDocumentResponse> => {
@@ -70,6 +65,10 @@ const createDocument = async (
       documentToCreate.dateUpdated = Date.now();
     }
 
+    if (documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES) {
+      documentToCreate = circleFieldsFilter(documentToCreate as Circle);
+    }
+
     await firestoreAdmin
       .collection(documentToCreate.collection)
       .doc(documentToCreate.id)
@@ -87,7 +86,7 @@ const createDocument = async (
     ) {
       addToProfileHistory(
         SHARED_TYPES.CREATED,
-        documentToCreate as Circle | CircleClone,
+        documentToCreate as Circle,
         context,
       );
     }

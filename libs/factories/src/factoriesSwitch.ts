@@ -6,7 +6,6 @@ import { ProfileFactory } from './profile/profileFactory';
 import {
   Circle,
   PublicProfileData,
-  CircleClone,
   UserProfileData,
   PublicProfileCloneHydrated,
 } from '@myiworlds/types';
@@ -14,7 +13,6 @@ import {
 export const factoriesSwitch = (
   document:
     | Circle
-    | CircleClone
     | PublicProfileData
     | PublicProfileCloneHydrated
     | UserProfileData,

@@ -70,16 +70,49 @@ export default async function buildAndCreateProfile(
       selectedProfileId: profile.id,
     };
 
-    const rating = await copyCircle('rating', updatedContext);
-    const history = await copyCircle('history', updatedContext);
-    const level = await copyCircle('level', updatedContext);
-    const theme = await copyCircle('theme', updatedContext);
-    const following = await copyCircle('following', updatedContext);
-    const circleUIs = await copyCircle('circle-uis', updatedContext);
-    const home = await copyCircle('home', updatedContext);
-    const publicHome = await copyCircle('public-home', updatedContext);
+    const rating = await copyCircle(
+      'rating',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const history = await copyCircle(
+      'history',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const level = await copyCircle(
+      'level',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const theme = await copyCircle(
+      'theme',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const following = await copyCircle(
+      'following',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const circleUIs = await copyCircle(
+      'circle-uis',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const home = await copyCircle(
+      'home',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
+    const publicHome = await copyCircle(
+      'public-home',
+      FIRESTORE_COLLECTIONS.CIRCLES,
+      updatedContext,
+    );
     const defaultProfileMedia = await copyCircle(
       'default-profile-media',
+      FIRESTORE_COLLECTIONS.CIRCLES,
       updatedContext,
     );
 

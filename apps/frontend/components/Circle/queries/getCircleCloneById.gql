@@ -1,0 +1,12 @@
+query getCircleCloneById($id: String!) {
+  getCircleCloneById(id: $id) {
+    id
+    title
+    media {
+      id
+      type
+      title
+      string
+    }
+  }
+}

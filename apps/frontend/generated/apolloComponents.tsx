@@ -28,6 +28,7 @@ export type Circle = {
   autoUpdate?: Maybe<Scalars['Boolean']>;
   parent?: Maybe<Circle>;
   copiedFrom?: Maybe<Circle>;
+  copiedFromClone?: Maybe<Scalars['Boolean']>;
   slug?: Maybe<Scalars['String']>;
   public?: Maybe<Scalars['Boolean']>;
   passwordRequired?: Maybe<Scalars['Boolean']>;
@@ -69,6 +70,7 @@ export type CircleClone = {
   parent?: Maybe<Circle>;
   clonedFrom?: Maybe<Circle>;
   copiedFrom?: Maybe<Circle>;
+  copiedFromClone?: Maybe<Scalars['Boolean']>;
   slug?: Maybe<Scalars['String']>;
   public?: Maybe<Scalars['Boolean']>;
   passwordRequired?: Maybe<Scalars['Boolean']>;
@@ -103,14 +105,14 @@ export type CopyCirclePayload = {
   __typename?: 'CopyCirclePayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  CircleHydrated?: Maybe<Circle>;
+  copiedCircleId?: Maybe<Scalars['String']>;
 };
 
 export type CreateCirclePayload = {
   __typename?: 'CreateCirclePayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  CircleHydrated?: Maybe<Circle>;
+  createdCircle?: Maybe<Circle>;
 };
 
 /** user who can create and interact with circles. */
@@ -220,7 +222,8 @@ export type MutationUpdateProfileArgs = {
 };
 
 export type MutationCopyCircleArgs = {
-  circleIdToCopy: Scalars['String'];
+  id: Scalars['String'];
+  collection: Scalars['String'];
 };
 
 export type MutationCreateCircleArgs = {
@@ -457,6 +460,20 @@ export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type CopyCircleMutationVariables = {
+  id: Scalars['String'];
+  collection: Scalars['String'];
+};
+
+export type CopyCircleMutation = { __typename?: 'Mutation' } & {
+  copyCircle: Maybe<
+    { __typename?: 'CopyCirclePayload' } & Pick<
+      CopyCirclePayload,
+      'status' | 'message' | 'copiedCircleId'
+    >
+  >;
+};
+
 export type UpdateCircleMutationVariables = {
   id: Scalars['String'];
   merge: Scalars['Boolean'];
@@ -509,6 +526,23 @@ export type GetCircleByIdQueryVariables = {
 export type GetCircleByIdQuery = { __typename?: 'Query' } & {
   getCircleById: Maybe<
     { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
+        media: Maybe<
+          { __typename?: 'Circle' } & Pick<
+            Circle,
+            'id' | 'type' | 'title' | 'string'
+          >
+        >;
+      }
+  >;
+};
+
+export type GetCircleCloneByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetCircleCloneByIdQuery = { __typename?: 'Query' } & {
+  getCircleCloneById: Maybe<
+    { __typename?: 'CircleClone' } & Pick<CircleClone, 'id' | 'title'> & {
         media: Maybe<
           { __typename?: 'Circle' } & Pick<
             Circle,
@@ -918,6 +952,59 @@ export type GetCircleClonesByIdQueryResult = ApolloReactCommon.QueryResult<
   GetCircleClonesByIdQuery,
   GetCircleClonesByIdQueryVariables
 >;
+export const CopyCircleDocument = gql`
+  mutation copyCircle($id: String!, $collection: String!) {
+    copyCircle(id: $id, collection: $collection) {
+      status
+      message
+      copiedCircleId
+    }
+  }
+`;
+export type CopyCircleMutationFn = ApolloReactCommon.MutationFunction<
+  CopyCircleMutation,
+  CopyCircleMutationVariables
+>;
+
+/**
+ * __useCopyCircleMutation__
+ *
+ * To run a mutation, you first call `useCopyCircleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCopyCircleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [copyCircleMutation, { data, loading, error }] = useCopyCircleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      collection: // value for 'collection'
+ *   },
+ * });
+ */
+export function useCopyCircleMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CopyCircleMutation,
+    CopyCircleMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CopyCircleMutation,
+    CopyCircleMutationVariables
+  >(CopyCircleDocument, baseOptions);
+}
+export type CopyCircleMutationHookResult = ReturnType<
+  typeof useCopyCircleMutation
+>;
+export type CopyCircleMutationResult = ApolloReactCommon.MutationResult<
+  CopyCircleMutation
+>;
+export type CopyCircleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CopyCircleMutation,
+  CopyCircleMutationVariables
+>;
 export const UpdateCircleDocument = gql`
   mutation updateCircle(
     $id: String!
@@ -1131,6 +1218,69 @@ export type GetCircleByIdLazyQueryHookResult = ReturnType<
 export type GetCircleByIdQueryResult = ApolloReactCommon.QueryResult<
   GetCircleByIdQuery,
   GetCircleByIdQueryVariables
+>;
+export const GetCircleCloneByIdDocument = gql`
+  query getCircleCloneById($id: String!) {
+    getCircleCloneById(id: $id) {
+      id
+      title
+      media {
+        id
+        type
+        title
+        string
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCircleCloneByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCircleCloneByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleCloneByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleCloneByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleCloneByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCircleCloneByIdQuery,
+    GetCircleCloneByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCircleCloneByIdQuery,
+    GetCircleCloneByIdQueryVariables
+  >(GetCircleCloneByIdDocument, baseOptions);
+}
+export function useGetCircleCloneByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCircleCloneByIdQuery,
+    GetCircleCloneByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCircleCloneByIdQuery,
+    GetCircleCloneByIdQueryVariables
+  >(GetCircleCloneByIdDocument, baseOptions);
+}
+export type GetCircleCloneByIdQueryHookResult = ReturnType<
+  typeof useGetCircleCloneByIdQuery
+>;
+export type GetCircleCloneByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCircleCloneByIdLazyQuery
+>;
+export type GetCircleCloneByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleCloneByIdQuery,
+  GetCircleCloneByIdQueryVariables
 >;
 export const GetCirclesByIdsDocument = gql`
   query getCirclesByIds($ids: [String]!) {

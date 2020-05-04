@@ -1,6 +1,6 @@
-import { CircleClone, Header } from '@myiworlds/types';
+import { Circle, Header } from '@myiworlds/types';
 
-export class CircleCloneDoesNotExist implements CircleClone {
+export class CircleCloneDoesNotExist implements Circle {
   id: string;
   collection: 'circles-clones';
   type: 'DOES_NOT_EXIST';

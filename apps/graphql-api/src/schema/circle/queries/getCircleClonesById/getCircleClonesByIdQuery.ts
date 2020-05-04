@@ -30,7 +30,7 @@ const getCircleClonesByIdQuery = {
         property: 'dateUpdated',
         ascending: false,
       },
-      20,
+      50,
       null,
       context,
     ),

@@ -6,7 +6,6 @@ import { userCanView } from '@myiworlds/helper-functions';
 import {
   Context,
   Circle,
-  CircleClone,
   UserProfileData,
   PublicProfileData,
   PublicProfileCloneHydrated,
@@ -21,7 +20,6 @@ export default async function getDocumentById(
   let response:
     | null
     | Circle
-    | CircleClone
     | UserProfileData
     | PublicProfileData
     | PublicProfileCloneHydrated = null;
@@ -50,11 +48,7 @@ export default async function getDocumentById(
         (response.collection === FIRESTORE_COLLECTIONS.CIRCLES ||
           response.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES)
       ) {
-        addToProfileHistory(
-          SHARED_TYPES.VIEWED,
-          response as Circle | CircleClone,
-          context,
-        );
+        addToProfileHistory(SHARED_TYPES.VIEWED, response as Circle, context);
       }
     } catch (error) {
       stackdriver.report(error);

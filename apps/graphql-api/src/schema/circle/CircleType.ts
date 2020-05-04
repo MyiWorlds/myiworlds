@@ -34,12 +34,15 @@ const CircleType: any = new GraphQLObjectType({
     copiedFrom: {
       type: CircleType,
       resolve: async (circle, args, context: Context) => {
-        if (circle.copiedFrom) {
+        if (circle.copiedFrom && circle.copiedFromClone) {
+          return context.circleCloneLoader.load(circle.copiedFrom);
+        } else if (circle.copiedFrom) {
           return context.circleLoader.load(circle.copiedFrom);
         }
         return null;
       },
     },
+    copiedFromClone: { type: GraphQLBoolean },
     slug: { type: GraphQLString },
     public: { type: GraphQLBoolean },
     passwordRequired: { type: GraphQLBoolean },

@@ -1,6 +1,7 @@
 import addToProfileHistory from './addToProfileHistory';
 import cloneDocument from './cloneDocument';
 import isSystemAdmin from './../../../../schema/circle/functions/isSystemAdmin';
+import { circleFieldsFilter } from './../functions/circleFieldsFilter';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import {
   RESPONSE_CODES,
@@ -19,7 +20,6 @@ import {
   PublicProfileData,
   PublicProfileCloneHydrated,
   Circle,
-  CircleClone,
   UpdateCircleMutation,
   User,
   UserClone,
@@ -35,7 +35,6 @@ interface Response {
 export default async function updateDocumentById(
   updatedDocument:
     | Circle
-    | CircleClone
     | UpdateCircleMutation
     | User
     | UserClone
@@ -123,13 +122,16 @@ export default async function updateDocumentById(
               key: keyof (
                 | Circle
                 | User
-                | CircleClone
                 | UserClone
                 | PublicProfileCloneHydrated
                 | UserProfileData
                 | PublicProfileData),
             ) => {
-              if (updatedDocument[key] === undefined) {
+              if (
+                updatedDocument.collection === FIRESTORE_COLLECTIONS.CIRCLES
+              ) {
+                updatedDocument = circleFieldsFilter(updatedDocument as Circle);
+              } else if (updatedDocument[key] === undefined) {
                 delete updatedDocument[key];
               }
             },
@@ -169,7 +171,7 @@ export default async function updateDocumentById(
     ) {
       addToProfileHistory(
         SHARED_TYPES.UPDATED,
-        updatedDocument as Circle | CircleClone,
+        updatedDocument as Circle,
         context,
       );
     }

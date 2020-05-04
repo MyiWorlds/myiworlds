@@ -1,0 +1,7 @@
+mutation copyCircle($id: String!, $collection: String!) {
+  copyCircle(id: $id, collection: $collection) {
+    status
+    message
+    copiedCircleId
+  }
+}

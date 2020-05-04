@@ -11,7 +11,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
 import ThemeEditor from '../../Theme/Editor/ThemeEditor';
 import ThemeViewer from '../../Theme/Viewer';
-import { Circle, CircleClone } from '@myiworlds/types';
+import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
@@ -54,10 +54,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const [collection, setCollection] = useState<'circles' | 'circles-clones'>(
     FIRESTORE_COLLECTIONS.CIRCLES,
   );
-  const [updateCircleVariables, setUpdateCircleVariables] = useState<
-    CircleClone | Circle
-  >({
+  const [updateCircleVariables, setUpdateCircleVariables] = useState<Circle>({
     id: '',
+    collection: FIRESTORE_COLLECTIONS.CIRCLES,
   });
   const [circleData, loadingCircle, errorCircle] = useDocument(
     firestoreClient.collection(collection).doc(circleId),
@@ -130,9 +129,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     setCanSave(false);
     setNavItems(null);
     if (
-      updateCircleVariables.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES
+      updateCircleVariables.collection ===
+        FIRESTORE_COLLECTIONS.CIRCLES_CLONES &&
+      updateCircleVariables.clonedFrom
     ) {
-      const circleToUdate = {
+      const circleToUdate: Circle = {
         ...updateCircleVariables,
         id: updateCircleVariables.clonedFrom,
       };
@@ -148,9 +149,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   };
 
   const handleCancel = () => {
-    console.log(
-      'Changing path to previous one as editing circle was canceled.',
-    );
     setViewingHistory(false);
     setNavItems(null);
     setUpdateCircleVariables({ id: '' });
@@ -158,8 +156,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       // eslint-disable-next-line no-restricted-globals
       document.referrer.indexOf(location.protocol + '//' + location.host) === 0
     ) {
+      console.log('Changing path to previous one.', document.referrer);
       router.back();
     } else {
+      console.log(
+        'Canceled editing and the previous route was from another domain.  Navigating to home',
+      );
       router.push('/');
     }
   };
@@ -193,6 +195,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           updateCircleLoading={updateCircleLoading}
           setViewingHistory={setViewingHistory}
           viewingClone={updateCircleVariables.clonedFrom ? true : false}
+          viewingId={updateCircleVariables.id}
         />
       ) : (
         <CircleEditorAppBarItems

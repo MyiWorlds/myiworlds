@@ -1,6 +1,6 @@
-import { CircleClone } from '@myiworlds/types';
+import { Circle } from '@myiworlds/types';
 
-export class CircleClonePermssionDenied implements CircleClone {
+export class CircleClonePermssionDenied implements Circle {
   id: string;
   collection: 'circles-clones';
   type: 'PERMISSION_DENIED';

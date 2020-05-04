@@ -1,3 +1,4 @@
+import CopyCircle from './../../shared/CopyCircle/CopyCircle';
 import React from 'react';
 import RestorePageIcon from '@material-ui/icons/RestorePage';
 import {
@@ -26,6 +27,7 @@ interface Props {
   setViewingHistory: (boolean: boolean) => void;
   canSave: boolean;
   viewingClone: boolean;
+  viewingId: string;
 }
 
 export default function CircleHistoryAppBarItems({
@@ -34,6 +36,7 @@ export default function CircleHistoryAppBarItems({
   setViewingHistory,
   canSave,
   viewingClone,
+  viewingId,
 }: Props) {
   const classes = useStyles();
 
@@ -42,6 +45,12 @@ export default function CircleHistoryAppBarItems({
       <Typography variant="h6" className={classes.title}>
         History
       </Typography>
+      {viewingClone && (
+        <CopyCircle
+          id={viewingId}
+          collection={viewingClone ? 'circles-clones' : 'circles'}
+        />
+      )}
       <Button
         className={classes.appBarBtn}
         disabled={updateCircleLoading || !canSave}

@@ -1,4 +1,4 @@
-import { Circle, CircleClone, Context } from '@myiworlds/types';
+import { Circle, Context } from '@myiworlds/types';
 import { CIRCLE_TYPES } from '@myiworlds/enums';
 import { CircleFactory } from '@myiworlds/factories';
 import { createDocument, updateDocumentById } from '.';
@@ -9,7 +9,7 @@ const addToEdge = (
   id: string,
   parentId: string,
   tags: string[],
-  document: Circle | CircleClone,
+  document: Circle,
   shouldUpdateParent: boolean,
   context: Context,
 ) => {

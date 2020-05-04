@@ -1,4 +1,5 @@
 import BooleanEditor from '../../../Boolean/Editor/BooleanEditor';
+import CircleCloneListItemViewer from './CircleCloneListItemViewer';
 import CircleListItemViewer from './CircleListItemViewer';
 import CircleListViewer from './CircleListViewer';
 import List from '@material-ui/core/List';
@@ -8,7 +9,6 @@ import React from 'react';
 import StringEditor from '../../../String/Editor/StringEditor';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { format } from 'date-fns';
 
 interface Props {
@@ -17,18 +17,6 @@ interface Props {
   parentStrings?: string[];
   originalCircle?: Circle;
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    nested: {
-      paddingLeft: theme.spacing(4),
-    },
-    ddAvatar: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-    },
-  }),
-);
 
 function setDeep(
   obj: any,
@@ -123,12 +111,16 @@ const CircleFieldsMapperEditor: React.FC<Props> = ({
       const dateDisplayFields = ['dateCreated', 'dateUpdated'];
 
       if (circleFields.includes(property) && value !== null) {
-        const circleDisplay = (value as string[]).map((id: string) => (
-          <div key={`${parentStrings}-${property}`}>
+        const circleDisplay = (
+          <div key={property}>
             <Typography variant="caption">{property}:</Typography>
-            <CircleListItemViewer id={id} />
+            {circle.copiedFromClone ? (
+              <CircleCloneListItemViewer id={value as string} />
+            ) : (
+              <CircleListItemViewer id={value as string} />
+            )}
           </div>
-        ));
+        );
         renderElements.push(circleDisplay);
       } else if (circleListFields.includes(property) && value !== null) {
         renderElements.push(

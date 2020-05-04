@@ -46,6 +46,7 @@ export interface Header {
   cache?: string;
   pii?: boolean;
   copiedFrom?: string;
+  copiedFromClone?: boolean;
   autoUpdate?: boolean;
   slug?: string;
   public?: boolean;
@@ -66,12 +67,15 @@ export interface Header {
 
 export interface HeaderHydrated {
   id: string;
-  collection?: FIRESTORE_COLLECTIONS.CIRCLES;
+  collection?:
+    | FIRESTORE_COLLECTIONS.CIRCLES
+    | FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
   type?: PossibleCircleTypes;
   parent?: CircleHydrated;
   cached?: boolean;
   cache?: CircleHydrated;
   pii?: boolean;
+  clonedFrom?: string;
   copiedFrom?: CircleHydrated;
   autoUpdate?: boolean;
   slug?: string;
@@ -92,6 +96,7 @@ export interface HeaderHydrated {
 }
 
 export interface Circle extends Header {
+  clonedFrom?: string;
   key?: string;
   string?: string;
   data?:
@@ -137,11 +142,6 @@ export interface UpdateCircleMutation extends Circle {
   merge: boolean;
 }
 
-export interface CircleClone extends Circle {
-  collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
-  clonedFrom: string;
-}
-
 export interface CircleCloneHydrated extends Circle {
   collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
   clonedFrom: Circle;
@@ -165,7 +165,7 @@ export interface QueryGetDocumentsByFilters {
   numberOfResults: number;
   hasMoreResults: boolean;
   cursor: string | null;
-  results: Circle[] | CircleClone[] | PublicProfile[] | PublicProfileClone[];
+  results: Circle[] | PublicProfile[] | PublicProfileClone[];
 }
 
 export interface GetDocumentById {
@@ -174,17 +174,12 @@ export interface GetDocumentById {
 }
 
 export interface QueryGetDocumentById extends GetDocumentById {
-  result: Circle | CircleClone | PublicProfile | PublicProfileClone | null;
+  result: Circle | PublicProfile | PublicProfileClone | null;
 }
 
 export interface QueryGetDocumentsByIds {
   documents: GetDocumentById[];
-  results: (
-    | Circle
-    | CircleClone
-    | PublicProfile
-    | PublicProfileClone
-    | never)[];
+  results: (Circle | PublicProfile | PublicProfileClone | never)[];
 }
 
 export interface ViewedByIds {

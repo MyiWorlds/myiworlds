@@ -1,6 +1,6 @@
 import createDocument from './../../../../services/firebase/firestore/mutations/createDocument';
 import getDocumentById from '../../../../services/firebase/firestore/queries/getDocumentById';
-import { Circle, Context } from '@myiworlds/types';
+import { Context } from '@myiworlds/types';
 import { CopyCircleResponse } from './copyCircleTypes';
 import { createCollectionId } from '../../../../services/firebase/firestore/functions/createCollectionId';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
@@ -9,6 +9,7 @@ import { userCanView } from '@myiworlds/helper-functions';
 
 export default async function copyCircle(
   circleIdToCopy: string,
+  collection: 'circles' | 'circles-clones',
   context: Context,
 ) {
   const response: CopyCircleResponse = {
@@ -17,18 +18,18 @@ export default async function copyCircle(
     createdDocumentId: null,
   };
 
+  if (!context.selectedProfileId) {
+    response.status = RESPONSE_CODES.ERROR;
+    response.message = 'You must be logged in to copy.';
+    return response;
+  }
+
   try {
-    let circleToCopy: Circle | null = await getDocumentById(
-      FIRESTORE_COLLECTIONS.CIRCLES,
+    let circleToCopy: any = await getDocumentById(
+      collection,
       circleIdToCopy,
       context,
     );
-
-    if (!context.selectedProfileId) {
-      response.status = RESPONSE_CODES.ERROR;
-      response.message = 'You must be logged in to copy.';
-      return response;
-    }
 
     if (!circleToCopy) {
       response.status = RESPONSE_CODES.ERROR;
@@ -46,6 +47,9 @@ export default async function copyCircle(
     circleToCopy = {
       ...circleToCopy,
       id: createCollectionId(FIRESTORE_COLLECTIONS.CIRCLES),
+      collection: FIRESTORE_COLLECTIONS.CIRCLES,
+      copiedFrom: circleIdToCopy,
+      copiedFromClone: collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES,
       public: false,
       creator: context.selectedProfileId,
       owner: context.selectedProfileId,
@@ -54,6 +58,10 @@ export default async function copyCircle(
       dateCreated: Date.now(),
       dateUpdated: Date.now(),
     };
+
+    if (circleToCopy.clonedFrom) {
+      delete circleToCopy.clonedFrom;
+    }
 
     const copiedCircle = await createDocument(circleToCopy, context);
 

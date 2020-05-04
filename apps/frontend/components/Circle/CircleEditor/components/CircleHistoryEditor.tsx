@@ -2,7 +2,7 @@ import CircleListItemViewer from './CircleListItemViewer';
 import List from '@material-ui/core/List';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
-import { Circle, CircleClone } from '@myiworlds/types';
+import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { format } from 'date-fns';
@@ -22,7 +22,7 @@ interface Props {
     newCollection: 'circles' | 'circles-clones' | null,
   ) => void;
   handleSave: () => void;
-  contentCircle: CircleClone | Circle;
+  contentCircle: Circle;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -51,6 +51,7 @@ const CircleHistoryEditor = React.memo(
       loading: loadingGetCircleClones,
       error: errorGettingCircleClones,
     } = useGetCircleClonesByIdQuery({
+      fetchPolicy: 'no-cache',
       skip: !circleId || circleId === '',
       variables: {
         id: circleId,
@@ -70,7 +71,7 @@ const CircleHistoryEditor = React.memo(
     if (getCircleClonesQuery && getCircleClonesQuery.getCircleClonesById) {
       console.log('Circles list viewer rendered.');
       const circles = getCircleClonesQuery.getCircleClonesById
-        .clones as CircleClone[];
+        .clones as Circle[];
       return (
         <List>
           <CircleListItemViewer
@@ -90,7 +91,7 @@ const CircleHistoryEditor = React.memo(
                 : updateCircleToFetch(circleId, FIRESTORE_COLLECTIONS.CIRCLES)
             }
           />
-          {circles.map((circle: CircleClone) => {
+          {circles.map((circle: Circle) => {
             return (
               <ListItem
                 button

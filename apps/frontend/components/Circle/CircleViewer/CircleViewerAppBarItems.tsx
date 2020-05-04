@@ -1,6 +1,6 @@
 import ButtonLink from '../../ButtonLink';
+import CopyCircle from '../shared/CopyCircle/CopyCircle';
 import EditIcon from '@material-ui/icons/Edit';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import IconButton from '@material-ui/core/IconButton';
 import React, { useContext } from 'react';
 import ShareIcon from '@material-ui/icons/Share';
@@ -68,13 +68,7 @@ export default function CircleViewerAppBarItems({ circle }: Props) {
       <Typography variant="h6" className={classes.title}>
         {circle.title || 'Untitled'}
       </Typography>
-      <Tooltip title="Copy">
-        <span>
-          <IconButton color="inherit" onClick={copyUrl}>
-            <FileCopyIcon />
-          </IconButton>
-        </span>
-      </Tooltip>
+      <CopyCircle id={circle.id} collection={circle.collection} />
       <Tooltip title="Share">
         <span>
           <IconButton color="inherit" onClick={copyUrl}>

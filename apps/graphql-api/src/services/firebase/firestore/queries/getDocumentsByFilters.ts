@@ -1,9 +1,9 @@
 import graphqlFields from 'graphql-fields';
 import { CIRCLE_TYPES } from '@myiworlds/enums';
-import { factoriesSwitch } from '../../../../../../../libs/factories/src/factoriesSwitch';
+import { factoriesSwitch } from '@myiworlds/factories';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { GraphQLResolveInfo } from 'graphql';
-import { RESPONSE_CODES } from '../../../../../../../libs/enums/src/responseCodes';
+import { RESPONSE_CODES } from '@myiworlds/enums';
 import { userCanView } from '@myiworlds/helper-functions';
 import {
   Context,
@@ -11,7 +11,6 @@ import {
   OrderBy,
   FirestoreCollectionTypes,
   Circle,
-  CircleClone,
   PublicProfileData,
   PublicProfileCloneData,
 } from '@myiworlds/types';
@@ -20,11 +19,7 @@ export interface GetDocumenByFiltersResponse {
   status: string;
   hasMoreResults: boolean;
   cursor: string | null;
-  results:
-    | Circle[]
-    | CircleClone[]
-    | PublicProfileData[]
-    | PublicProfileCloneData[];
+  results: Circle[] | PublicProfileData[] | PublicProfileCloneData[];
 }
 
 export default async function getDocumentsByFilters(
