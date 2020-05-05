@@ -95,8 +95,7 @@ export interface HeaderHydrated {
   dateUpdated?: number;
 }
 
-export interface Circle extends Header {
-  clonedFrom?: string;
+export interface Content {
   key?: string;
   string?: string;
   data?:
@@ -116,8 +115,9 @@ export interface Circle extends Header {
   lines?: string[];
 }
 
-export interface CircleHydrated extends HeaderHydrated {
-  id: string;
+export interface Circle extends Header, Content {}
+
+export interface ContentHydrated {
   key?: string;
   string?: string;
   data?:
@@ -137,6 +137,8 @@ export interface CircleHydrated extends HeaderHydrated {
   line?: CircleHydrated;
   lines?: CircleHydrated[];
 }
+
+export interface CircleHydrated extends HeaderHydrated, ContentHydrated {}
 
 export interface UpdateCircleMutation extends Circle {
   merge: boolean;

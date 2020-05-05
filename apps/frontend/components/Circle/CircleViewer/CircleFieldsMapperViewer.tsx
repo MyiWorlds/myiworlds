@@ -6,6 +6,7 @@ import List from '@material-ui/core/List';
 import NumberViewer from '../../Number/Viewer/NumberViewer';
 import ProfileListItemViewer from '../../Profile/Viewer/ProfileListItemViewer';
 import React from 'react';
+import ReactGridLayout from './../../ReactGridLayout/ReactGridLayout';
 import StringViewer from '../../String/Viewer/StringViewer';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
@@ -138,7 +139,7 @@ const CircleFieldsMapperViewer: React.FC<Props> = ({ circle }) => {
     return <>{renderElements}</>;
   };
 
-  return <List>{renderObject(circle)}</List>;
+  return <ReactGridLayout gridItems={renderObject(circle)} />;
 };
 
 export default CircleFieldsMapperViewer;
