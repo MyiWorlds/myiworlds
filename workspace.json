@@ -55,7 +55,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/frontend/jest.config.js",
-            "tsConfig": "apps/frontend/tsconfig.spec.json"
+            "tsConfig": "apps/frontend/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         },
         "deploy": {
@@ -112,7 +113,8 @@
             "outputPath": "dist/apps/graphql-api",
             "main": "apps/graphql-api/src/index.ts",
             "tsConfig": "apps/graphql-api/tsconfig.app.json",
-            "assets": ["apps/graphql-api/src/assets"]
+            "assets": ["apps/graphql-api/src/assets"],
+            "buildLibsFromSource": true
           },
           "configurations": {
             "production": {
@@ -150,7 +152,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/graphql-api/jest.config.js",
-            "tsConfig": "apps/graphql-api/tsconfig.spec.json"
+            "tsConfig": "apps/graphql-api/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         },
         "deploy": {
@@ -187,7 +190,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/credentials/jest.config.js",
-            "tsConfig": "libs/credentials/tsconfig.spec.json"
+            "tsConfig": "libs/credentials/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -214,7 +218,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/types/jest.config.js",
-            "tsConfig": "libs/types/tsconfig.spec.json"
+            "tsConfig": "libs/types/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -241,7 +246,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/services/jest.config.js",
-            "tsConfig": "libs/services/tsconfig.spec.json"
+            "tsConfig": "libs/services/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -268,7 +274,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/enums/jest.config.js",
-            "tsConfig": "libs/enums/tsconfig.spec.json"
+            "tsConfig": "libs/enums/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -286,7 +293,8 @@
             "outputPath": "dist/apps/functions",
             "main": "apps/functions/src/main.ts",
             "tsConfig": "apps/functions/tsconfig.app.json",
-            "assets": ["apps/functions/src/assets"]
+            "assets": ["apps/functions/src/assets"],
+            "buildLibsFromSource": true
           },
           "configurations": {
             "production": {
@@ -324,7 +332,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/functions/jest.config.js",
-            "tsConfig": "apps/functions/tsconfig.spec.json"
+            "tsConfig": "apps/functions/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -351,7 +360,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/factories/jest.config.js",
-            "tsConfig": "libs/factories/tsconfig.spec.json"
+            "tsConfig": "libs/factories/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -378,7 +388,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/helper-functions/jest.config.js",
-            "tsConfig": "libs/helper-functions/tsconfig.spec.json"
+            "tsConfig": "libs/helper-functions/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }

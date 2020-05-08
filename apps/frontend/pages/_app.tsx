@@ -8,7 +8,8 @@ import { ProfileProvider } from '../contexts/Profile/ProfileContext';
 import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
 import { UserInterfaceProvider } from '../contexts/UserInterface/UserInterfaceContext';
 import { UserProvider } from '../contexts/User/UserContext';
-
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 class MyApp extends App<any> {
   render() {
     const { Component, pageProps, apolloClient } = this.props;

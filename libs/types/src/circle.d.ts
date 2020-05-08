@@ -45,6 +45,7 @@ export interface Header {
   cached?: boolean;
   cache?: string;
   pii?: boolean;
+  clonedFrom?: string;
   copiedFrom?: string;
   copiedFromClone?: boolean;
   autoUpdate?: boolean;
