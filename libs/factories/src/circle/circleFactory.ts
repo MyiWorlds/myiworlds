@@ -18,7 +18,6 @@ import { CircleQueryGetDocumentsByFilters } from './circles/circleQueryGetDocume
 import { CircleQueryGetDocumentsByIds } from './circles/circleQueryGetDocumentsByIds';
 import { CircleString } from './circles/circleString';
 import { CircleTheme } from './circles/circleTheme';
-import { CircleUI } from './circles/circleUI';
 import { CircleViewedByIds } from './circles/circleViewedByIds';
 import { PossibleCircleTypes } from '@myiworlds/types';
 
@@ -28,13 +27,12 @@ export class CircleFactory {
   use(type: 'NUMBER'): CircleNumber;
   use(type: 'BIG_NUMBER'): CircleBigNumber;
   use(type: 'DATE'): CircleDate;
-  use(type: 'DATA'): CircleData;
+  use(type: 'DATA' | 'LAYOUTS'): CircleData;
   use(type: 'GEO_POINT'): CircleGeoPoint;
   use(type: 'KEY_VALUE'): CircleKeyValue;
   use(type: 'LINE' | 'UPDATED' | 'CREATED' | 'VIEWED'): CircleLine;
   use(type: 'VIEWED_BY_IDS'): CircleViewedByIds;
-  use(type: 'LINES'): CircleLines;
-  use(type: 'UI'): CircleUI;
+  use(type: 'LINES' | 'STYLES'): CircleLines;
   use(type: 'MEDIA_FONT_ICON'): CircleMediaFontIcon;
   use(type: 'MEDIA_IMAGE_HREF'): CircleMediaImageHref;
   use(type: 'EDGE'): CircleEdge;
@@ -60,6 +58,7 @@ export class CircleFactory {
       case 'BIG_NUMBER':
         return new CircleBigNumber();
 
+      case 'LAYOUTS':
       case 'DATA':
         return new CircleData();
 
@@ -81,6 +80,7 @@ export class CircleFactory {
       case 'VIEWED_BY_IDS':
         return new CircleViewedByIds();
 
+      case 'STYLES':
       case 'LINES':
         return new CircleLines();
 
@@ -89,9 +89,6 @@ export class CircleFactory {
 
       case 'MEDIA_IMAGE_HREF':
         return new CircleMediaImageHref();
-
-      case 'UI':
-        return new CircleUI();
 
       case 'EDGE':
         return new CircleEdge();

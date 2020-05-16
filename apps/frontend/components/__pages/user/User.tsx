@@ -115,8 +115,8 @@ const User = () => {
           <ListItem
             button
             component={ButtonLink}
-            href={`/edit/[id]?id=${selectedProfile.theme.id}`}
-            as={`/edit/${selectedProfile.theme.id}`}
+            href={`edit/[id]?id=${selectedProfile.theme.id}`}
+            as={`edit/${selectedProfile.theme.id}`}
           >
             <ListItemIcon>
               <Avatar>

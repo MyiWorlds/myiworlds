@@ -118,11 +118,20 @@ const CircleCloneType: any = new GraphQLObjectType({
         return [];
       },
     },
-    ui: {
+    styles: {
       type: CircleType,
       resolve: async (circle, args, context: Context) => {
-        if (circle.ui) {
-          return context.circleLoader.load(circle.ui);
+        if (circle.styles) {
+          return context.circleLoader.load(circle.styles);
+        }
+        return null;
+      },
+    },
+    layouts: {
+      type: CircleType,
+      resolve: async (circle, args, context: Context) => {
+        if (circle.layouts) {
+          return context.circleLoader.load(circle.layouts);
         }
         return null;
       },

@@ -1,5 +1,9 @@
+import CloudDoneIcon from '@material-ui/icons/CloudDone';
+import ContentSizeChanger from './components/ContentSizeChanger';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import EditIcon from '@material-ui/icons/Edit';
 import HistoryIcon from '@material-ui/icons/History';
+import Progress from './../../Progress/Progress';
 import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import { Circle } from '@myiworlds/types';
@@ -21,29 +25,40 @@ const useStyles = makeStyles((theme: Theme) =>
     appBarBtn: {
       marginRight: theme.spacing(2),
     },
+    progressIcon: {
+      marginRight: theme.spacing(2),
+      marginLeft: theme.spacing(2),
+      position: 'relative',
+    },
   }),
 );
 
 interface Props {
   circle: Circle;
-  updateCircleLoading: boolean;
-  handleSave: () => void;
-  handleCancel: () => void;
+  isSaving: boolean;
+  handleFinished: () => void;
   setViewingHistory: (boolean: boolean) => void;
-  updateNavItemsAndViewer: () => void;
-  canSave: boolean;
+  setEditingGrid: (boolean: boolean) => void;
+  updateControllerAndViewer: () => void;
+  hasUnsavedChanges: boolean;
   viewingHistory: boolean;
+  displaySize: null | number;
+  setDisplaySize: (newSize: null | number) => void;
+  handleGoBack: () => void;
 }
 
 export default function CircleEditorAppBarItems({
   circle,
-  updateCircleLoading,
-  handleSave,
-  handleCancel,
+  isSaving,
+  handleFinished,
   setViewingHistory,
-  canSave,
-  updateNavItemsAndViewer,
+  updateControllerAndViewer,
   viewingHistory,
+  setEditingGrid,
+  displaySize,
+  setDisplaySize,
+  hasUnsavedChanges,
+  handleGoBack,
 }: Props) {
   const classes = useStyles();
 
@@ -52,6 +67,25 @@ export default function CircleEditorAppBarItems({
       <Typography variant="h6" className={classes.title}>
         {circle.title || 'Untitled'}
       </Typography>
+      {circle.type !== 'THEME' && (
+        <>
+          <ContentSizeChanger
+            displaySize={displaySize}
+            setDisplaySize={setDisplaySize}
+          />
+          <Tooltip title="Edit grid layout">
+            <IconButton
+              edge="start"
+              className={classes.appBarBtn}
+              color="inherit"
+              aria-label="menu"
+              onClick={() => setEditingGrid(true)}
+            >
+              <DashboardIcon />
+            </IconButton>
+          </Tooltip>
+        </>
+      )}
       {viewingHistory ? (
         <IconButton
           edge="start"
@@ -60,7 +94,7 @@ export default function CircleEditorAppBarItems({
           aria-label="menu"
           onClick={() => {
             setViewingHistory(false);
-            updateNavItemsAndViewer();
+            updateControllerAndViewer();
           }}
         >
           <EditIcon />
@@ -78,23 +112,34 @@ export default function CircleEditorAppBarItems({
           </IconButton>
         </Tooltip>
       )}
+      {isSaving ? (
+        <Tooltip title="Saving circle">
+          <div className={classes.progressIcon}>
+            <Progress hideBackground size={24} color={'inherit'} />
+          </div>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Circle saved and up to date">
+          <CloudDoneIcon className={classes.appBarBtn} />
+        </Tooltip>
+      )}
+
       <Button
-        autoFocus
         color="inherit"
-        onClick={handleCancel}
-        disabled={updateCircleLoading}
-        className={classes.appBarBtn}
+        onClick={handleGoBack}
+        disabled={isSaving || hasUnsavedChanges}
       >
-        Cancel
+        Back
       </Button>
+
       <Button
         autoFocus
         color="primary"
-        onClick={handleSave}
-        disabled={updateCircleLoading || !canSave}
+        onClick={handleFinished}
+        disabled={isSaving || hasUnsavedChanges}
         variant="contained"
       >
-        Save
+        Finished
       </Button>
     </>
   );

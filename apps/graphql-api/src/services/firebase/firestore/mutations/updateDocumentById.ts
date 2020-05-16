@@ -1,5 +1,6 @@
 import addToProfileHistory from './addToProfileHistory';
 import cloneDocument from './cloneDocument';
+import createCircle from '../../../../schema/circle/mutations/createCircle/createCircle';
 import isSystemAdmin from './../../../../schema/circle/functions/isSystemAdmin';
 import { circleFieldsFilter } from './../functions/circleFieldsFilter';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
@@ -63,14 +64,29 @@ export default async function updateDocumentById(
     return response;
   }
 
-  if (!updatedDocument.id) {
-    response = {
-      status: RESPONSE_CODES.ERROR,
-      message:
-        'Sorry, I was not given a unique id. I need to know what it is you wish for me to update. Please try again.',
-      updatedDocumentId: null,
-      previousCloneId: null,
-    };
+  if (
+    !updatedDocument.id ||
+    (updatedDocument.id === '' &&
+      updatedDocument.collection === FIRESTORE_COLLECTIONS.CIRCLES)
+  ) {
+    const createdDocument = await createCircle(updatedDocument, context);
+
+    if (createdDocument) {
+      response = {
+        status: RESPONSE_CODES.SUCCESS,
+        message: 'I created that for you.',
+        updatedDocumentId: createdDocument.createdDocumentId,
+        previousCloneId: null,
+      };
+    } else {
+      response = {
+        status: RESPONSE_CODES.ERROR,
+        message:
+          'Sorry there was an error creating the document you were trying to update.',
+        updatedDocumentId: null,
+        previousCloneId: null,
+      };
+    }
     return response;
   }
 
@@ -125,7 +141,8 @@ export default async function updateDocumentById(
                 | UserClone
                 | PublicProfileCloneHydrated
                 | UserProfileData
-                | PublicProfileData),
+                | PublicProfileData
+              ),
             ) => {
               if (
                 updatedDocument.collection === FIRESTORE_COLLECTIONS.CIRCLES

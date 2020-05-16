@@ -24,7 +24,8 @@ export type PossibleCircleTypes =
   | 'PERMISSION_DENIED'
   | 'LINE'
   | 'LINES'
-  | 'UI'
+  | 'STYLES'
+  | 'LAYOUTS'
   | 'THEME'
   | 'UPDATED'
   | 'CREATED'
@@ -61,7 +62,8 @@ export interface Header {
   owner?: string;
   viewers?: string[];
   editors?: string[];
-  ui?: string;
+  styles?: string;
+  layouts?: string;
   dateCreated?: number;
   dateUpdated?: number;
 }
@@ -91,7 +93,8 @@ export interface HeaderHydrated {
   owner?: PublicProfile;
   viewers?: PublicProfile[];
   editors?: PublicProfile[];
-  ui?: CircleHydrated;
+  styles?: CircleHydrated;
+  layouts?: CircleHydrated;
   dateCreated?: number;
   dateUpdated?: number;
 }

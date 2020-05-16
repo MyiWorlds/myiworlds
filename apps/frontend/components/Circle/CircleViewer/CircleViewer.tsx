@@ -1,14 +1,15 @@
-import CircleFieldsMapperViewer from './CircleFieldsMapperViewer';
 import CircleViewerAppBarItems from './CircleViewerAppBarItems';
 import Error from '../../Error';
 import firestoreClient from '../../../lib/firebase/firestoreClient';
 import Progress from '../../Progress/Progress';
 import React, { useContext, useEffect } from 'react';
+import ReactGridLayoutViewer from './../../ReactGridLayout/Viewer/ReactGridLayoutViewer';
 import ThemeViewer from './../../Theme/Viewer/ThemeViewer';
 import { Circle } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserInterfaceContext } from '../../../contexts/UserInterface/UserInterfaceContext';
+// import CircleFieldsMapperViewer from './CircleFieldsMapperViewer';
 
 interface Props {
   id: string;
@@ -22,6 +23,20 @@ export default function CircleViewer({ id }: Props) {
   const [circleData, loadingCircle, errorCircle] = useDocument(
     firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
   );
+
+  const [
+    circleLayoutsData,
+    loadingCircleLayouts,
+    errorCircleLayouts,
+  ] = useDocument(
+    contentViewing && contentViewing.layouts && contentViewing.layouts !== ''
+      ? firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id)
+      : undefined,
+  );
+
+  // const [circleUiData, loadingCircleUi, errorCircleUi] = useDocument(
+  //   firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
+  // );
 
   const updateContentViewing = () => {
     if (circleData) {
@@ -41,18 +56,23 @@ export default function CircleViewer({ id }: Props) {
   };
 
   useEffect(componentDidUpdate, [circleData, loadingCircle]);
-  useEffect(updateContentViewing, [circleData]);
+  useEffect(updateContentViewing, [circleData, circleLayoutsData]);
 
   if (errorCircle) {
     return <Error error={errorCircle} />;
   }
 
-  if (loadingCircle) {
+  if (errorCircleLayouts) {
+    return <Error error={errorCircleLayouts} />;
+  }
+
+  if (loadingCircle || loadingCircleLayouts) {
     return <Progress />;
   }
 
-  if (circleData) {
+  if (circleData && circleLayoutsData) {
     const circle = circleData.data() as Circle;
+    const circleLayouts = circleLayoutsData.data() as Circle;
     if (circle) {
       let viewer = null;
 
@@ -61,7 +81,12 @@ export default function CircleViewer({ id }: Props) {
           viewer = <ThemeViewer circle={circle} />;
           break;
         default:
-          viewer = <CircleFieldsMapperViewer circle={circle} />;
+          viewer = (
+            <ReactGridLayoutViewer
+              circle={circle}
+              circleLayouts={circleLayouts}
+            />
+          );
           break;
       }
 

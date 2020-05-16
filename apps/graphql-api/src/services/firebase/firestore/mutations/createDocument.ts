@@ -51,7 +51,7 @@ const createDocument = async (
   }
 
   try {
-    if (!documentToCreate.id) {
+    if (!documentToCreate.id || documentToCreate.id === '') {
       const ref = firestoreAdmin.collection(documentToCreate.collection).doc();
 
       documentToCreate.id = ref.id;
@@ -81,8 +81,8 @@ const createDocument = async (
     if (
       response.status === RESPONSE_CODES.SUCCESS &&
       addToHistory &&
-      (documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES &&
-        documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES)
+      documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES &&
+        documentToCreate.collection === FIRESTORE_COLLECTIONS.CIRCLES_CLONES
     ) {
       addToProfileHistory(
         SHARED_TYPES.CREATED,

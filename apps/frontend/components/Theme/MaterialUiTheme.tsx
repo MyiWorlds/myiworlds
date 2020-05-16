@@ -15,7 +15,7 @@ import {
 interface Props {
   children: React.ReactElement;
   themeOverride?: Theme;
-  setCanSave?: (bool: boolean) => void;
+  setHasUnsavedChanges?: (bool: boolean) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,7 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const MaterialUiTheme = ({ themeOverride, children, setCanSave }: Props) => {
+const MaterialUiTheme = ({
+  themeOverride,
+  children,
+  setHasUnsavedChanges,
+}: Props) => {
   const classes = useStyles();
 
   let theme = defaultMUITheme;
@@ -46,7 +50,7 @@ const MaterialUiTheme = ({ themeOverride, children, setCanSave }: Props) => {
     return (
       <ErrorBoundary
         backupErrorRenderComponent={backupThemeDisplay}
-        setCanSave={setCanSave}
+        setHasUnsavedChanges={setHasUnsavedChanges}
       >
         <ThemeProvider theme={responsiveFontSizes(theme)}>
           <CssBaseline />

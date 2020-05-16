@@ -6,7 +6,7 @@ import { CircleHydrated } from '@myiworlds/types';
 
 interface Props {
   circle: CircleHydrated;
-  classes: { [key: string]: string };
+  classes?: { [key: string]: string };
 }
 
 const Media: React.FunctionComponent<Props> = ({ circle, classes }) => {

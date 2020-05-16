@@ -48,18 +48,30 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   circle: Circle;
-  setCanSave?: (bool: boolean) => void;
+  setHasUnsavedChanges?: (bool: boolean) => void;
 }
 
-const ThemeViewer: React.FunctionComponent<Props> = ({ circle, setCanSave }) => {
+const ThemeViewer: React.FunctionComponent<Props> = ({
+  circle,
+  setHasUnsavedChanges,
+}) => {
   const muiTheme = useTheme();
   const classes = useStyles();
 
   const theme = circle.data.theme;
 
   return (
-    <MaterialUiTheme themeOverride={theme} setCanSave={setCanSave}>
-      <div style={{ background: theme.palette.background?.default || muiTheme.palette.background.default }}>
+    <MaterialUiTheme
+      themeOverride={theme}
+      setHasUnsavedChanges={setHasUnsavedChanges}
+    >
+      <div
+        style={{
+          background:
+            theme.palette.background?.default ||
+            muiTheme.palette.background.default,
+        }}
+      >
         <Spacer multiplier={3} />
         <Card className={classes.card}>
           <AppBar position="static">
@@ -74,13 +86,11 @@ const ThemeViewer: React.FunctionComponent<Props> = ({ circle, setCanSave }) => 
               </IconButton>
               <Typography variant="h6" className={classes.title}>
                 Example of theme
-                </Typography>
+              </Typography>
               <Button color="inherit">Button</Button>
             </Toolbar>
           </AppBar>
           <CardContent>
-
-
             <Grid container spacing={3}>
               <Grid item md={6}>
                 <Spacer />
@@ -114,14 +124,12 @@ const ThemeViewer: React.FunctionComponent<Props> = ({ circle, setCanSave }) => 
             <Spacer />
             <Typography variant="body2">Body2</Typography>
 
-
             <Spacer multiplier={3} />
 
             <Typography variant="h6">Switches:</Typography>
             <Switches />
 
             <Spacer multiplier={3} />
-
 
             <Typography variant="h6">Checkboxes:</Typography>
             <Checkboxes />
@@ -139,7 +147,6 @@ const ThemeViewer: React.FunctionComponent<Props> = ({ circle, setCanSave }) => 
         </Card>
 
         <Spacer multiplier={3} />
-
       </div>
     </MaterialUiTheme>
   );

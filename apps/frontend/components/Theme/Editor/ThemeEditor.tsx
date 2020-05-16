@@ -94,8 +94,74 @@ const ThemeEditor: React.FC<Props> = ({ circle, updateCircle }) => {
   let combinedTheme = cloneDeep(circle.data.theme);
 
   if (user.isSystemAdmin) {
-    combinedTheme = deepMerge(cloneDeep(circle.data.theme), muiTheme);
+    combinedTheme = deepMerge(
+      cloneDeep(circle.data.theme),
+      cloneDeep(muiTheme),
+    );
   }
+
+  const listOfFieldPathsNotEditable = [
+    'spacing',
+    'breakpoints.between',
+    'breakpoints.down',
+    'breakpoints.only',
+    'breakpoints.up',
+    'breakpoints.width',
+    'mixins.gutters',
+    'palette.type',
+    'palette.primary.dark',
+    'palette.primary.light',
+    'palette.primary.contrastText',
+    'palette.secondary.dark',
+    'palette.secondary.light',
+    'palette.secondary.contrastText',
+    'palette.success.dark',
+    'palette.success.light',
+    'palette.success.contrastText',
+    'palette.error.dark',
+    'palette.error.light',
+    'palette.error.contrastText',
+    'palette.warning.dark',
+    'palette.warning.light',
+    'palette.warning.contrastText',
+    'palette.info.dark',
+    'palette.info.light',
+    'palette.info.contrastText',
+    'palette.getContrastText',
+    'palette.augmentColor',
+    'transitions.create',
+    'transitions.getAutoHeightDuration',
+    'typography.pxToRem',
+    'typography.round',
+  ];
+
+  const deleteKey = (obj: any, path: string) => {
+    try {
+      if (!obj) {
+        return;
+      }
+
+      const pathArray = path.split('.');
+
+      for (let i = 0; i < pathArray.length - 1; i++) {
+        obj = obj[pathArray[i]];
+
+        if (typeof obj === 'undefined') {
+          return;
+        }
+      }
+
+      if (pathArray.length > 1) {
+        delete obj[(pathArray as any).pop()];
+      } else {
+        delete obj[pathArray[0]];
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  listOfFieldPathsNotEditable.forEach(field => deleteKey(combinedTheme, field));
 
   return (
     <List className={classes.list}>

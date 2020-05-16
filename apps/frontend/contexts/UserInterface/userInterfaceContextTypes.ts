@@ -8,7 +8,7 @@ export interface ProviderStore {
   setNavWidth: (value: number) => void;
   contentViewing: null | Circle;
   setContentViewing: (val: null | Circle) => void;
-  setNavItems: (navItems: React.ReactElement | null) => void;
+  setController: (navItems: React.ReactElement | null) => void;
   setAppBarItems: (appBarItems: React.ReactElement | null) => void;
   setDraggableDialogContent: (
     draggableDialogContent: React.ReactElement | null,

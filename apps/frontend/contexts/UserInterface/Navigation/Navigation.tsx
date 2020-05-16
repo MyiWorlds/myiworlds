@@ -193,7 +193,7 @@ const Navigation: React.FC<Props> = ({
     setIsResizingNav(true);
   };
 
-  const defaultNavItems = (
+  const defaultController = (
     <List className={classes.list}>
       <ListItem button component={ButtonLink} href="/">
         <ListItemIcon>
@@ -294,7 +294,7 @@ const Navigation: React.FC<Props> = ({
     </List>
   );
 
-  const displayedNavItems = navItems ? navItems : defaultNavItems;
+  const displayedController = navItems ? navItems : defaultController;
 
   useCallback(handleMouseMove, [setNavWidth]);
   useEventListener('mousemove', handleMouseMove);
@@ -309,7 +309,7 @@ const Navigation: React.FC<Props> = ({
           onOpen={() => {}}
           onClose={() => setShowNavigation(false)}
         >
-          <div className={classes.mobileDrawer}>{displayedNavItems}</div>
+          <div className={classes.mobileDrawer}>{displayedController}</div>
         </SwipeableDrawer>
       </Hidden>
       <Hidden smDown>
@@ -333,7 +333,7 @@ const Navigation: React.FC<Props> = ({
             className={classes.dragger}
           />
           <div className={classes.toolbar} />
-          <div className={classes.drawerPaper}>{displayedNavItems}</div>
+          <div className={classes.drawerPaper}>{displayedController}</div>
         </Drawer>
       </Hidden>
     </>

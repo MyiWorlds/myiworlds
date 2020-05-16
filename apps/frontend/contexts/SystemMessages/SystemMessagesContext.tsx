@@ -89,7 +89,9 @@ const SystemMessagesProvider = ({ children }: any) => {
           <Alert severity={snackbar.severity} variant="filled">
             <span id="message-id">{snackbar.title}</span>
           </Alert>
-        ) : null}
+        ) : (
+          undefined
+        )}
       </Snackbar>
       {children}
     </SystemMessagesContext.Provider>

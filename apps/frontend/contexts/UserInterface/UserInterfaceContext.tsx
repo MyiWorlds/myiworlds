@@ -11,6 +11,7 @@ import Zoom from '@material-ui/core/Zoom';
 import { Circle } from '@myiworlds/types';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
+import { useRouter } from 'next/router';
 import {
   createStyles,
   makeStyles,
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
+  const router = useRouter();
   const { user } = useContext(UserContext);
   const classes = useStyles();
   const defaultNavWidth = 240;
@@ -58,7 +60,7 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   const [navWidth, setNavWidth] = useState(defaultNavWidth);
   const [isResizingNav, setIsResizingNav] = useState(false);
   const [contentViewing, setContentViewing] = useState<null | Circle>(null);
-  const [navItems, setNavItems] = useState<React.ReactElement | null>(null);
+  const [navItems, setController] = useState<React.ReactElement | null>(null);
   const [
     draggableDialogContent,
     setDraggableDialogContent,
@@ -89,7 +91,7 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   useEffect(updateNavWidth, [navItems]);
   useEffect(didMount, []);
 
-  const createFab = user && user.canCreate && (
+  const createFab = user && user.canCreate && router.pathname !== '/edit/[id]' && (
     <Zoom
       in={true}
       timeout={transitionDuration}
@@ -119,7 +121,7 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
         setNavWidth,
         contentViewing,
         setContentViewing,
-        setNavItems,
+        setController,
         setAppBarItems,
         setDraggableDialogContent,
         setAppDialog,

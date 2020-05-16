@@ -8,7 +8,7 @@
       "type": "node",
       "request": "attach",
       "name": "Graphql API",
-      "port": 7777,
+      "port": 63164,
       "restart": true,
       "sourceMaps": true,
       "outFiles": ["${workspaceFolder}/dist/apps/graphql-api"]
@@ -24,10 +24,7 @@
   "compounds": [
     {
       "name": "Frontend & Backend Debug",
-      "configurations": [
-        "Chrome",
-        "Graphql API"
-      ]
+      "configurations": ["Chrome", "Graphql API"]
     }
   ]
 }

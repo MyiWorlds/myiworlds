@@ -68,7 +68,6 @@ export default function CircleListItemViewer({
   }
 
   if (getCircleQuery && getCircleQuery.getCircleById) {
-    console.log('Rendering Circle list item.');
     circle = getCircleQuery.getCircleById as Circle;
     return (
       <ListItem

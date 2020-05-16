@@ -42,7 +42,8 @@ const updateCircleMutation = {
     owner: { type: GraphQLString },
     viewers: { type: GraphQLList(GraphQLString) },
     editors: { type: GraphQLList(GraphQLString) },
-    ui: { type: GraphQLString },
+    styles: { type: GraphQLString },
+    layouts: { type: GraphQLString },
     dateCreated: { type: GraphQLBigInt },
     dateUpdated: { type: GraphQLBigInt },
     key: { type: GraphQLString },
@@ -73,6 +74,7 @@ const updateCircleMutation = {
     fields: () => ({
       status: { type: GraphQLString },
       message: { type: GraphQLString },
+      updatedDocumentId: { type: GraphQLString },
       updatedCircle: {
         type: CircleType,
         resolve: async (response: UpdateCircleResponse, context: Context) => {

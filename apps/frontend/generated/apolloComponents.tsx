@@ -44,7 +44,8 @@ export type Circle = {
   owner?: Maybe<PublicProfile>;
   viewers?: Maybe<Array<Maybe<PublicProfile>>>;
   editors?: Maybe<Array<Maybe<PublicProfile>>>;
-  ui?: Maybe<Circle>;
+  styles?: Maybe<Circle>;
+  layouts?: Maybe<Circle>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
   key?: Maybe<Scalars['String']>;
@@ -86,7 +87,8 @@ export type CircleClone = {
   owner?: Maybe<PublicProfile>;
   viewers?: Maybe<Array<Maybe<PublicProfile>>>;
   editors?: Maybe<Array<Maybe<PublicProfile>>>;
-  ui?: Maybe<Circle>;
+  styles?: Maybe<Circle>;
+  layouts?: Maybe<Circle>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
   key?: Maybe<Scalars['String']>;
@@ -248,7 +250,8 @@ export type MutationCreateCircleArgs = {
   owner?: Maybe<Scalars['String']>;
   viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   editors?: Maybe<Array<Maybe<Scalars['String']>>>;
-  ui?: Maybe<Scalars['String']>;
+  styles?: Maybe<Scalars['String']>;
+  layouts?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
   key?: Maybe<Scalars['String']>;
@@ -284,7 +287,8 @@ export type MutationUpdateCircleArgs = {
   owner?: Maybe<Scalars['String']>;
   viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   editors?: Maybe<Array<Maybe<Scalars['String']>>>;
-  ui?: Maybe<Scalars['String']>;
+  styles?: Maybe<Scalars['String']>;
+  layouts?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
   key?: Maybe<Scalars['String']>;
@@ -403,6 +407,7 @@ export type UpdateCirclePayload = {
   __typename?: 'UpdateCirclePayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
+  updatedDocumentId?: Maybe<Scalars['String']>;
   updatedCircle?: Maybe<Circle>;
 };
 
@@ -529,7 +534,8 @@ export type UpdateCircleMutationVariables = {
   owner?: Maybe<Scalars['String']>;
   viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   editors?: Maybe<Array<Maybe<Scalars['String']>>>;
-  ui?: Maybe<Scalars['String']>;
+  styles?: Maybe<Scalars['String']>;
+  layouts?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
   key?: Maybe<Scalars['String']>;
@@ -548,7 +554,7 @@ export type UpdateCircleMutation = { __typename?: 'Mutation' } & {
   updateCircle: Maybe<
     { __typename?: 'UpdateCirclePayload' } & Pick<
       UpdateCirclePayload,
-      'status' | 'message'
+      'status' | 'message' | 'updatedDocumentId'
     >
   >;
 };
@@ -1136,7 +1142,8 @@ export const UpdateCircleDocument = gql`
     $owner: String
     $viewers: [String]
     $editors: [String]
-    $ui: String
+    $styles: String
+    $layouts: String
     $dateCreated: BigInt
     $dateUpdated: BigInt
     $key: String
@@ -1171,7 +1178,8 @@ export const UpdateCircleDocument = gql`
       owner: $owner
       viewers: $viewers
       editors: $editors
-      ui: $ui
+      styles: $styles
+      layouts: $layouts
       dateCreated: $dateCreated
       dateUpdated: $dateUpdated
       key: $key
@@ -1187,6 +1195,7 @@ export const UpdateCircleDocument = gql`
     ) {
       status
       message
+      updatedDocumentId
     }
   }
 `;
@@ -1228,7 +1237,8 @@ export type UpdateCircleMutationFn = ApolloReactCommon.MutationFunction<
  *      owner: // value for 'owner'
  *      viewers: // value for 'viewers'
  *      editors: // value for 'editors'
- *      ui: // value for 'ui'
+ *      styles: // value for 'styles'
+ *      layouts: // value for 'layouts'
  *      dateCreated: // value for 'dateCreated'
  *      dateUpdated: // value for 'dateUpdated'
  *      key: // value for 'key'
