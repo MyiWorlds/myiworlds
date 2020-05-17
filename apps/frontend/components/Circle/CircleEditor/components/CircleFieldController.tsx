@@ -1,8 +1,8 @@
 import AppBar from '@material-ui/core/AppBar';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CircleFieldEditor from './CircleFieldEditor';
+import CodeIcon from '@material-ui/icons/Code';
 import Collapse from '@material-ui/core/Collapse';
-import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,7 +17,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -98,16 +97,22 @@ export default function CircleFieldController({
         aria-labelledby="nested-list-subheader"
         className={classes.root}
       >
+        <LayoutEditor
+          circleLayouts={circleLayouts}
+          setCircleLayouts={setCircleLayouts}
+          fieldEditing={fieldEditing}
+        />
+
         <ListItem button onClick={handleClickValue}>
           <ListItemIcon>
-            <PaletteIcon />
+            <CodeIcon />
           </ListItemIcon>
           <ListItemText primary="Value" />
           {showValue ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={showValue} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button>
+            <ListItem>
               <CircleFieldEditor
                 circle={circle}
                 updateCircle={updateCircle}
@@ -134,23 +139,6 @@ export default function CircleFieldController({
               <ListItemText primary="Starred" />
             </ListItem>
           </List>
-        </Collapse>
-
-        <ListItem button onClick={handleClickLayouts}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Layouts" />
-          {showLayouts ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={showLayouts} timeout="auto" unmountOnExit>
-          <div className={classes.nested}>
-            <LayoutEditor
-              circleLayouts={circleLayouts}
-              setCircleLayouts={setCircleLayouts}
-              fieldEditing={fieldEditing}
-            />
-          </div>
         </Collapse>
       </List>
     </div>

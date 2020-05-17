@@ -43,6 +43,10 @@ export default class MyDocument extends Document {
             .cm-s-monokai {
               z-index: 9999 !important;
             }
+
+            .react-resizable-handle {
+              z-index: 999;
+            }
           `}</style>
         </Head>
         <body>

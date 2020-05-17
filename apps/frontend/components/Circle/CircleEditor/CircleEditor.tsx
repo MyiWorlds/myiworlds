@@ -195,7 +195,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   const layoutCircleWasUpdated = () => {
     if (updateLayoutCircleLoading) {
-      console.log('Saving circle');
+      console.log('Saving layout circle');
     }
 
     if (updateLayoutCircleError) {
@@ -365,7 +365,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     } else if (viewingHistory) {
       newAppBarItems = (
         <CircleHistoryAppBarItems
-          hasUnsavedChanges={hasUnsavedChanges && !loadingCircle}
           handleSave={handleSave}
           updateCircleLoading={updateCircleLoading}
           setViewingHistory={setViewingHistory}
@@ -477,7 +476,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
 
     if (displaySize) {
-      console.log(displaySize);
       newViewer = (
         <Card style={{ width: displaySize, margin: '0px auto' }}>
           {newViewer}

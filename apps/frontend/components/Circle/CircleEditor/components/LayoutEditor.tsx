@@ -1,17 +1,10 @@
 import cloneDeep from 'lodash.clonedeep';
-import HeightIcon from '@material-ui/icons/Height';
-import HelpIcon from '@material-ui/icons/Help';
-import IconButton from '@material-ui/core/IconButton';
-import LayersIcon from '@material-ui/icons/Layers';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import React, { useState } from 'react';
 import Switch from '@material-ui/core/Switch';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Tooltip from '@material-ui/core/Tooltip';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { Circle } from '@myiworlds/types';
@@ -112,23 +105,23 @@ export default function LayoutEditor({
     setCircleLayouts(updatedLayouts);
   };
 
-  const editLayoutItem = (
-    property: keyof Layout,
-    value: string | number | boolean,
-  ) => {
-    const updatedLayouts = cloneDeep(circleLayouts);
+  // const editLayoutItem = (
+  //   property: keyof Layout,
+  //   value: string | number | boolean,
+  // ) => {
+  //   const updatedLayouts = cloneDeep(circleLayouts);
 
-    updatedLayouts.data.layouts[screenSize].forEach((layout: any) => {
-      if (layout.i === fieldEditing) {
-        layout[property] = value;
-      }
-    });
-    setCircleLayouts(updatedLayouts);
-  };
+  //   updatedLayouts.data.layouts[screenSize].forEach((layout: any) => {
+  //     if (layout.i === fieldEditing) {
+  //       layout[property] = value;
+  //     }
+  //   });
+  //   setCircleLayouts(updatedLayouts);
+  // };
 
-  const toggleStatic = () => {
-    editLayoutItem('static', !currentLayoutEditing.static);
-  };
+  // const toggleStatic = () => {
+  //   editLayoutItem('static', !currentLayoutEditing.static);
+  // };
 
   if (!currentLayoutEditing) {
     return <div>Add grid item back</div>;
@@ -136,7 +129,7 @@ export default function LayoutEditor({
 
   return (
     <div>
-      <div className={classes.toggleContainer}>
+      {/* <div className={classes.toggleContainer}>
         <ToggleButtonGroup
           value={screenSize}
           exclusive
@@ -159,25 +152,13 @@ export default function LayoutEditor({
             xl
           </ToggleButton>
         </ToggleButtonGroup>
-      </div>
+      </div> */}
 
       <ListItem>
         <ListItemIcon>
           {isLayoutItemShown ? <VisibilityIcon /> : <VisibilityOffIcon />}
         </ListItemIcon>
-        <ListItemText
-          id="switch-list-label-wifi"
-          primary={
-            <>
-              Show{' '}
-              <Tooltip title="This will hide it on all screen sizes">
-                <IconButton aria-label="help">
-                  <HelpIcon />
-                </IconButton>
-              </Tooltip>
-            </>
-          }
-        />
+        <ListItemText id="switch-list-label-wifi" primary="Show" />
 
         <ListItemSecondaryAction>
           <Switch
@@ -191,7 +172,7 @@ export default function LayoutEditor({
         </ListItemSecondaryAction>
       </ListItem>
 
-      <ListItem>
+      {/* <ListItem>
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
@@ -204,23 +185,7 @@ export default function LayoutEditor({
             inputProps={{ 'aria-labelledby': 'switch-show-grid-item' }}
           />
         </ListItemSecondaryAction>
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <HeightIcon />
-        </ListItemIcon>
-        <ListItemText primary="Height" />
-        {currentLayoutEditing.h}
-      </ListItem>
-
-      <ListItem>
-        <ListItemIcon>
-          <HeightIcon className={classes.width} />
-        </ListItemIcon>
-        <ListItemText primary="Width" />
-        {currentLayoutEditing.w}
-      </ListItem>
+      </ListItem> */}
     </div>
   );
 }

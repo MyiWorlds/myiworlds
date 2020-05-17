@@ -87,7 +87,6 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     'flex layout bg-white shadow rounded-sm',
   );
   const [showGrid, setShowGrid] = useState(false);
-  const [grid, setGrid] = useState([]);
 
   const preventInitialAnimation = () => {
     const timer = setTimeout(
@@ -129,39 +128,61 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isResizingNav, navWidth, classNames, displaySize]);
 
-  const children = React.useMemo(() => {
-    const newGrid: any = [];
+  // const children = React.useMemo(() => {
+  //   const newGrid: any = [];
 
-    for (const [key, value] of Object.entries(circle)) {
-      const itemInGrid = circleLayouts.data.layouts.xs.find((gridItem: any) => {
-        return gridItem.i === key && gridItem.w !== 0 && gridItem.h !== 0;
-      });
-      if (itemInGrid) {
-        newGrid.push(
-          <div key={key}>
-            <CircleFieldViewer
-              property={key}
-              value={value}
-              circle={circle}
-              setFieldEditing={setFieldEditing}
-              fieldEditing={fieldEditing}
-              editingGrid={editingGrid}
-            />
-          </div>,
-        );
-      }
-    }
-    return newGrid;
-  }, [
-    circle,
-    circleLayouts.data.layouts.xs,
-    setFieldEditing,
-    fieldEditing,
-    editingGrid,
-  ]);
+  //   for (const [key, value] of Object.entries(circle)) {
+  //     const itemInGrid = circleLayouts.data.layouts.xs.find((gridItem: any) => {
+  //       return gridItem.i === key && gridItem.w !== 0 && gridItem.h !== 0;
+  //     });
+  //     if (itemInGrid) {
+  //       newGrid.push(
+  //         <div key={key}>
+  //           <CircleFieldViewer
+  //             property={key}
+  //             value={value}
+  //             circle={circle}
+  //             setFieldEditing={setFieldEditing}
+  //             fieldEditing={fieldEditing}
+  //             editingGrid={editingGrid}
+  //           />
+  //         </div>,
+  //       );
+  //     }
+  //   }
+  //   return newGrid;
+  // }, [
+  //   circle,
+  //   circleLayouts.data.layouts.xs,
+  //   setFieldEditing,
+  //   fieldEditing,
+  //   editingGrid,
+  // ]);
 
   if (!showGrid) {
     return null;
+  }
+
+  const newGrid: any = [];
+
+  for (const [key, value] of Object.entries(circle)) {
+    const itemInGrid = circleLayouts.data.layouts.xs.find((gridItem: any) => {
+      return gridItem.i === key && gridItem.w !== 0 && gridItem.h !== 0;
+    });
+    if (itemInGrid) {
+      newGrid.push(
+        <div key={key}>
+          <CircleFieldViewer
+            property={key}
+            value={value}
+            circle={circle}
+            setFieldEditing={setFieldEditing}
+            fieldEditing={fieldEditing}
+            editingGrid={editingGrid}
+          />
+        </div>,
+      );
+    }
   }
 
   return (
@@ -189,7 +210,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
       rowHeight={theme.spacing()}
       // draggableCancel="input,textarea,label"
     >
-      {children}
+      {newGrid}
     </ResponsiveGridLayout>
   );
 };

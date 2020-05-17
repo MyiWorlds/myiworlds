@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.shape.borderRadius,
       background: theme.palette.primary.light,
       opacity: 0.5,
-      zIndex: -1,
+      zIndex: 1,
       boxShadow: theme.shadows[3],
     },
     container: {
@@ -34,6 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     noPointerEvents: {
       pointerEvents: 'none',
+      position: 'relative',
+      zIndex: 100,
     },
     clickableBackground: {
       position: 'absolute',
@@ -55,6 +57,12 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       height: '100%',
       top: 0,
+      cursor: 'grab',
+      '&:active': {
+        cursor: 'grabbing',
+      },
+    },
+    editingAndSelected: {
       cursor: 'grab',
       '&:active': {
         cursor: 'grabbing',
@@ -88,7 +96,13 @@ const CircleFieldViewerContainer: React.FunctionComponent<Props> = ({
         {fieldEditing !== property && !editingGrid && (
           <div className={classes.clickableBackground} />
         )}
-        {fieldEditing === property && <div className={classes.selected} />}
+        {fieldEditing === property && (
+          <div
+            className={`${classes.selected} ${
+              editingGrid ? classes.editingAndSelected : ''
+            }`}
+          />
+        )}
         {editingGrid && <div className={classes.editingGrid} />}
       </div>
     );

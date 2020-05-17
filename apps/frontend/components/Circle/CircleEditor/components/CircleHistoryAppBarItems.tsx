@@ -25,7 +25,6 @@ interface Props {
   updateCircleLoading: boolean;
   handleSave: () => void;
   setViewingHistory: (boolean: boolean) => void;
-  hasUnsavedChanges: boolean;
   viewingClone: boolean;
   viewingId: string;
 }
@@ -34,7 +33,6 @@ export default function CircleHistoryAppBarItems({
   updateCircleLoading,
   handleSave,
   setViewingHistory,
-  hasUnsavedChanges,
   viewingClone,
   viewingId,
 }: Props) {
@@ -53,7 +51,7 @@ export default function CircleHistoryAppBarItems({
       )}
       <Button
         className={classes.appBarBtn}
-        disabled={updateCircleLoading || !hasUnsavedChanges}
+        disabled={updateCircleLoading}
         onClick={() => setViewingHistory(false)}
       >
         Cancel
@@ -63,7 +61,7 @@ export default function CircleHistoryAppBarItems({
           autoFocus
           color="primary"
           onClick={handleSave}
-          disabled={updateCircleLoading || !hasUnsavedChanges}
+          disabled={updateCircleLoading}
           variant="contained"
           startIcon={<RestorePageIcon />}
         >
