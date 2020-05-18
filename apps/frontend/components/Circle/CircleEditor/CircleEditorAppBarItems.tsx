@@ -128,6 +128,7 @@ export default function CircleEditorAppBarItems({
         color="inherit"
         onClick={handleGoBack}
         disabled={isSaving || hasUnsavedChanges}
+        className={classes.appBarBtn}
       >
         Back
       </Button>

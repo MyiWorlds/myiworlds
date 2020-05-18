@@ -199,6 +199,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
 
     if (updateLayoutCircleError) {
+      setSavingCircle(false);
       setAppSnackbar({
         title: `There was an error updating the layout. ${updateLayoutCircleError.message}`,
         autoHideDuration: 3000,
@@ -211,6 +212,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       updateLayoutCircleData.updateCircle &&
       updateLayoutCircleData.updateCircle.status === RESPONSE_CODES.SUCCESS
     ) {
+      setSavingCircle(false);
       setEditingGrid(false);
       setAppSnackbar({
         title: 'Layout was saved!',
@@ -287,7 +289,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     setUpdateCircleVariables({ id: '' });
     if (
       // eslint-disable-next-line no-restricted-globals
-      document.referrer.indexOf(location.protocol + '//' + location.host) === 0
+      document.referrer.indexOf(location.protocol + '//' + location.host) ===
+        0 &&
+      document.referrer !== document.URL
     ) {
       console.log('Changing path to previous one.', document.referrer);
       router.back();
@@ -339,12 +343,42 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     timerToSaveCircle.current = setTimeout(() => {
       updateCircle();
       setHasUnsavedChanges(false);
-    }, 2000);
+    }, 1500);
     return () => {
       if (timerToSaveCircle) {
         clearTimeout(timerToSaveCircle.current);
       }
     };
+  };
+
+  const handleUpdateLayoutsCircleAndSave = (newValues: Circle) => {
+    setCircleLayouts(newValues);
+    setSavingCircle(true);
+    if (timerToSaveCircle.current) {
+      clearTimeout(timerToSaveCircle.current);
+    }
+    timerToSaveCircle.current = setTimeout(() => {
+      updateLayoutCircle();
+      setHasUnsavedChanges(false);
+    }, 1500);
+    return () => {
+      if (timerToSaveCircle) {
+        clearTimeout(timerToSaveCircle.current);
+      }
+    };
+  };
+
+  const handleSaveHistory = () => {
+    setViewingHistory(false);
+    handleSave();
+  };
+
+  const handleCancelViewingHistory = () => {
+    setViewingHistory(false);
+    if (updateCircleVariables.id !== id) {
+      setCircleId(id);
+      setCollection(FIRESTORE_COLLECTIONS.CIRCLES);
+    }
   };
 
   const updateAppBarItems = (appBarItems?: React.ReactElement) => {
@@ -365,11 +399,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     } else if (viewingHistory) {
       newAppBarItems = (
         <CircleHistoryAppBarItems
-          handleSave={handleSave}
+          handleSave={handleSaveHistory}
           updateCircleLoading={updateCircleLoading}
           setViewingHistory={setViewingHistory}
           viewingClone={updateCircleVariables.clonedFrom ? true : false}
           viewingId={updateCircleVariables.id}
+          handleCancel={handleCancelViewingHistory}
         />
       );
     } else {
@@ -378,7 +413,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           circle={updateCircleVariables}
           hasUnsavedChanges={hasUnsavedChanges}
           handleFinished={navigateToViewCircle}
-          isSaving={updateCircleLoading || savingCircle}
+          isSaving={
+            updateCircleLoading || savingCircle || updateLayoutCircleLoading
+          }
           setViewingHistory={setViewingHistory}
           updateControllerAndViewer={updateControllerAndViewer}
           viewingHistory={viewingHistory}
@@ -402,10 +439,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       newViewer = viewer;
       switch (circle.type) {
         case 'THEME': {
+          setDisplaySize(null);
           newController = (
             <ThemeEditor
               circle={circle}
-              updateCircle={setUpdateCircleVariables}
+              updateCircle={handleUpdateCircleAndSave}
             />
           );
           newViewer = (
@@ -435,7 +473,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
               updateCircle={handleUpdateCircleAndSave}
               circle={circle}
               circleLayouts={circleLayouts}
-              setCircleLayouts={setCircleLayouts}
+              setCircleLayouts={
+                editingGrid
+                  ? setCircleLayouts
+                  : handleUpdateLayoutsCircleAndSave
+              }
+              displaySize={displaySize}
             />
           ) : (
             <CircleFieldsController
@@ -457,11 +500,13 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           circleLayouts={circleLayouts}
           setCircleLayouts={setCircleLayouts}
           editingGrid={true}
+          displaySize={displaySize}
         />
       );
     }
 
     if (viewingHistory) {
+      setDisplaySize(null);
       newController = (
         <CircleHistoryEditor
           circleId={circle.clonedFrom ? circle.clonedFrom : circle.id}
@@ -495,7 +540,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     if (circle) {
       switch (circle.type) {
         case 'THEME': {
-          navWidth = 600;
+          navWidth = 400;
           break;
         }
         default: {
@@ -516,8 +561,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   useEffect(componentDidMount, []);
   useEffect(circleBeingEditedChanged, [loadingCircle, user, viewingHistory]);
   useEffect(circleLayoutsBeingEditedChanged, [
-    // circleData,
-    // circleLayoutsData,
     loadingCircleLayouts,
     errorCircleLayouts,
   ]);
@@ -528,6 +571,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     viewingHistory,
     updateCircleVariables,
     updateCircleLoading,
+    updateLayoutCircleLoading,
     savingCircle,
     loadingCircle,
     editingGrid,
@@ -541,18 +585,13 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     displaySize,
     circleLayouts,
   ]);
-  useEffect(updateNavWidth, [
-    viewingHistory,
-    loadingCircle,
-    // circleData
-  ]);
+  useEffect(updateNavWidth, [viewingHistory, loadingCircle]);
   useEffect(circleWasUpdated, [updateCircleData]);
   useEffect(layoutCircleWasUpdated, [
     updateLayoutCircleData,
     updateLayoutCircleLoading,
     updateLayoutCircleError,
   ]);
-  // useEffect(saveToDatabase, [save]);
 
   if (!user.canCreate) {
     return (

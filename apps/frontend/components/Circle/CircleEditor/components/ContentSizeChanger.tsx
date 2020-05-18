@@ -28,6 +28,14 @@ export default function ContentSizeChanger({
   const classes = useStyles();
   const theme = useTheme();
 
+  const componentDidMount = () => {
+    if (!displaySize) {
+      setDisplaySize(theme.breakpoints.values.lg + 1);
+    }
+  };
+
+  React.useEffect(componentDidMount, []);
+
   const handleScreenSize = (
     event: React.MouseEvent<HTMLElement>,
     newScreenSize: number | null | '',
@@ -41,10 +49,17 @@ export default function ContentSizeChanger({
   let switchActivated: '' | number = '';
 
   if (displaySize) {
-    switchActivated = displaySize;
+    const closest = Object.values(theme.breakpoints.values).reduce(
+      (a: number, b: number) => {
+        return Math.abs(b - displaySize) < Math.abs(a - displaySize) ? b : a;
+      },
+    );
+
+    switchActivated =
+      closest < theme.breakpoints.values['sm'] ? 300 : closest + 1;
   } else {
     if (editingGrid) {
-      switchActivated = theme.breakpoints.values.xl;
+      switchActivated = theme.breakpoints.values.xl + 1;
     } else {
       switchActivated = '';
     }
@@ -59,20 +74,29 @@ export default function ContentSizeChanger({
         aria-label="screen size"
         size="small"
       >
-        <ToggleButton value={250} aria-label="extra small">
+        <ToggleButton value={300} aria-label="extra small">
           xs
         </ToggleButton>
-        <ToggleButton value={theme.breakpoints.values.sm} aria-label="small">
+        <ToggleButton
+          value={theme.breakpoints.values.sm + 1}
+          aria-label="small"
+        >
           sm
         </ToggleButton>
-        <ToggleButton value={theme.breakpoints.values.md} aria-label="medium">
+        <ToggleButton
+          value={theme.breakpoints.values.md + 1}
+          aria-label="medium"
+        >
           md
         </ToggleButton>
-        <ToggleButton value={theme.breakpoints.values.lg} aria-label="large">
+        <ToggleButton
+          value={theme.breakpoints.values.lg + 1}
+          aria-label="large"
+        >
           lg
         </ToggleButton>
         <ToggleButton
-          value={theme.breakpoints.values.xl}
+          value={theme.breakpoints.values.xl + 1}
           aria-label="extra large"
         >
           xl

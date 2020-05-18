@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     mobileDrawer: {
       width: 250,
       height: '100%',
+      minWidth: 200,
     },
     drawer: {
       flexShrink: 0,
@@ -101,6 +102,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       height: '100%',
       overflow: 'auto',
+      minWidth: 200,
     },
   }),
 );

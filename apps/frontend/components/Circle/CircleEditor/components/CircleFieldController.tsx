@@ -17,6 +17,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -42,6 +43,7 @@ interface Props {
   circleLayouts: any;
   setCircleLayouts: (circle: Circle) => void;
   editingGrid?: boolean;
+  displaySize: null | number;
 }
 
 export default function CircleFieldController({
@@ -52,6 +54,7 @@ export default function CircleFieldController({
   circleLayouts,
   setCircleLayouts,
   editingGrid,
+  displaySize,
 }: Props) {
   const classes = useStyles();
   const [showValue, setShowValue] = useState(editingGrid ? false : true);
@@ -66,13 +69,11 @@ export default function CircleFieldController({
     setShowStyles(!showStyles);
   };
 
-  const handleClickLayouts = () => {
-    setShowLayouts(!showLayouts);
-  };
-
   if (!fieldEditing) {
     return null;
   }
+
+  const isSpacer = fieldEditing.startsWith('spacer-');
 
   return (
     <div className={classes.root}>
@@ -88,7 +89,7 @@ export default function CircleFieldController({
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {fieldEditing}
+            {isSpacer ? 'Spacer' : fieldEditing}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -101,45 +102,49 @@ export default function CircleFieldController({
           circleLayouts={circleLayouts}
           setCircleLayouts={setCircleLayouts}
           fieldEditing={fieldEditing}
+          displaySize={displaySize}
+          setFieldEditing={setFieldEditing}
         />
 
-        <ListItem button onClick={handleClickValue}>
-          <ListItemIcon>
-            <CodeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Value" />
-          {showValue ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={showValue} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem>
-              <CircleFieldEditor
-                circle={circle}
-                updateCircle={updateCircle}
-                property={fieldEditing}
-                value={circle[fieldEditing as keyof Circle]}
-              />
+        {!isSpacer && (
+          <>
+            <ListItem button onClick={handleClickValue}>
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Value" />
+              {showValue ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
-          </List>
-        </Collapse>
+            <Collapse in={showValue} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <CircleFieldEditor
+                  circle={circle}
+                  updateCircle={updateCircle}
+                  property={fieldEditing}
+                  value={circle[fieldEditing as keyof Circle]}
+                />
+              </List>
+            </Collapse>
 
-        <ListItem button onClick={handleClickStyles}>
-          <ListItemIcon>
-            <PaletteIcon />
-          </ListItemIcon>
-          <ListItemText primary="Styles" />
-          {showStyles ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={showStyles} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
-              {/* <ListItemIcon>
+            <ListItem button onClick={handleClickStyles}>
+              <ListItemIcon>
+                <PaletteIcon />
+              </ListItemIcon>
+              <ListItemText primary="Styles" />
+              {showStyles ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={showStyles} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  {/* <ListItemIcon>
               <StarBorder />
             </ListItemIcon> */}
-              <ListItemText primary="Starred" />
-            </ListItem>
-          </List>
-        </Collapse>
+                  <ListItemText primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse>
+          </>
+        )}
       </List>
     </div>
   );

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const StringViewer: React.FunctionComponent<Props> = ({ label, number }) => {
+const NumberViewer: React.FunctionComponent<Props> = ({ label, number }) => {
   const classes = useStyles();
 
   if (label) {
@@ -38,4 +38,4 @@ const StringViewer: React.FunctionComponent<Props> = ({ label, number }) => {
   }
 };
 
-export default StringViewer;
+export default NumberViewer;

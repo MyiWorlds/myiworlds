@@ -3,19 +3,26 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import LockIcon from '@material-ui/icons/Lock';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 import React, { useState } from 'react';
 import Switch from '@material-ui/core/Switch';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { Circle } from '@myiworlds/types';
-import { generateLayoutFromSize } from '../../../ReactGridLayout/Viewer/gridLayoutHelperFunctions';
 import { Layout } from 'react-grid-layout';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {
+  generateLayoutFromSize,
+  getCurrentLayoutSize,
+} from '../../../ReactGridLayout/Viewer/gridLayoutHelperFunctions';
 
 interface Props {
   circleLayouts: Circle;
   setCircleLayouts: (circle: Circle) => void;
   fieldEditing: string;
+  displaySize: null | number;
+  setFieldEditing: (newFieldEditing: string | null) => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,18 +39,16 @@ export default function LayoutEditor({
   circleLayouts,
   setCircleLayouts,
   fieldEditing,
+  displaySize,
+  setFieldEditing,
 }: Props) {
   const classes = useStyles();
-  const [screenSize, setScreenSize] = useState('xl');
+  const theme = useTheme();
+  const isSpacer = fieldEditing.startsWith('spacer-');
 
-  const handleScreenSize = (
-    event: React.MouseEvent<HTMLElement>,
-    newScreenSize: string | null,
-  ) => {
-    if (newScreenSize) {
-      setScreenSize(newScreenSize);
-    }
-  };
+  const screenSize = displaySize
+    ? getCurrentLayoutSize(displaySize, theme)
+    : 'xl';
 
   const currentLayoutEditing = circleLayouts.data.layouts[screenSize].find(
     (layout: Layout) => layout.i === fieldEditing,
@@ -55,22 +60,31 @@ export default function LayoutEditor({
     currentLayoutEditing.h !== 0;
 
   const addFieldToLayouts = () => {
-    const screenSizes = Object.keys(circleLayouts.data.layouts);
-
     const previousLayouts = cloneDeep(circleLayouts.data.layouts);
 
-    screenSizes.forEach((size: any) => {
-      previousLayouts[size] = previousLayouts[size].map((gridItem: any) => {
+    previousLayouts[screenSize] = previousLayouts[screenSize].map(
+      (gridItem: any) => {
         if (gridItem.i === fieldEditing) {
-          gridItem = generateLayoutFromSize(
-            size,
-            fieldEditing,
-            previousLayouts[size].length,
-          );
+          gridItem = {
+            ...gridItem,
+            ...generateLayoutFromSize(
+              screenSize,
+              fieldEditing,
+              previousLayouts[screenSize].length,
+            ),
+          };
+          if (gridItem.prevW) {
+            gridItem.w = gridItem.prevW;
+            gridItem.prevW = null;
+          }
+          if (gridItem.prevH) {
+            gridItem.h = gridItem.prevH;
+            gridItem.prevH = null;
+          }
         }
         return gridItem;
-      });
-    });
+      },
+    );
     setCircleLayouts({
       ...circleLayouts,
       data: {
@@ -81,50 +95,51 @@ export default function LayoutEditor({
 
   const removeFieldToLayouts = () => {
     const updatedLayouts = cloneDeep(circleLayouts);
-    const screenSizes = Object.keys(circleLayouts.data.layouts);
 
-    screenSizes.forEach((size: any) => {
-      updatedLayouts.data.layouts[size] = updatedLayouts.data.layouts[size].map(
-        (gridItem: any) => {
-          if (gridItem.i === fieldEditing) {
-            gridItem.w = 0;
-            gridItem.h = 0;
-          }
-          return gridItem;
-        },
-      );
-    });
-
-    // const updatedLayouts = {
-    //   ...circleLayouts,
-    //   data: {
-    //     layouts: )
-    //   }
-    // }
+    if (isSpacer) {
+      updatedLayouts.data.layouts[screenSize] = updatedLayouts.data.layouts[
+        screenSize
+      ].filter((gridItem: any) => gridItem.i !== fieldEditing);
+    } else {
+      updatedLayouts.data.layouts[screenSize] = updatedLayouts.data.layouts[
+        screenSize
+      ].map((gridItem: any) => {
+        if (gridItem.i === fieldEditing) {
+          gridItem.prevW = gridItem.w;
+          gridItem.prevH = gridItem.h;
+          gridItem.w = 0;
+          gridItem.h = 0;
+        }
+        return gridItem;
+      });
+    }
 
     setCircleLayouts(updatedLayouts);
   };
 
-  // const editLayoutItem = (
-  //   property: keyof Layout,
-  //   value: string | number | boolean,
-  // ) => {
-  //   const updatedLayouts = cloneDeep(circleLayouts);
+  const editLayoutItem = (
+    property: keyof Layout,
+    value: string | number | boolean,
+  ) => {
+    const updatedLayouts = cloneDeep(circleLayouts);
 
-  //   updatedLayouts.data.layouts[screenSize].forEach((layout: any) => {
-  //     if (layout.i === fieldEditing) {
-  //       layout[property] = value;
-  //     }
-  //   });
-  //   setCircleLayouts(updatedLayouts);
-  // };
+    updatedLayouts.data.layouts[screenSize].forEach((layout: any) => {
+      if (layout.i === fieldEditing) {
+        layout[property] = value;
+      }
+    });
+    setCircleLayouts(updatedLayouts);
+  };
 
-  // const toggleStatic = () => {
-  //   editLayoutItem('static', !currentLayoutEditing.static);
-  // };
+  const toggleStatic = () => {
+    editLayoutItem('static', !currentLayoutEditing.static);
+  };
 
   if (!currentLayoutEditing) {
-    return <div>Add grid item back</div>;
+    if (isSpacer) {
+      setFieldEditing(null);
+    }
+    return null;
   }
 
   return (
@@ -172,9 +187,9 @@ export default function LayoutEditor({
         </ListItemSecondaryAction>
       </ListItem>
 
-      {/* <ListItem>
+      <ListItem>
         <ListItemIcon>
-          <LayersIcon />
+          {currentLayoutEditing.static ? <LockIcon /> : <LockOpenIcon />}
         </ListItemIcon>
         <ListItemText primary="Static" />
         <ListItemSecondaryAction>
@@ -185,7 +200,7 @@ export default function LayoutEditor({
             inputProps={{ 'aria-labelledby': 'switch-show-grid-item' }}
           />
         </ListItemSecondaryAction>
-      </ListItem> */}
+      </ListItem>
     </div>
   );
 }

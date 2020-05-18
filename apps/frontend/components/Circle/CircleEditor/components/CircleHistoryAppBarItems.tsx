@@ -27,6 +27,7 @@ interface Props {
   setViewingHistory: (boolean: boolean) => void;
   viewingClone: boolean;
   viewingId: string;
+  handleCancel: () => void;
 }
 
 export default function CircleHistoryAppBarItems({
@@ -35,6 +36,7 @@ export default function CircleHistoryAppBarItems({
   setViewingHistory,
   viewingClone,
   viewingId,
+  handleCancel,
 }: Props) {
   const classes = useStyles();
 
@@ -52,7 +54,7 @@ export default function CircleHistoryAppBarItems({
       <Button
         className={classes.appBarBtn}
         disabled={updateCircleLoading}
-        onClick={() => setViewingHistory(false)}
+        onClick={handleCancel}
       >
         Cancel
       </Button>

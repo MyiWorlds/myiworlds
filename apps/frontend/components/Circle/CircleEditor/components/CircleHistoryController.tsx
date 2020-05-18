@@ -36,95 +36,93 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CircleHistoryEditor = React.memo(
-  ({
-    circleId,
-    clonedCircleIdViewing,
-    updateCircleToFetch,
-    handleSave,
-    contentCircle,
-  }: Props) => {
-    const classes = useStyles();
+const CircleHistoryEditor = ({
+  circleId,
+  clonedCircleIdViewing,
+  updateCircleToFetch,
+  handleSave,
+  contentCircle,
+}: Props) => {
+  const classes = useStyles();
 
-    const {
-      data: getCircleClonesQuery,
-      loading: loadingGetCircleClones,
-      error: errorGettingCircleClones,
-    } = useGetCircleClonesByIdQuery({
-      fetchPolicy: 'no-cache',
-      skip: !circleId || circleId === '',
-      variables: {
-        id: circleId,
-      },
-    });
+  const {
+    data: getCircleClonesQuery,
+    loading: loadingGetCircleClones,
+    error: errorGettingCircleClones,
+  } = useGetCircleClonesByIdQuery({
+    fetchPolicy: 'no-cache',
+    skip: !circleId || circleId === '',
+    variables: {
+      id: circleId,
+    },
+  });
 
-    if (errorGettingCircleClones) {
-      console.log('There was an error getting the list of circles.');
-      return null;
-    }
+  if (errorGettingCircleClones) {
+    console.log('There was an error getting the list of circles.');
+    return null;
+  }
 
-    if (loadingGetCircleClones) {
-      console.log('Loading circle history clones');
-      return null;
-    }
+  if (loadingGetCircleClones) {
+    console.log('Loading circle history clones');
+    return null;
+  }
 
-    if (getCircleClonesQuery && getCircleClonesQuery.getCircleClonesById) {
-      console.log('Circles list viewer rendered.');
-      const circles = getCircleClonesQuery.getCircleClonesById
-        .clones as Circle[];
-      return (
-        <List>
-          <CircleListItemViewer
-            id={circleId}
-            secondary={'Current'}
-            listItemClasses={{
-              root: classes.currentCircle,
-            }}
-            listItemTextClasses={{
-              root: classes.listItemText,
-              primary: classes.listItemText,
-            }}
-            selected={true}
-            onSelect={() =>
-              contentCircle.id === circleId
-                ? {}
-                : updateCircleToFetch(circleId, FIRESTORE_COLLECTIONS.CIRCLES)
-            }
-          />
-          {circles.map((circle: Circle) => {
-            return (
-              <ListItem
-                button
-                selected={clonedCircleIdViewing === circle.id}
-                onClick={() =>
-                  updateCircleToFetch(
-                    circle.id,
-                    FIRESTORE_COLLECTIONS.CIRCLES_CLONES,
-                  )
-                }
-                key={circle.id}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={circle.title}
-                  secondary={format(
-                    circle.dateUpdated as number,
-                    'MMMM dd, yyyy h:mm a',
-                  )}
-                />
-              </ListItem>
-            );
-          })}
-        </List>
-      );
-    } else {
-      return null;
-    }
-  },
-);
+  if (getCircleClonesQuery && getCircleClonesQuery.getCircleClonesById) {
+    console.log('Circles list viewer rendered.');
+    const circles = getCircleClonesQuery.getCircleClonesById.clones as Circle[];
+    return (
+      <List>
+        <CircleListItemViewer
+          id={circleId}
+          secondary={'Current'}
+          noCache={true}
+          listItemClasses={{
+            root: classes.currentCircle,
+          }}
+          listItemTextClasses={{
+            root: classes.listItemText,
+            primary: classes.listItemText,
+          }}
+          selected={true}
+          onSelect={() =>
+            contentCircle.id === circleId
+              ? {}
+              : updateCircleToFetch(circleId, FIRESTORE_COLLECTIONS.CIRCLES)
+          }
+        />
+        {circles.map((circle: Circle) => {
+          return (
+            <ListItem
+              button
+              selected={clonedCircleIdViewing === circle.id}
+              onClick={() =>
+                updateCircleToFetch(
+                  circle.id,
+                  FIRESTORE_COLLECTIONS.CIRCLES_CLONES,
+                )
+              }
+              key={circle.id}
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <PersonIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={circle.title}
+                secondary={format(
+                  circle.dateUpdated as number,
+                  'MMMM dd, yyyy h:mm a',
+                )}
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+    );
+  } else {
+    return null;
+  }
+};
 
 export default CircleHistoryEditor;

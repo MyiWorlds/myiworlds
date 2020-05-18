@@ -1,19 +1,21 @@
+import AddToGrid from './../Editor/AddToGrid';
 import CircleFieldViewer from './../../Circle/CircleViewer/CircleFieldViewer';
+import CircleFieldViewerContainer from './../../Circle/CircleViewer/CircleFieldViewerContainer';
 import React, { useContext, useEffect, useState } from 'react';
 import { Circle } from '@myiworlds/types';
+import { getCurrentLayoutSize } from './gridLayoutHelperFunctions';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 import {
-  // createStyles,
-  // makeStyles,
+  createStyles,
+  makeStyles,
   useTheme,
-  // Theme,
+  Theme,
 } from '@material-ui/core/styles';
 import {
   Layout,
   Responsive,
   // ResponsiveProps,
   WidthProvider,
-  ItemCallback,
 } from 'react-grid-layout';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -28,48 +30,19 @@ interface Props {
   fieldEditing?: string | null;
 }
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     container: {
-//       position: 'relative',
-//       margin: '0 auto',
-//       maxWidth: '100%',
-//       // paddingBottom: theme.spacing(12)
-//     },
-//     gridItem: {
-//       border: `1px solid ${theme.palette.divider}`,
-//       borderRadius: theme.shape.borderRadius,
-//     },
-//     contentWrapper: {
-//       position: 'relative',
-//       display: 'flex',
-//       height: '100%',
-//       margin: theme.spacing(1),
-//     },
-//     gridItemContentCover: {
-//       width: '100%',
-//       height: '100%',
-//       position: 'absolute',
-//       background: theme.palette.primary.main,
-//       opacity: 0.3,
-//       zIndex: 998,
-//     },
-//     gridItemPreventClickThrough: {
-//       pointerEvents: 'none',
-//       cursor: 'default',
-//       display: 'block',
-//     },
-//     dragArea: {
-//       position: 'absolute',
-//       display: 'block',
-//       zIndex: 999,
-//       top: 0,
-//       right: 0,
-//       opacity: 0.4,
-//       margin: theme.spacing(1) / 2,
-//     },
-//   }),
-// );
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      marginBottom: theme.spacing(24),
+    },
+    spacerText: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  }),
+);
 
 const ReactGridLayoutViewer: React.FC<Props> = ({
   circle,
@@ -80,7 +53,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
   fieldEditing,
   setCircleLayouts,
 }) => {
-  // const classes = useStyles();
+  const classes = useStyles();
   const theme = useTheme();
   const { navWidth, isResizingNav } = useContext(UserInterfaceContext);
   const [classNames, setClassNames] = useState(
@@ -166,7 +139,9 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
   const newGrid: any = [];
 
   for (const [key, value] of Object.entries(circle)) {
-    const itemInGrid = circleLayouts.data.layouts.xs.find((gridItem: any) => {
+    const itemInGrid = circleLayouts.data.layouts[
+      getCurrentLayoutSize(displaySize, theme)
+    ].find((gridItem: any) => {
       return gridItem.i === key && gridItem.w !== 0 && gridItem.h !== 0;
     });
     if (itemInGrid) {
@@ -185,33 +160,68 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     }
   }
 
+  circleLayouts.data.layouts[getCurrentLayoutSize(displaySize, theme)].forEach(
+    (layoutSizeItem: Layout) => {
+      if (layoutSizeItem.i.startsWith('spacer-')) {
+        newGrid.push(
+          <div key={layoutSizeItem.i}>
+            <CircleFieldViewerContainer
+              key={layoutSizeItem.i}
+              fieldEditing={fieldEditing}
+              property={layoutSizeItem.i}
+              setFieldEditing={setFieldEditing}
+              editingGrid={editingGrid}
+            >
+                <span className={classes.spacerText}>
+                  {editingGrid ? 'Spacer' : ''}
+                </span>
+            </CircleFieldViewerContainer>
+          </div>,
+        );
+      }
+    },
+  );
+
   return (
-    <ResponsiveGridLayout
-      measureBeforeMount={true}
-      useCSSTransforms={false}
-      className={classNames}
-      layouts={circleLayouts.data.layouts}
-      onLayoutChange={handleLayoutChange}
-      // autoSize={true}
-      // rowHeight={muiTheme.spacing(1) / 2}
-      // onResize={this.onResize}
-      isDraggable={editingGrid ? true : false}
-      isResizable={editingGrid ? true : false}
-      breakpoints={{
-        xl: theme.breakpoints.values.xl,
-        lg: theme.breakpoints.values.lg,
-        md: theme.breakpoints.values.md,
-        sm: theme.breakpoints.values.sm,
-        xs: theme.breakpoints.values.xs,
-      }}
-      cols={{ xl: 64, lg: 48, md: 32, sm: 24, xs: 12 }}
-      maxRows={1000}
-      margin={[0, 0]}
-      rowHeight={theme.spacing()}
-      // draggableCancel="input,textarea,label"
-    >
-      {newGrid}
-    </ResponsiveGridLayout>
+    <div className={classes.container}>
+      {editingGrid && displaySize && setCircleLayouts && (
+        <AddToGrid
+          circle={circle}
+          circleLayouts={circleLayouts}
+          displaySize={displaySize}
+          editingGrid={editingGrid}
+          setFieldEditing={setFieldEditing}
+          fieldEditing={fieldEditing}
+          setCircleLayouts={setCircleLayouts}
+        />
+      )}
+      <ResponsiveGridLayout
+        measureBeforeMount={true}
+        useCSSTransforms={false}
+        className={classNames}
+        layouts={circleLayouts.data.layouts}
+        onLayoutChange={handleLayoutChange}
+        // autoSize={true}
+        // rowHeight={muiTheme.spacing(1) / 2}
+        // onResize={this.onResize}
+        isDraggable={editingGrid ? true : false}
+        isResizable={editingGrid ? true : false}
+        breakpoints={{
+          xl: theme.breakpoints.values.xl,
+          lg: theme.breakpoints.values.lg,
+          md: theme.breakpoints.values.md,
+          sm: theme.breakpoints.values.sm,
+          xs: theme.breakpoints.values.xs,
+        }}
+        cols={{ xl: 64, lg: 48, md: 32, sm: 24, xs: 12 }}
+        maxRows={1000}
+        margin={[0, 0]}
+        rowHeight={theme.spacing()}
+        // draggableCancel="input,textarea,label"
+      >
+        {newGrid}
+      </ResponsiveGridLayout>
+    </div>
   );
 };
 

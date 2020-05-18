@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     noPointerEvents: {
       pointerEvents: 'none',
-      position: 'relative',
       zIndex: 100,
     },
     clickableBackground: {
@@ -47,11 +46,12 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius: theme.shape.borderRadius,
         background: theme.palette.primary.light,
         opacity: 0.4,
-        // zIndex: -1,
       },
     },
     editingGrid: {
       background: theme.palette.primary.light,
+      border: `1px solid ${theme.palette.secondary.main}`,
+      borderRadius: 2,
       opacity: 0.4,
       position: 'absolute',
       width: '100%',

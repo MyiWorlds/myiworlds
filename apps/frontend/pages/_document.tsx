@@ -45,7 +45,7 @@ export default class MyDocument extends Document {
             }
 
             .react-resizable-handle {
-              z-index: 999;
+              z-index: 999 !important;
             }
           `}</style>
         </Head>

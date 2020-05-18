@@ -1,6 +1,7 @@
 import CircleViewerAppBarItems from './CircleViewerAppBarItems';
 import Error from '../../Error';
 import firestoreClient from '../../../lib/firebase/firestoreClient';
+import generateDefaultGridLayouts from './../../ReactGridLayout/Viewer/gridLayoutHelperFunctions';
 import Progress from '../../Progress/Progress';
 import React, { useContext, useEffect } from 'react';
 import ReactGridLayoutViewer from './../../ReactGridLayout/Viewer/ReactGridLayoutViewer';
@@ -29,8 +30,13 @@ export default function CircleViewer({ id }: Props) {
     loadingCircleLayouts,
     errorCircleLayouts,
   ] = useDocument(
-    contentViewing && contentViewing.layouts && contentViewing.layouts !== ''
-      ? firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id)
+    circleData &&
+      circleData.data() &&
+      circleData.data().layouts &&
+      circleData.data().layouts !== ''
+      ? firestoreClient
+          .collection(FIRESTORE_COLLECTIONS.CIRCLES)
+          .doc(circleData.data().layouts)
       : undefined,
   );
 
@@ -41,7 +47,11 @@ export default function CircleViewer({ id }: Props) {
   const updateContentViewing = () => {
     if (circleData) {
       const circle = circleData.data() as Circle;
-      if (circle && circle !== contentViewing) {
+      if (
+        circle &&
+        ((contentViewing && circle.id !== contentViewing.id) ||
+          (contentViewing && circle.dateUpdated !== contentViewing.dateUpdated))
+      ) {
         setContentViewing(circle);
       }
     }
@@ -55,8 +65,8 @@ export default function CircleViewer({ id }: Props) {
     }
   };
 
-  useEffect(componentDidUpdate, [circleData, loadingCircle]);
-  useEffect(updateContentViewing, [circleData, circleLayoutsData]);
+  useEffect(componentDidUpdate, [loadingCircle, loadingCircleLayouts]);
+  useEffect(updateContentViewing, [loadingCircle, loadingCircleLayouts]);
 
   if (errorCircle) {
     return <Error error={errorCircle} />;
@@ -70,9 +80,37 @@ export default function CircleViewer({ id }: Props) {
     return <Progress />;
   }
 
-  if (circleData && circleLayoutsData) {
+  if (circleData) {
     const circle = circleData.data() as Circle;
-    const circleLayouts = circleLayoutsData.data() as Circle;
+    let circleLayouts = null;
+
+    if (circleLayoutsData) {
+      const circleLayoutsResponse = circleLayoutsData.data() as Circle;
+
+      const layouts = JSON.parse(circleLayoutsResponse.data.layouts, function(
+        key,
+        value,
+      ) {
+        return value === 'Infinity' ? Infinity : value;
+      });
+      circleLayouts = {
+        ...circleLayoutsResponse,
+        data: {
+          layouts,
+        },
+      };
+    } else {
+      circleLayouts = {
+        id: 'default-circle-layout',
+        type: 'LAYOUTS',
+        collection: FIRESTORE_COLLECTIONS.CIRCLES,
+        data: {
+          layouts: generateDefaultGridLayouts(
+            Object.getOwnPropertyNames(circle),
+          ),
+        },
+      } as Circle;
+    }
     if (circle) {
       let viewer = null;
 

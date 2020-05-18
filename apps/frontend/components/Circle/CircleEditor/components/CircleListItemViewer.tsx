@@ -24,6 +24,7 @@ interface Props {
     | undefined;
   listItemSecondaryAction?: React.ReactNode;
   onSelect?: () => void;
+  noCache?: boolean;
 }
 
 export default function CircleListItemViewer({
@@ -35,6 +36,7 @@ export default function CircleListItemViewer({
   disabled,
   listItemSecondaryAction,
   onSelect,
+  noCache,
 }: Props) {
   const {
     data: getCircleQuery,
@@ -42,6 +44,7 @@ export default function CircleListItemViewer({
     error: errorGettingCircle,
   } = useGetCircleByIdQuery({
     skip: !id,
+    fetchPolicy: noCache ? 'no-cache' : 'cache-first',
     variables: {
       id,
     },
