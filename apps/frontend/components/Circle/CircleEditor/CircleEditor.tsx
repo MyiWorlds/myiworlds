@@ -20,9 +20,11 @@ import ReactGridLayoutViewer from './../../ReactGridLayout/Viewer/ReactGridLayou
 import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
 import ThemeEditor from '../../Theme/Editor/ThemeEditor';
 import ThemeViewer from '../../Theme/Viewer';
+import { canEdit } from '@myiworlds/helper-functions';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
+import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
 import { Typography } from '@material-ui/core';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
@@ -61,6 +63,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   } = useContext(UserInterfaceContext);
   const { setAppSnackbar } = useContext(SystemMessagesContext);
   const { user } = useContext(UserContext);
+  const { selectedProfile } = useContext(ProfileContext);
   const timerToSaveCircle = useRef<any>(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [viewer, setViewer] = useState<null | React.ReactElement>(null);
@@ -612,6 +615,17 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   if (loadingCircle) {
     return <ProgressWithMessage message="Loading Circle" />;
+  }
+
+  if (!selectedProfile || !canEdit(updateCircleVariables, selectedProfile.id)) {
+    return (
+      <>
+        <Typography variant="h1">
+          You are not able to edit this circle
+        </Typography>
+        <Typography variant="h4">Request edit or view</Typography>
+      </>
+    );
   }
 
   return <div className={classes.root}>{viewer}</div>;
