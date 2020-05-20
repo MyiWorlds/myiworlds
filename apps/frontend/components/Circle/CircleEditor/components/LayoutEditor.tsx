@@ -50,7 +50,7 @@ export default function LayoutEditor({
     ? getCurrentLayoutSize(displaySize, theme)
     : 'xl';
 
-  const currentLayoutEditing = circleLayouts.data.layouts[screenSize].find(
+  let currentLayoutEditing = circleLayouts.data.layouts[screenSize].find(
     (layout: Layout) => layout.i === fieldEditing,
   );
 
@@ -76,10 +76,12 @@ export default function LayoutEditor({
           if (gridItem.prevW) {
             gridItem.w = gridItem.prevW;
             gridItem.prevW = null;
+            gridItem.minW = 1;
           }
           if (gridItem.prevH) {
             gridItem.h = gridItem.prevH;
             gridItem.prevH = null;
+            gridItem.minH = 1;
           }
         }
         return gridItem;
@@ -109,6 +111,8 @@ export default function LayoutEditor({
           gridItem.prevH = gridItem.h;
           gridItem.w = 0;
           gridItem.h = 0;
+          gridItem.minW = 0;
+          gridItem.minH = 0;
         }
         return gridItem;
       });
@@ -138,8 +142,14 @@ export default function LayoutEditor({
   if (!currentLayoutEditing) {
     if (isSpacer) {
       setFieldEditing(null);
+      return null;
+    } else {
+      currentLayoutEditing = generateLayoutFromSize(
+        screenSize,
+        fieldEditing,
+        circleLayouts.data.layouts[screenSize].length,
+      );
     }
-    return null;
   }
 
   return (

@@ -493,7 +493,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       }
     }
 
-    if (editingGrid) {
+    if (editingGrid && fieldEditing) {
       newController = (
         <CircleFieldController
           fieldEditing={fieldEditing}
