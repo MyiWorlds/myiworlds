@@ -9,8 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FormHelperText } from '@material-ui/core';
 
-interface Props {}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -21,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CreateSecurityKey: React.FunctionComponent<Props> = () => {
+const CreateSecurityKey: React.FunctionComponent = () => {
   const classes = useStyles();
   const [name, setName] = useState<string>('');
 

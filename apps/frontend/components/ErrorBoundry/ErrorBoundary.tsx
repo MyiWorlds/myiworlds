@@ -6,8 +6,13 @@ interface Props {
   setHasUnsavedChanges?: (bool: boolean) => void;
 }
 
+interface State {
+  error: null | Error;
+  errorInfo: null | any;
+}
+
 class ErrorBoundary extends React.Component<Props> {
-  state = { error: null, errorInfo: null };
+  state: State = { error: null, errorInfo: null };
 
   componentDidCatch(error: Error, errorInfo: any) {
     if (this.props.setHasUnsavedChanges) {
@@ -32,7 +37,8 @@ class ErrorBoundary extends React.Component<Props> {
   }
 
   render() {
-    if (this.state.errorInfo) {
+    const { errorInfo, error } = this.state;
+    if (errorInfo) {
       if (this.props.backupErrorRenderComponent) {
         return this.props.backupErrorRenderComponent;
       } else {
@@ -42,9 +48,11 @@ class ErrorBoundary extends React.Component<Props> {
               The theme property you set is not valid
             </Typography>
             <details style={{ whiteSpace: 'pre-wrap' }}>
-              {this.state.error && this.state.error.toString()}
+              {error && error.toString()}
               <br />
-              {this.state.errorInfo && this.state.errorInfo.componentStack}
+              {errorInfo && errorInfo.componentStack
+                ? errorInfo.componentStack
+                : null}
             </details>
           </div>
         );

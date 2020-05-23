@@ -53,7 +53,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SelectProfileDialog = (props: SelectProfileDialogProps) => {
   const classes = useStyles();
   const { onSelect } = props;
-  const [profiles, setProfiles] = useState<UserProfileHydrated[]>([guestProfile]);
+  const [profiles, setProfiles] = useState<UserProfileHydrated[]>([
+    guestProfile,
+  ]);
   const [showCreateProfile, setShowCreateProfile] = useState(
     profiles && profiles.length ? false : true,
   );
@@ -62,7 +64,14 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
   //   loading: getUserProfilesLoading,
   //   error: getUserProfilesError,
   // }
-  const [getProfiles, {loading:  getUserProfilesLoading, data: getUserProfilesQuery, error: getUserProfilesError}] = useGetUserProfilesLazyQuery();
+  const [
+    getProfiles,
+    {
+      loading: getUserProfilesLoading,
+      data: getUserProfilesQuery,
+      error: getUserProfilesError,
+    },
+  ] = useGetUserProfilesLazyQuery();
 
   const createProfileForm = (
     <Dialog
@@ -97,7 +106,8 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
       <DialogTitle id="simple-dialog-title">Select CreatedProfile</DialogTitle>
       <DialogContent>
         <List>
-          {profiles && profiles[0].id !== 'guest' &&
+          {profiles &&
+            profiles[0].id !== 'guest' &&
             profiles.map((profile: UserProfileHydrated) => (
               <ListItem
                 button
@@ -127,18 +137,24 @@ const SelectProfileDialog = (props: SelectProfileDialogProps) => {
   );
 
   const onDataChange = () => {
-    if (getUserProfilesQuery && getUserProfilesQuery?.getUserProfiles && getUserProfilesQuery.getUserProfiles.length) {
-      setProfiles(getUserProfilesQuery?.getUserProfiles as UserProfileHydrated[])
+    if (
+      getUserProfilesQuery &&
+      getUserProfilesQuery?.getUserProfiles &&
+      getUserProfilesQuery.getUserProfiles.length
+    ) {
+      setProfiles(
+        getUserProfilesQuery?.getUserProfiles as UserProfileHydrated[],
+      );
       setShowCreateProfile(false);
     } else {
       if (!profiles.length || profiles[0].id === 'guest') {
         setShowCreateProfile(true);
       }
     }
-  }
+  };
 
-  useEffect(getProfiles, [])
-  useEffect(onDataChange, [getUserProfilesQuery])
+  useEffect(getProfiles, []);
+  useEffect(onDataChange, [getUserProfilesQuery]);
 
   if (getUserProfilesLoading) {
     return <ProgressWithMessage message="Loading your profiles" />;

@@ -32,11 +32,11 @@ export default function CircleViewer({ id }: Props) {
   ] = useDocument(
     circleData &&
       circleData.data() &&
-      circleData.data().layouts &&
-      circleData.data().layouts !== ''
+      (circleData.data() as firebase.firestore.DocumentData).layouts &&
+      (circleData.data() as firebase.firestore.DocumentData).layouts !== ''
       ? firestoreClient
           .collection(FIRESTORE_COLLECTIONS.CIRCLES)
-          .doc(circleData.data().layouts)
+          .doc((circleData.data() as firebase.firestore.DocumentData).layouts)
       : undefined,
   );
 

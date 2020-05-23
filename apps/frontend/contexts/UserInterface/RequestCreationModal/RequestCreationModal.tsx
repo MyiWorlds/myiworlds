@@ -9,8 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { UserInterfaceContext } from './../UserInterfaceContext';
 
-interface Props {}
-
 const useStyles = makeStyles({
   root: {
     zIndex: 99999,
@@ -21,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-const RequestCreationModal: React.FunctionComponent<Props> = () => {
+const RequestCreationModal: React.FunctionComponent = () => {
   const classes = useStyles();
   const { setAppDialog } = useContext(UserInterfaceContext);
 

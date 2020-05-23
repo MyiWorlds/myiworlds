@@ -5,13 +5,13 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import React, { useState } from 'react';
+import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { Circle } from '@myiworlds/types';
 import { Layout } from 'react-grid-layout';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import {
   generateLayoutFromSize,
   getCurrentLayoutSize,
@@ -25,15 +25,15 @@ interface Props {
   setFieldEditing: (newFieldEditing: string | null) => void;
 }
 
-const useStyles = makeStyles(theme => ({
-  toggleContainer: {
-    textAlign: 'center',
-    margin: theme.spacing(2, 0),
-  },
-  width: {
-    transform: 'rotate(90deg)',
-  },
-}));
+// const useStyles = makeStyles(theme => ({
+//   toggleContainer: {
+//     textAlign: 'center',
+//     margin: theme.spacing(2, 0),
+//   },
+//   width: {
+//     transform: 'rotate(90deg)',
+//   },
+// }));
 
 export default function LayoutEditor({
   circleLayouts,
@@ -42,7 +42,7 @@ export default function LayoutEditor({
   displaySize,
   setFieldEditing,
 }: Props) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const theme = useTheme();
   const isSpacer = fieldEditing.startsWith('spacer-');
 

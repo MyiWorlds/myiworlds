@@ -34,8 +34,8 @@ const Progress: React.FC<Props> = ({ size, hideBackground, color }) => {
       color={progressColor}
       style={{
         position: 'absolute',
-        top: progressSize / size ? 5 : 8,
-        left: progressSize / size ? 5 : 8,
+        top: progressSize / progressSize ? 5 : 8,
+        left: progressSize / progressSize ? 5 : 8,
       }}
       // className={classes.progress}
       size={progressSize}
@@ -50,8 +50,8 @@ const Progress: React.FC<Props> = ({ size, hideBackground, color }) => {
           <div
             style={{
               position: 'relative',
-              height: size * 1.25 || 50,
-              width: size * 1.25 || 50,
+              height: progressSize * 1.25 || 50,
+              width: progressSize * 1.25 || 50,
             }}
           >
             {progressCircle}
@@ -61,8 +61,8 @@ const Progress: React.FC<Props> = ({ size, hideBackground, color }) => {
             elevation={5}
             style={{
               position: 'relative',
-              height: size * 1.25 || 50,
-              width: size * 1.25 || 50,
+              height: progressSize * 1.25 || 50,
+              width: progressSize * 1.25 || 50,
               borderRadius: '50%',
             }}
           >

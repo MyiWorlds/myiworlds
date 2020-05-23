@@ -21,8 +21,6 @@ import {
   useSeedFirestoreCirclesMutation,
 } from './../../../../../generated/apolloComponents';
 
-interface Props {}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -41,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const SeedFirestore: React.FunctionComponent<Props> = () => {
+const SeedFirestore: React.FunctionComponent = () => {
   const classes = useStyles();
   const {
     data: getSeededCirclesByIdsQuery,
@@ -79,32 +77,33 @@ const SeedFirestore: React.FunctionComponent<Props> = () => {
     list = <ProgressWithMessage message="Loading default Circles" />;
   } else if (
     getSeededCirclesByIdsQuery &&
-    getSeededCirclesByIdsQuery.getSeededCirclesByIds
+    getSeededCirclesByIdsQuery.getSeededCirclesByIds &&
+    getSeededCirclesByIdsQuery.getSeededCirclesByIds.length
   ) {
-    list = getSeededCirclesByIdsQuery.getSeededCirclesByIds.map(
-      (circle: CircleHydrated) => {
-        return (
-          <ListItem
-            button
-            key={circle.id}
-            component={ButtonLink}
-            href={`/id/[id]?id=${circle.id}`}
-            as={`/id/${circle.id}`}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                {circle.media ? (
-                  <Media circle={circle.media} />
-                ) : (
-                  <FiberManualRecordIcon />
-                )}
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={circle.title} />
-          </ListItem>
-        );
-      },
-    );
+    const queryItems = getSeededCirclesByIdsQuery.getSeededCirclesByIds as CircleHydrated[];
+
+    list = queryItems.map((circle: CircleHydrated) => {
+      return (
+        <ListItem
+          button
+          key={circle.id}
+          component={ButtonLink}
+          href={`/id/[id]?id=${circle.id}`}
+          as={`/id/${circle.id}`}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              {circle.media ? (
+                <Media circle={circle.media} />
+              ) : (
+                <FiberManualRecordIcon />
+              )}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={circle.title} />
+        </ListItem>
+      );
+    });
   }
 
   return (

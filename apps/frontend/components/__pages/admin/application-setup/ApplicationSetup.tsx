@@ -114,7 +114,10 @@ const ApplicationSetup = () => {
       <Header title="Application Setup" />
       <Stepper activeStep={activeStep} orientation="vertical" nonLinear>
         {steps.map((step, index) => (
-          <Step key={index} last={index === steps.length}>
+          <Step
+            key={index}
+            //  last={index === steps.length}
+          >
             <StepButton onClick={() => setActiveStep(index)} completed={false}>
               <StepLabel>{step.label}</StepLabel>
             </StepButton>

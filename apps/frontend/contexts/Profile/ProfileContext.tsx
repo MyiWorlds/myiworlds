@@ -5,7 +5,6 @@ import MaterialUiTheme from '../../components/Theme/MaterialUiTheme';
 import ProgressWithMessage from './../../components/ProgressWithMessage/ProgressWithMessage';
 import React, { useContext, useEffect, useState } from 'react';
 import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog';
-import { CircleHydrated, UserProfileData, UserProfileHydrated } from '@myiworlds/types';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { getCookie, setCookie } from '../../functions/cookies';
 import { ProviderStore } from './profileContextTypes.d';
@@ -13,6 +12,11 @@ import { SystemMessagesContext } from './../SystemMessages/SystemMessagesContext
 import { Theme } from '@material-ui/core/styles';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext } from '../User/UserContext';
+import {
+  CircleHydrated,
+  UserProfileData,
+  UserProfileHydrated,
+} from '@myiworlds/types';
 import {
   useCreateProfileMutation,
   useGetProfileByIdQuery,
@@ -50,7 +54,13 @@ const ProfileProvider = ({ children }: any) => {
   });
 
   const [themeData, loadingTheme, errorTheme] = useDocument(
-    firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(selectedProfile.theme && selectedProfile.theme.id ? selectedProfile.theme.id : 'theme'),
+    firestoreClient
+      .collection(FIRESTORE_COLLECTIONS.CIRCLES)
+      .doc(
+        selectedProfile.theme && selectedProfile.theme.id
+          ? selectedProfile.theme.id
+          : 'theme',
+      ),
   );
 
   const [
@@ -66,14 +76,11 @@ const ProfileProvider = ({ children }: any) => {
     },
   });
 
-  const [
-    updateProfile,
+  const [updateProfile, { data: updateProfileData }] = useUpdateProfileMutation(
     {
-      data: updateProfileData,
+      variables: updateProfileVariables,
     },
-  ] = useUpdateProfileMutation({
-    variables: updateProfileVariables,
-  });
+  );
 
   const profileUpdated = () => {
     if (updateProfileData?.updateProfile?.status === RESPONSE_CODES.SUCCESS) {
@@ -81,7 +88,9 @@ const ProfileProvider = ({ children }: any) => {
         title: updateProfileData.updateProfile.message || '',
         autoHideDuration: 2000,
       });
-    } else if (updateProfileData?.updateProfile?.status === RESPONSE_CODES.ERROR) {
+    } else if (
+      updateProfileData?.updateProfile?.status === RESPONSE_CODES.ERROR
+    ) {
       setAppSnackbar({
         title: updateProfileData.updateProfile.message || '',
         autoHideDuration: 2000,
@@ -113,7 +122,9 @@ const ProfileProvider = ({ children }: any) => {
       createProfileData.createProfile &&
       createProfileData.createProfile.createdDocumentId
     ) {
-      console.log('Profile created and telling app to get the new selected profile');
+      console.log(
+        'Profile created and telling app to get the new selected profile',
+      );
       setCookie(
         'selectedProfileId',
         createProfileData.createProfile.createdDocumentId,
@@ -136,7 +147,10 @@ const ProfileProvider = ({ children }: any) => {
 
   const updateSelectedProfile = () => {
     if (getProfileQuery && getProfileQuery.getProfileById) {
-      console.log('Setting selected profile: ', getProfileQuery.getProfileById.username);
+      console.log(
+        'Setting selected profile: ',
+        getProfileQuery.getProfileById.username,
+      );
       if (selectedProfileSubscription) {
         selectedProfileSubscription();
       }
@@ -168,7 +182,7 @@ const ProfileProvider = ({ children }: any) => {
         getProfileByUsernameData.getProfileByUsername;
       isUsernameAvailable =
         usernameAvailabilityResponse &&
-          usernameAvailabilityResponse.usernameAvailable
+        usernameAvailabilityResponse.usernameAvailable
           ? true
           : false;
       isUsernameInvalid =
@@ -215,7 +229,13 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   const subscribeToProfile = () => {
-    if (selectedProfile && selectedProfile.id && selectedProfile.id !== 'guest' && !selectedProfileSubscription && !profileIdToSelect) {
+    if (
+      selectedProfile &&
+      selectedProfile.id &&
+      selectedProfile.id !== 'guest' &&
+      !selectedProfileSubscription &&
+      !profileIdToSelect
+    ) {
       console.log(
         'Subscribing to the selected profile: ',
         selectedProfile.username,
@@ -274,7 +294,10 @@ const ProfileProvider = ({ children }: any) => {
   }
 
   const handleUpdateThemeSubscription = () => {
-    const theme: CircleHydrated | null = themeData && themeData.data() ? (themeData.data() as CircleHydrated) : null;
+    const theme: CircleHydrated | null =
+      themeData && themeData.data()
+        ? (themeData.data() as CircleHydrated)
+        : null;
     if (theme) {
       console.log('Updating profile with subscribed theme');
       setSelectedProfile({
@@ -289,7 +312,6 @@ const ProfileProvider = ({ children }: any) => {
       console.log('Subscription to theme loading');
     }
   };
-
 
   useEffect(handleSettingUsernameAvailability, [getProfileByUsernameData]);
   useEffect(handleUsernameToCreate, [usernameToCreate]);
@@ -380,8 +402,8 @@ const ProfileProvider = ({ children }: any) => {
       <MaterialUiTheme
         themeOverride={
           selectedProfile.theme &&
-            selectedProfile.theme.data &&
-            selectedProfile.theme.data.theme
+          selectedProfile.theme.data &&
+          selectedProfile.theme.data.theme
             ? (selectedProfile.theme.data.theme as Theme)
             : undefined
         }

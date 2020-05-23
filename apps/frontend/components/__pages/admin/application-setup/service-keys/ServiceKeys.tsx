@@ -16,8 +16,6 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { googleCloud } from '@myiworlds/credentials';
 
-interface Props {}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -27,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Credentials: React.FunctionComponent<Props> = () => {
+const Credentials: React.FunctionComponent = () => {
   const classes = useStyles();
 
   return (

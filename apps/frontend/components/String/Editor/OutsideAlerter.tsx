@@ -12,7 +12,7 @@ function useOutsideAlerter(
      * Alert if clicked on outside of element
      */
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (ref.current && !ref.current.contains(event.target) && handleClose) {
         handleClose();
       }
     }
@@ -23,7 +23,7 @@ function useOutsideAlerter(
       // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [ref]);
+  }, [ref, handleClose]);
 }
 
 /**

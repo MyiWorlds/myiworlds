@@ -5,7 +5,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from './../../User/UserContext';
-interface Props {}
 
 const useStyles = makeStyles({
   root: {
@@ -17,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-const LoginModal: React.FunctionComponent<Props> = () => {
+const LoginModal: React.FunctionComponent = () => {
   const classes = useStyles();
   const { handleLogin } = useContext(UserContext);
 

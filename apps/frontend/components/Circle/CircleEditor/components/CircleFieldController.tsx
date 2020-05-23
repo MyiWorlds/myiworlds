@@ -59,7 +59,6 @@ export default function CircleFieldController({
   const classes = useStyles();
   const [showValue, setShowValue] = useState(editingGrid ? false : true);
   const [showStyles, setShowStyles] = useState(false);
-  const [showLayouts, setShowLayouts] = useState(editingGrid || false);
 
   const handleClickValue = () => {
     setShowValue(!showValue);

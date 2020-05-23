@@ -16,13 +16,17 @@ import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { CircleHydrated } from '@myiworlds/types';
-import { CopyCircleMutation, useCopyCircleMutation, useGetCircleAndLinesByIdLazyQuery } from './../../../generated/apolloComponents';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { UserInterfaceContext } from '../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
+import {
+  CopyCircleMutation,
+  useCopyCircleMutation,
+  useGetCircleAndLinesByIdLazyQuery,
+} from './../../../generated/apolloComponents';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,11 +56,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Transition = React.forwardRef<unknown, TransitionProps>(
-  function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  },
-);
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const CircleSelector = React.memo(() => {
   const router = useRouter();
@@ -82,8 +87,11 @@ const CircleSelector = React.memo(() => {
 
   const [
     copyCircle,
-    {       data: copyCircleData,
-      loading: copyCircleLoading, error: copyCircleError },
+    {
+      data: copyCircleData,
+      loading: copyCircleLoading,
+      error: copyCircleError,
+    },
   ] = useCopyCircleMutation({
     variables: {
       id: idToCopy as string,
@@ -94,12 +102,24 @@ const CircleSelector = React.memo(() => {
   const copyCircleDataChanged = () => {
     const copyCircleResponse: CopyCircleMutation | undefined = copyCircleData;
 
-    if (copyCircleResponse && copyCircleResponse.copyCircle && copyCircleResponse?.copyCircle?.status === RESPONSE_CODES.SUCCESS && copyCircleResponse.copyCircle.copiedCircleId) {
+    if (
+      copyCircleResponse &&
+      copyCircleResponse.copyCircle &&
+      copyCircleResponse?.copyCircle?.status === RESPONSE_CODES.SUCCESS &&
+      copyCircleResponse.copyCircle.copiedCircleId
+    ) {
       setCreatingCircle(false);
-      router.push(`/edit/[id]?=${copyCircleResponse.copyCircle.copiedCircleId}`, `/edit/${copyCircleResponse.copyCircle.copiedCircleId}`);
-    } else if (copyCircleResponse?.copyCircle?.status === RESPONSE_CODES.ERROR) {
+      router.push(
+        `/edit/[id]?=${copyCircleResponse.copyCircle.copiedCircleId}`,
+        `/edit/${copyCircleResponse.copyCircle.copiedCircleId}`,
+      );
+    } else if (
+      copyCircleResponse?.copyCircle?.status === RESPONSE_CODES.ERROR
+    ) {
       setAppSnackbar({
-        title: copyCircleResponse?.copyCircle?.message ? copyCircleResponse?.copyCircle?.message : "There was an error copying the circle. Please try again",
+        title: copyCircleResponse?.copyCircle?.message
+          ? copyCircleResponse?.copyCircle?.message
+          : 'There was an error copying the circle. Please try again',
         autoHideDuration: 2000,
       });
     }
@@ -124,27 +144,33 @@ const CircleSelector = React.memo(() => {
   useEffect(handleGetCircles, [creatingCircle]);
   useEffect(handleSelectContentType, [idToCopy]);
   useEffect(copyCircleDataChanged, [
-    copyCircleData, copyCircleLoading,
-    copyCircleError]);
+    copyCircleData,
+    copyCircleLoading,
+    copyCircleError,
+  ]);
 
-    let content = null;
+  let content = null;
   if (copyCircleLoading) {
     content = <Progress />;
   }
-      if (loadingGetCircle) {
-        content = <Progress />;
-      }
+  if (loadingGetCircle) {
+    content = <Progress />;
+  }
   if (copyCircleError) {
-     content = <Error
+    content = (
+      <Error
         error={copyCircleError}
         message={'There was an copying the content'}
-      />;
+      />
+    );
   }
   if (errorGettingCircle) {
-     content = <Error
+    content = (
+      <Error
         error={errorGettingCircle}
         message={'There was an error getting the content types'}
-      />;
+      />
+    );
   }
 
   let circle: CircleHydrated | null = null;
@@ -164,7 +190,12 @@ const CircleSelector = React.memo(() => {
           <Grid item sm={12} key={circle.title}>
             <CardHeader
               avatar={
-                circle.media && <Media circle={circle.media} classes={{icon: classes.sectionMedia}} />
+                circle.media && (
+                  <Media
+                    circle={circle.media}
+                    classes={{ icon: classes.sectionMedia }}
+                  />
+                )
               }
               title={circle.title}
             />
@@ -181,7 +212,10 @@ const CircleSelector = React.memo(() => {
                       onClick={() => setIdToCopy(creationType.id)}
                     >
                       {creationType.media && (
-                        <Media circle={creationType.media} classes={{icon: classes.media}} />
+                        <Media
+                          circle={creationType.media}
+                          classes={{ icon: classes.media }}
+                        />
                       )}
                       <CardContent>
                         <Typography gutterBottom variant="h6" component="h2">
@@ -197,7 +231,6 @@ const CircleSelector = React.memo(() => {
       </div>
     );
   }
-
 
   return (
     <Dialog
