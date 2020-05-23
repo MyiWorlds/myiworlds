@@ -9,6 +9,7 @@ import Error from '../../Error';
 import firestoreClient from './../../../lib/firebase/firestoreClient';
 import generateDefaultGridLayouts from '../../ReactGridLayout/Viewer/gridLayoutHelperFunctions';
 import LoginModal from '../../../contexts/UserInterface/LoginModal';
+import ProfileCanNotEdit from './components/ProfileCanNotEdit';
 import ProgressWithMessage from './../../ProgressWithMessage/ProgressWithMessage';
 import React, {
   useContext,
@@ -20,13 +21,13 @@ import ReactGridLayoutViewer from './../../ReactGridLayout/Viewer/ReactGridLayou
 import RequestCreationModal from '../../../contexts/UserInterface/RequestCreationModal';
 import ThemeEditor from '../../Theme/Editor/ThemeEditor';
 import ThemeViewer from '../../Theme/Viewer';
+import UserCanNotCreate from './components/UserCanNotCreate';
 import { canEdit } from '@myiworlds/helper-functions';
 import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
-import { Typography } from '@material-ui/core';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import { UserContext } from './../../../contexts/User/UserContext';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
@@ -597,16 +598,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   ]);
 
   if (!user.canCreate) {
-    return (
-      <>
-        <Typography variant="h1">
-          You are currently not able to create
-        </Typography>
-        <Typography variant="h4">
-          Please wait until this is ready for public use.
-        </Typography>
-      </>
-    );
+    return <UserCanNotCreate />;
   }
 
   if (errorCircle) {
@@ -618,14 +610,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   }
 
   if (!selectedProfile || !canEdit(updateCircleVariables, selectedProfile.id)) {
-    return (
-      <>
-        <Typography variant="h1">
-          You are not able to edit this circle
-        </Typography>
-        <Typography variant="h4">Request edit or view</Typography>
-      </>
-    );
+    return <ProfileCanNotEdit />;
   }
 
   return <div className={classes.root}>{viewer}</div>;
