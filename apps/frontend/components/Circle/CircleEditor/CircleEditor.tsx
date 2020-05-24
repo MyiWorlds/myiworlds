@@ -4,9 +4,8 @@ import CircleFieldController from './components/CircleFieldController';
 import CircleFieldsController from './components/CircleFieldsController';
 import CircleGridLayoutAppBarItems from '../../ReactGridLayout/Editor/CircleGridLayoutAppBarItems';
 import CircleHistoryAppBarItems from './components/CircleHistoryAppBarItems';
-import CircleHistoryEditor from './components/CircleHistoryController';
+import CircleHistoryController from './components/CircleHistoryController';
 import Error from '../../Error';
-import firestoreClient from './../../../lib/firebase/firestoreClient';
 import generateDefaultGridLayouts from '../../ReactGridLayout/Viewer/gridLayoutHelperFunctions';
 import LoginModal from '../../../contexts/UserInterface/LoginModal';
 import ProfileCanNotEdit from './components/ProfileCanNotEdit';
@@ -23,16 +22,20 @@ import ThemeEditor from '../../Theme/Editor/ThemeEditor';
 import ThemeViewer from '../../Theme/Viewer';
 import UserCanNotCreate from './components/UserCanNotCreate';
 import { canEdit } from '@myiworlds/helper-functions';
-import { Circle } from '@myiworlds/types';
+import { Circle, CircleHydrated } from '@myiworlds/types';
+import { convertHydratedCircleToFlatCircle } from '../functions/convertHydratedCircleToFlatCircle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
 import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
-import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
+import { useGetCircleToEditByIdQuery } from './../../../generated/apolloComponents';
 import { UserContext } from './../../../contexts/User/UserContext';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
-import { useUpdateCircleMutation } from '../../../generated/apolloComponents';
+import {
+  useGetFullCircleCloneByIdQuery,
+  useUpdateCircleMutation,
+} from '../../../generated/apolloComponents';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -74,68 +77,36 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const [circleId, setCircleId] = useState<string | undefined>(id);
   const [fieldEditing, setFieldEditing] = useState<null | string>(null);
   const [displaySize, setDisplaySize] = useState<null | number>(null);
+  const [
+    updateCircleVariables,
+    setUpdateCircleVariables,
+  ] = useState<Circle | null>(null);
   const [collection, setCollection] = useState<'circles' | 'circles-clones'>(
     FIRESTORE_COLLECTIONS.CIRCLES,
   );
-  const [updateCircleVariables, setUpdateCircleVariables] = useState<Circle>({
-    id: '',
-    collection: FIRESTORE_COLLECTIONS.CIRCLES,
-  });
-  const [circleLayouts, setCircleLayouts] = useState<Circle>({
-    id: 'default-circle-layout',
-    type: 'LAYOUTS',
-    collection: FIRESTORE_COLLECTIONS.CIRCLES,
-    data: {
-      layouts: generateDefaultGridLayouts(
-        Object.getOwnPropertyNames(updateCircleVariables),
-      ),
+  const [circleLayouts, setCircleLayouts] = useState<Circle | null>(null);
+
+  const {
+    data: circleData,
+    loading: loadingCircle,
+    error: errorCircle,
+  } = useGetCircleToEditByIdQuery({
+    skip: !circleId || collection !== FIRESTORE_COLLECTIONS.CIRCLES,
+    variables: {
+      id: circleId as string,
     },
   });
-  const [circleData, loadingCircle, errorCircle] = useDocumentDataOnce(
-    circleId ? firestoreClient.collection(collection).doc(circleId) : undefined,
-  );
-  const [
-    circleLayoutsData,
-    loadingCircleLayouts,
-    errorCircleLayouts,
-  ] = useDocumentDataOnce(
-    updateCircleVariables.layouts
-      ? firestoreClient
-          .collection(FIRESTORE_COLLECTIONS.CIRCLES)
-          .doc(updateCircleVariables.layouts)
-      : null,
-  );
 
-  const circleLayoutsBeingEditedChanged = () => {
-    if (loadingCircleLayouts) {
-      console.log('Loading circle layouts.');
-      return;
-    }
-    if (errorCircleLayouts) {
-      setAppSnackbar({
-        title: `There was an error getting the layout. ${errorCircleLayouts.message}`,
-        autoHideDuration: 3000,
-        severity: 'error',
-      });
-      return;
-    }
-
-    const circle: Circle | null = circleLayoutsData
-      ? (circleLayoutsData as Circle)
-      : null;
-    if (circle) {
-      console.log('There was a change to the layouts, updating...');
-      const layouts = JSON.parse(circle.data.layouts, function(key, value) {
-        return value === 'Infinity' ? Infinity : value;
-      });
-      setCircleLayouts({
-        ...circle,
-        data: {
-          layouts,
-        },
-      });
-    }
-  };
+  const {
+    data: circleCloneData,
+    loading: loadingCircleClone,
+    error: errorCircleClone,
+  } = useGetFullCircleCloneByIdQuery({
+    skip: !circleId || collection !== FIRESTORE_COLLECTIONS.CIRCLES_CLONES,
+    variables: {
+      id: circleId || ('' as string),
+    },
+  });
 
   const updateCircleToFetch = (
     newId: string | null,
@@ -156,19 +127,24 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     },
   ] = useUpdateCircleMutation({
     variables: {
-      ...circleLayouts,
+      ...(circleLayouts as Circle),
       data: {
-        layouts: JSON.stringify(
-          circleLayouts.data.layouts,
-          (key, value: any) => {
-            if (value === Infinity) {
-              return 'Infinity';
-            }
-            return value;
-          },
-        ),
+        layouts:
+          circleLayouts &&
+          circleLayouts.data &&
+          (circleLayouts as Circle).data.layouts
+            ? JSON.stringify(
+                (circleLayouts as Circle).data.layouts,
+                (key, value: any) => {
+                  if (value === Infinity) {
+                    return 'Infinity';
+                  }
+                  return value;
+                },
+              )
+            : {},
       },
-      merge: false,
+      merge: true,
     },
   });
 
@@ -177,8 +153,8 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     { data: updateCircleData, loading: updateCircleLoading },
   ] = useUpdateCircleMutation({
     variables: {
-      ...updateCircleVariables,
-      merge: false,
+      ...(updateCircleVariables as Circle),
+      merge: true,
     },
   });
 
@@ -223,6 +199,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
         autoHideDuration: 3000,
       });
       if (
+        updateCircleVariables &&
         updateCircleVariables.layouts !==
           updateLayoutCircleData.updateCircle.updatedDocumentId &&
         updateLayoutCircleData.updateCircle.updatedDocumentId
@@ -269,6 +246,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     console.log('Saving circle');
     setController(null);
     if (
+      updateCircleVariables &&
       updateCircleVariables.collection ===
         FIRESTORE_COLLECTIONS.CIRCLES_CLONES &&
       updateCircleVariables.clonedFrom
@@ -280,12 +258,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       handleUpdateCircleAndSave(circleToUdate);
     }
   };
-
-  // const saveToDatabase = () => {
-  //   if (save) {
-  //     updateCircle();
-  //   }
-  // };
 
   const handleGoBack = () => {
     setViewingHistory(false);
@@ -309,7 +281,14 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   const circleBeingEditedChanged = () => {
     // Need to add if data changes and you have unsaved changes, merge with them
-    const circle: Circle | null = circleData ? (circleData as Circle) : null;
+    let circle: CircleHydrated | null = null;
+
+    if (circleData && circleData?.getCircleById) {
+      circle = circleData.getCircleById as CircleHydrated;
+    } else if (circleCloneData && circleCloneData?.getCircleCloneById) {
+      circle = circleCloneData.getCircleCloneById as CircleHydrated;
+    }
+
     if (user.id && !user.canCreate) {
       setAppDialog(<RequestCreationModal />);
     } else {
@@ -319,21 +298,34 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     if (circle) {
       console.log('Circle updated, updating...');
       setCircleId(undefined);
-      setUpdateCircleVariables(circle);
+      setUpdateCircleVariables(convertHydratedCircleToFlatCircle(circle));
 
-      if (circleLayouts.id !== '' && circle.id !== '') {
-        if (!circle.layouts) {
-          setCircleLayouts({
-            id: '',
-            collection: FIRESTORE_COLLECTIONS.CIRCLES,
-            type: 'LAYOUTS',
+      if (circle.layouts) {
+        const layouts = JSON.parse(circle.layouts.data.layouts, function(
+          key,
+          value,
+        ) {
+          return value === 'Infinity' ? Infinity : value;
+        });
+        setCircleLayouts(
+          convertHydratedCircleToFlatCircle({
+            ...circle.layouts,
             data: {
-              layouts: generateDefaultGridLayouts(
-                Object.getOwnPropertyNames(circle),
-              ),
+              layouts,
             },
-          });
-        }
+          }),
+        );
+      } else {
+        setCircleLayouts({
+          id: 'default-circle-layout',
+          type: 'LAYOUTS',
+          collection: FIRESTORE_COLLECTIONS.CIRCLES,
+          data: {
+            layouts: generateDefaultGridLayouts(
+              Object.getOwnPropertyNames(circle),
+            ),
+          },
+        });
       }
     }
   };
@@ -362,7 +354,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       clearTimeout(timerToSaveCircle.current);
     }
     timerToSaveCircle.current = setTimeout(() => {
-      updateLayoutCircle();
+      if (circleLayouts) {
+        updateLayoutCircle();
+      }
       setHasUnsavedChanges(false);
     }, 1500);
     return () => {
@@ -379,7 +373,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   const handleCancelViewingHistory = () => {
     setViewingHistory(false);
-    if (updateCircleVariables.id !== id) {
+    if (updateCircleVariables && updateCircleVariables.id !== id) {
       setCircleId(id);
       setCollection(FIRESTORE_COLLECTIONS.CIRCLES);
     }
@@ -387,6 +381,10 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   const updateAppBarItems = (appBarItems?: React.ReactElement) => {
     let newAppBarItems = null;
+
+    if (!updateCircleVariables) {
+      return;
+    }
 
     if (editingGrid) {
       newAppBarItems = (
@@ -438,59 +436,60 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     let newViewer = null;
 
     const circle = updateCircleVariables;
-    if (circle && circle.id !== '') {
-      console.log('There was a change to the Circle, updating the editor.');
-      newViewer = viewer;
-      switch (circle.type) {
-        case 'THEME': {
-          setDisplaySize(null);
-          newController = (
-            <ThemeEditor
-              circle={circle}
-              updateCircle={handleUpdateCircleAndSave}
-            />
-          );
-          newViewer = (
-            <ThemeViewer
-              circle={circle}
-              setHasUnsavedChanges={setHasUnsavedChanges}
-            />
-          );
-          break;
-        }
-        default: {
-          newViewer = (
-            <ReactGridLayoutViewer
-              circle={circle}
-              editingGrid={editingGrid}
-              setFieldEditing={setFieldEditing}
-              fieldEditing={fieldEditing}
-              displaySize={displaySize}
-              circleLayouts={circleLayouts}
-              setCircleLayouts={setCircleLayouts}
-            />
-          );
-          newController = fieldEditing ? (
-            <CircleFieldController
-              fieldEditing={fieldEditing}
-              setFieldEditing={setFieldEditing}
-              updateCircle={handleUpdateCircleAndSave}
-              circle={circle}
-              circleLayouts={circleLayouts}
-              setCircleLayouts={
-                editingGrid
-                  ? setCircleLayouts
-                  : handleUpdateLayoutsCircleAndSave
-              }
-              displaySize={displaySize}
-            />
-          ) : (
-            <CircleFieldsController
-              circle={circle}
-              setFieldEditing={setFieldEditing}
-            />
-          );
-        }
+
+    if (!circle || !circleLayouts) {
+      return;
+    }
+
+    console.log('There was a change to the Circle, updating the editor.');
+    newViewer = viewer;
+    switch (circle.type) {
+      case 'THEME': {
+        setDisplaySize(null);
+        newController = (
+          <ThemeEditor
+            circle={circle}
+            updateCircle={handleUpdateCircleAndSave}
+          />
+        );
+        newViewer = (
+          <ThemeViewer
+            circle={circle}
+            setHasUnsavedChanges={setHasUnsavedChanges}
+          />
+        );
+        break;
+      }
+      default: {
+        newViewer = (
+          <ReactGridLayoutViewer
+            circle={circle}
+            editingGrid={editingGrid}
+            setFieldEditing={setFieldEditing}
+            fieldEditing={fieldEditing}
+            displaySize={displaySize}
+            circleLayouts={circleLayouts}
+            setCircleLayouts={setCircleLayouts}
+          />
+        );
+        newController = fieldEditing ? (
+          <CircleFieldController
+            fieldEditing={fieldEditing}
+            setFieldEditing={setFieldEditing}
+            updateCircle={handleUpdateCircleAndSave}
+            circle={circle}
+            circleLayouts={circleLayouts}
+            setCircleLayouts={
+              editingGrid ? setCircleLayouts : handleUpdateLayoutsCircleAndSave
+            }
+            displaySize={displaySize}
+          />
+        ) : (
+          <CircleFieldsController
+            circle={circle}
+            setFieldEditing={setFieldEditing}
+          />
+        );
       }
     }
 
@@ -512,7 +511,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     if (viewingHistory) {
       setDisplaySize(null);
       newController = (
-        <CircleHistoryEditor
+        <CircleHistoryController
           circleId={circle.clonedFrom ? circle.clonedFrom : circle.id}
           clonedCircleIdViewing={
             viewingHistory && circle.clonedFrom ? circle.id : null
@@ -544,7 +543,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     if (circle) {
       switch (circle.type) {
         case 'THEME': {
-          navWidth = 400;
+          navWidth = 500;
           break;
         }
         default: {
@@ -563,10 +562,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   };
 
   useEffect(componentDidMount, []);
-  useEffect(circleBeingEditedChanged, [loadingCircle, user, viewingHistory]);
-  useEffect(circleLayoutsBeingEditedChanged, [
-    loadingCircleLayouts,
-    errorCircleLayouts,
+  useEffect(circleBeingEditedChanged, [
+    loadingCircle,
+    loadingCircleClone,
+    user,
+    viewingHistory,
   ]);
   useEffect(updateAppBarItems, [
     hasUnsavedChanges,
@@ -578,6 +578,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     updateLayoutCircleLoading,
     savingCircle,
     loadingCircle,
+    loadingCircleClone,
     editingGrid,
     displaySize,
   ]);
@@ -589,7 +590,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     displaySize,
     circleLayouts,
   ]);
-  useEffect(updateNavWidth, [viewingHistory, loadingCircle]);
+  useEffect(updateNavWidth, [
+    viewingHistory,
+    loadingCircle,
+    loadingCircleClone,
+  ]);
   useEffect(circleWasUpdated, [updateCircleData]);
   useEffect(layoutCircleWasUpdated, [
     updateLayoutCircleData,
@@ -605,11 +610,23 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     return <Error error={errorCircle} />;
   }
 
-  if (loadingCircle) {
+  if (errorCircleClone) {
+    return <Error error={errorCircleClone} />;
+  }
+
+  if (loadingCircle || loadingCircleClone) {
     return <ProgressWithMessage message="Loading Circle" />;
   }
 
-  if (!selectedProfile || !canEdit(updateCircleVariables, selectedProfile.id)) {
+  if (!updateCircleVariables) {
+    return null;
+  }
+
+  if (
+    !selectedProfile ||
+    (updateCircleVariables &&
+      !canEdit(updateCircleVariables, selectedProfile.id))
+  ) {
     return <ProfileCanNotEdit />;
   }
 

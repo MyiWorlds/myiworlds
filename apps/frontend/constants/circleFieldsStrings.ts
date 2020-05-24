@@ -1,6 +1,14 @@
-export const circleFields = ['parent', 'cache', 'copiedFrom', 'media', 'line'];
+export const circleFields = [
+  'parent',
+  'cache',
+  'copiedFrom',
+  'media',
+  'line',
+  'layouts',
+];
+export const circleCloneFields = ['clonedFrom'];
 export const circleListFields = ['lines', 'styles'];
-export const circleDataFields = ['data', 'layouts'];
+export const circleDataFields = ['data'];
 export const profileFields = ['creator', 'owner'];
 export const profileListFields = ['editors', 'viewers'];
 export const stringFields = [

@@ -3,8 +3,8 @@ import IconButton from '@material-ui/core/IconButton';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { PublicProfileData } from '@myiworlds/types';
 import { useGetPublicProfileByIdQuery } from './../../../generated/apolloComponents';
-import { UserProfileData } from '@myiworlds/types';
 import {
   Avatar,
   ListItem,
@@ -54,7 +54,7 @@ const ProfileListItemViewer = React.memo(({ id }: Props) => {
 
   if (getPublicProfileQuery && getPublicProfileQuery.getPublicProfileById) {
     console.log('Profile list item rerendered.');
-    profile = getPublicProfileQuery.getPublicProfileById as UserProfileData;
+    profile = getPublicProfileQuery.getPublicProfileById as PublicProfileData;
 
     return (
       <ListItem

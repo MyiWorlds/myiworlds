@@ -15,6 +15,7 @@ const ProfileType = new GraphQLObjectType({
     dateCreated: { type: GraphQLBigInt },
     dateUpdated: { type: GraphQLBigInt },
     addToHistory: { type: GraphQLBoolean },
+    userId: { type: GraphQLString },
     media: {
       type: CircleType,
       resolve: async (profile, args, context: Context) => {

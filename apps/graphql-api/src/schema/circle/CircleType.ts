@@ -1,5 +1,6 @@
 import PublicProfileType from './../profile/PublicProfileType';
 import { Context } from '@myiworlds/types';
+import { GraphQLNonNull } from 'graphql';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { GraphQLJSON } = require('graphql-type-json');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -17,7 +18,7 @@ const CircleType: any = new GraphQLObjectType({
   description: 'A circle in a graph that can assemble to be anything.',
 
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLNonNull(GraphQLString) },
     collection: { type: GraphQLString },
     cached: { type: GraphQLBoolean },
     pii: { type: GraphQLBoolean },

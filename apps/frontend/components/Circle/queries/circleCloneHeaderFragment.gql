@@ -1,0 +1,60 @@
+fragment CircleCloneHeaderFragment on CircleClone {
+  id
+  collection
+  cached
+  pii
+  autoUpdate
+  clonedFrom {
+    id
+  }
+  parent {
+    id
+  }
+  copiedFrom {
+    id
+  }
+  copiedFromClone
+  slug
+  public
+  passwordRequired
+  type
+  tags
+  title
+  subtitle
+  description
+  media {
+    id
+    type
+    title
+    string
+    data
+  }
+  creator {
+    id
+    username
+  }
+  owner {
+    id
+    username
+  }
+  viewers {
+    id
+    username
+  }
+  editors {
+    id
+    username
+  }
+  styles {
+    id
+    title
+    data
+  }
+  layouts {
+    id
+    title
+    data
+  }
+  dateCreated
+  dateUpdated
+}

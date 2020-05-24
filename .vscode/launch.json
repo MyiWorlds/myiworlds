@@ -8,7 +8,7 @@
       "type": "node",
       "request": "attach",
       "name": "Graphql API",
-      "port": 63164,
+      "port": 51888,
       "restart": true,
       "sourceMaps": true,
       "outFiles": ["${workspaceFolder}/dist/apps/graphql-api"]

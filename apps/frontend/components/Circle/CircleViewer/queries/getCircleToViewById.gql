@@ -1,0 +1,5 @@
+query getCircleToViewById($id: String!) {
+  getCircleById(id: $id) {
+    ...FullCircleFragment
+  }
+}

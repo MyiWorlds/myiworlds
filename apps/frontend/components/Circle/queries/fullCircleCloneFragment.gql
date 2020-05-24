@@ -1,0 +1,19 @@
+fragment FullCircleCloneFragment on CircleClone {
+  ...CircleCloneHeaderFragment
+  key
+  string
+  data
+  number
+  bigNumber
+  boolean
+  date
+  geoPoint
+  line {
+    id
+    title
+  }
+  lines {
+    id
+    title
+  }
+}

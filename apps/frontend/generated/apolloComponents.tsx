@@ -21,7 +21,7 @@ export type Scalars = {
 /** A circle in a graph that can assemble to be anything. */
 export type Circle = {
   __typename?: 'Circle';
-  id?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   collection?: Maybe<Scalars['String']>;
   cached?: Maybe<Scalars['Boolean']>;
   pii?: Maybe<Scalars['Boolean']>;
@@ -126,6 +126,7 @@ export type CreatedProfile = {
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
   addToHistory?: Maybe<Scalars['Boolean']>;
+  userId?: Maybe<Scalars['String']>;
   media?: Maybe<Circle>;
   rating?: Maybe<Circle>;
   theme?: Maybe<Circle>;
@@ -465,6 +466,24 @@ export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type GetCircleToEditByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetCircleToEditByIdQuery = { __typename?: 'Query' } & {
+  getCircleById: Maybe<{ __typename?: 'Circle' } & FullCircleFragmentFragment>;
+};
+
+export type GetFullCircleCloneByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetFullCircleCloneByIdQuery = { __typename?: 'Query' } & {
+  getCircleCloneById: Maybe<
+    { __typename?: 'CircleClone' } & FullCircleCloneFragmentFragment
+  >;
+};
+
 export type GetCircleAndLinesByIdQueryVariables = {
   id: Scalars['String'];
 };
@@ -497,6 +516,14 @@ export type GetCircleAndLinesByIdQuery = { __typename?: 'Query' } & {
         >;
       }
   >;
+};
+
+export type GetCircleToViewByIdQueryVariables = {
+  id: Scalars['String'];
+};
+
+export type GetCircleToViewByIdQuery = { __typename?: 'Query' } & {
+  getCircleById: Maybe<{ __typename?: 'Circle' } & FullCircleFragmentFragment>;
 };
 
 export type CopyCircleMutationVariables = {
@@ -558,6 +585,167 @@ export type UpdateCircleMutation = { __typename?: 'Mutation' } & {
     >
   >;
 };
+
+export type CircleCloneHeaderFragmentFragment = {
+  __typename?: 'CircleClone';
+} & Pick<
+  CircleClone,
+  | 'id'
+  | 'collection'
+  | 'cached'
+  | 'pii'
+  | 'autoUpdate'
+  | 'copiedFromClone'
+  | 'slug'
+  | 'public'
+  | 'passwordRequired'
+  | 'type'
+  | 'tags'
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'dateCreated'
+  | 'dateUpdated'
+> & {
+    clonedFrom: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    parent: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    copiedFrom: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    media: Maybe<
+      { __typename?: 'Circle' } & Pick<
+        Circle,
+        'id' | 'type' | 'title' | 'string' | 'data'
+      >
+    >;
+    creator: Maybe<
+      { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
+    >;
+    owner: Maybe<
+      { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
+    >;
+    viewers: Maybe<
+      Array<
+        Maybe<
+          { __typename?: 'PublicProfile' } & Pick<
+            PublicProfile,
+            'id' | 'username'
+          >
+        >
+      >
+    >;
+    editors: Maybe<
+      Array<
+        Maybe<
+          { __typename?: 'PublicProfile' } & Pick<
+            PublicProfile,
+            'id' | 'username'
+          >
+        >
+      >
+    >;
+    styles: Maybe<
+      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
+    >;
+    layouts: Maybe<
+      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
+    >;
+  };
+
+export type CircleHeaderFragmentFragment = { __typename?: 'Circle' } & Pick<
+  Circle,
+  | 'id'
+  | 'collection'
+  | 'cached'
+  | 'pii'
+  | 'autoUpdate'
+  | 'copiedFromClone'
+  | 'slug'
+  | 'public'
+  | 'passwordRequired'
+  | 'type'
+  | 'tags'
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'dateCreated'
+  | 'dateUpdated'
+> & {
+    parent: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    copiedFrom: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    media: Maybe<
+      { __typename?: 'Circle' } & Pick<
+        Circle,
+        'id' | 'type' | 'title' | 'string' | 'data'
+      >
+    >;
+    creator: Maybe<
+      { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
+    >;
+    owner: Maybe<
+      { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
+    >;
+    viewers: Maybe<
+      Array<
+        Maybe<
+          { __typename?: 'PublicProfile' } & Pick<
+            PublicProfile,
+            'id' | 'username'
+          >
+        >
+      >
+    >;
+    editors: Maybe<
+      Array<
+        Maybe<
+          { __typename?: 'PublicProfile' } & Pick<
+            PublicProfile,
+            'id' | 'username'
+          >
+        >
+      >
+    >;
+    styles: Maybe<
+      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
+    >;
+    layouts: Maybe<
+      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
+    >;
+  };
+
+export type FullCircleCloneFragmentFragment = {
+  __typename?: 'CircleClone';
+} & Pick<
+  CircleClone,
+  | 'key'
+  | 'string'
+  | 'data'
+  | 'number'
+  | 'bigNumber'
+  | 'boolean'
+  | 'date'
+  | 'geoPoint'
+> & {
+    line: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>;
+    lines: Maybe<
+      Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
+    >;
+  } & CircleCloneHeaderFragmentFragment;
+
+export type FullCircleFragmentFragment = { __typename?: 'Circle' } & Pick<
+  Circle,
+  | 'key'
+  | 'string'
+  | 'data'
+  | 'number'
+  | 'bigNumber'
+  | 'boolean'
+  | 'date'
+  | 'geoPoint'
+> & {
+    line: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>;
+    lines: Maybe<
+      Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
+    >;
+  } & CircleHeaderFragmentFragment;
 
 export type GetCircleByIdQueryVariables = {
   id: Scalars['String'];
@@ -787,6 +975,7 @@ export type SelectedProfileFragmentFragment = {
   | 'id'
   | 'collection'
   | 'username'
+  | 'userId'
   | 'dateCreated'
   | 'dateUpdated'
   | 'overrideCircleUIs'
@@ -857,11 +1046,177 @@ export type LoggedInUserFragmentFragment = { __typename?: 'User' } & Pick<
   | 'canCreate'
 >;
 
+export const CircleCloneHeaderFragmentFragmentDoc = gql`
+  fragment CircleCloneHeaderFragment on CircleClone {
+    id
+    collection
+    cached
+    pii
+    autoUpdate
+    clonedFrom {
+      id
+    }
+    parent {
+      id
+    }
+    copiedFrom {
+      id
+    }
+    copiedFromClone
+    slug
+    public
+    passwordRequired
+    type
+    tags
+    title
+    subtitle
+    description
+    media {
+      id
+      type
+      title
+      string
+      data
+    }
+    creator {
+      id
+      username
+    }
+    owner {
+      id
+      username
+    }
+    viewers {
+      id
+      username
+    }
+    editors {
+      id
+      username
+    }
+    styles {
+      id
+      title
+      data
+    }
+    layouts {
+      id
+      title
+      data
+    }
+    dateCreated
+    dateUpdated
+  }
+`;
+export const FullCircleCloneFragmentFragmentDoc = gql`
+  fragment FullCircleCloneFragment on CircleClone {
+    ...CircleCloneHeaderFragment
+    key
+    string
+    data
+    number
+    bigNumber
+    boolean
+    date
+    geoPoint
+    line {
+      id
+      title
+    }
+    lines {
+      id
+      title
+    }
+  }
+  ${CircleCloneHeaderFragmentFragmentDoc}
+`;
+export const CircleHeaderFragmentFragmentDoc = gql`
+  fragment CircleHeaderFragment on Circle {
+    id
+    collection
+    cached
+    pii
+    autoUpdate
+    parent {
+      id
+    }
+    copiedFrom {
+      id
+    }
+    copiedFromClone
+    slug
+    public
+    passwordRequired
+    type
+    tags
+    title
+    subtitle
+    description
+    media {
+      id
+      type
+      title
+      string
+      data
+    }
+    creator {
+      id
+      username
+    }
+    owner {
+      id
+      username
+    }
+    viewers {
+      id
+      username
+    }
+    editors {
+      id
+      username
+    }
+    styles {
+      id
+      title
+      data
+    }
+    layouts {
+      id
+      title
+      data
+    }
+    dateCreated
+    dateUpdated
+  }
+`;
+export const FullCircleFragmentFragmentDoc = gql`
+  fragment FullCircleFragment on Circle {
+    ...CircleHeaderFragment
+    key
+    string
+    data
+    number
+    bigNumber
+    boolean
+    date
+    geoPoint
+    line {
+      id
+      title
+    }
+    lines {
+      id
+      title
+    }
+  }
+  ${CircleHeaderFragmentFragmentDoc}
+`;
 export const SelectedProfileFragmentFragmentDoc = gql`
   fragment SelectedProfileFragment on CreatedProfile {
     id
     collection
     username
+    userId
     media {
       id
       type
@@ -992,6 +1347,120 @@ export type GetCircleClonesByIdQueryResult = ApolloReactCommon.QueryResult<
   GetCircleClonesByIdQuery,
   GetCircleClonesByIdQueryVariables
 >;
+export const GetCircleToEditByIdDocument = gql`
+  query getCircleToEditById($id: String!) {
+    getCircleById(id: $id) {
+      ...FullCircleFragment
+    }
+  }
+  ${FullCircleFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetCircleToEditByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCircleToEditByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleToEditByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleToEditByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleToEditByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCircleToEditByIdQuery,
+    GetCircleToEditByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCircleToEditByIdQuery,
+    GetCircleToEditByIdQueryVariables
+  >(GetCircleToEditByIdDocument, baseOptions);
+}
+export function useGetCircleToEditByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCircleToEditByIdQuery,
+    GetCircleToEditByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCircleToEditByIdQuery,
+    GetCircleToEditByIdQueryVariables
+  >(GetCircleToEditByIdDocument, baseOptions);
+}
+export type GetCircleToEditByIdQueryHookResult = ReturnType<
+  typeof useGetCircleToEditByIdQuery
+>;
+export type GetCircleToEditByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCircleToEditByIdLazyQuery
+>;
+export type GetCircleToEditByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleToEditByIdQuery,
+  GetCircleToEditByIdQueryVariables
+>;
+export const GetFullCircleCloneByIdDocument = gql`
+  query getFullCircleCloneById($id: String!) {
+    getCircleCloneById(id: $id) {
+      ...FullCircleCloneFragment
+    }
+  }
+  ${FullCircleCloneFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetFullCircleCloneByIdQuery__
+ *
+ * To run a query within a React component, call `useGetFullCircleCloneByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFullCircleCloneByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFullCircleCloneByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetFullCircleCloneByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetFullCircleCloneByIdQuery,
+    GetFullCircleCloneByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetFullCircleCloneByIdQuery,
+    GetFullCircleCloneByIdQueryVariables
+  >(GetFullCircleCloneByIdDocument, baseOptions);
+}
+export function useGetFullCircleCloneByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetFullCircleCloneByIdQuery,
+    GetFullCircleCloneByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetFullCircleCloneByIdQuery,
+    GetFullCircleCloneByIdQueryVariables
+  >(GetFullCircleCloneByIdDocument, baseOptions);
+}
+export type GetFullCircleCloneByIdQueryHookResult = ReturnType<
+  typeof useGetFullCircleCloneByIdQuery
+>;
+export type GetFullCircleCloneByIdLazyQueryHookResult = ReturnType<
+  typeof useGetFullCircleCloneByIdLazyQuery
+>;
+export type GetFullCircleCloneByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetFullCircleCloneByIdQuery,
+  GetFullCircleCloneByIdQueryVariables
+>;
 export const GetCircleAndLinesByIdDocument = gql`
   query getCircleAndLinesById($id: String!) {
     getCircleById(id: $id) {
@@ -1066,6 +1535,63 @@ export type GetCircleAndLinesByIdLazyQueryHookResult = ReturnType<
 export type GetCircleAndLinesByIdQueryResult = ApolloReactCommon.QueryResult<
   GetCircleAndLinesByIdQuery,
   GetCircleAndLinesByIdQueryVariables
+>;
+export const GetCircleToViewByIdDocument = gql`
+  query getCircleToViewById($id: String!) {
+    getCircleById(id: $id) {
+      ...FullCircleFragment
+    }
+  }
+  ${FullCircleFragmentFragmentDoc}
+`;
+
+/**
+ * __useGetCircleToViewByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCircleToViewByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleToViewByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleToViewByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleToViewByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCircleToViewByIdQuery,
+    GetCircleToViewByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCircleToViewByIdQuery,
+    GetCircleToViewByIdQueryVariables
+  >(GetCircleToViewByIdDocument, baseOptions);
+}
+export function useGetCircleToViewByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCircleToViewByIdQuery,
+    GetCircleToViewByIdQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCircleToViewByIdQuery,
+    GetCircleToViewByIdQueryVariables
+  >(GetCircleToViewByIdDocument, baseOptions);
+}
+export type GetCircleToViewByIdQueryHookResult = ReturnType<
+  typeof useGetCircleToViewByIdQuery
+>;
+export type GetCircleToViewByIdLazyQueryHookResult = ReturnType<
+  typeof useGetCircleToViewByIdLazyQuery
+>;
+export type GetCircleToViewByIdQueryResult = ApolloReactCommon.QueryResult<
+  GetCircleToViewByIdQuery,
+  GetCircleToViewByIdQueryVariables
 >;
 export const CopyCircleDocument = gql`
   mutation copyCircle($id: String!, $collection: String!) {

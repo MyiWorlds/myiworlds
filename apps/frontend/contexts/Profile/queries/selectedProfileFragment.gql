@@ -2,6 +2,7 @@ fragment SelectedProfileFragment on CreatedProfile {
   id
   collection
   username
+  userId
   media {
     id
     type

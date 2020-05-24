@@ -1,0 +1,5 @@
+query getFullCircleCloneById($id: String!) {
+  getCircleCloneById(id: $id) {
+    ...FullCircleCloneFragment
+  }
+}

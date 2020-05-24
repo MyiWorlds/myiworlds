@@ -1,0 +1,19 @@
+fragment FullCircleFragment on Circle {
+  ...CircleHeaderFragment
+  key
+  string
+  data
+  number
+  bigNumber
+  boolean
+  date
+  geoPoint
+  line {
+    id
+    title
+  }
+  lines {
+    id
+    title
+  }
+}

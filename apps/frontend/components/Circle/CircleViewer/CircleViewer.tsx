@@ -1,14 +1,14 @@
 import CircleViewerAppBarItems from './CircleViewerAppBarItems';
 import Error from '../../Error';
-import firestoreClient from '../../../lib/firebase/firestoreClient';
 import generateDefaultGridLayouts from './../../ReactGridLayout/Viewer/gridLayoutHelperFunctions';
 import Progress from '../../Progress/Progress';
 import React, { useContext, useEffect } from 'react';
 import ReactGridLayoutViewer from './../../ReactGridLayout/Viewer/ReactGridLayoutViewer';
 import ThemeViewer from './../../Theme/Viewer/ThemeViewer';
-import { Circle } from '@myiworlds/types';
+import { Circle, CircleHydrated } from '@myiworlds/types';
+import { convertHydratedCircleToFlatCircle } from '../functions/convertHydratedCircleToFlatCircle';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { useGetCircleToViewByIdQuery } from './../../../generated/apolloComponents';
 import { UserInterfaceContext } from '../../../contexts/UserInterface/UserInterfaceContext';
 // import CircleFieldsMapperViewer from './CircleFieldsMapperViewer';
 
@@ -20,97 +20,79 @@ export default function CircleViewer({ id }: Props) {
   const { setContentViewing, contentViewing, setAppBarItems } = useContext(
     UserInterfaceContext,
   );
+  const [circleLayouts, setCircleLayouts] = React.useState<Circle | null>(null);
 
-  const [circleData, loadingCircle, errorCircle] = useDocument(
-    firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
-  );
-
-  const [
-    circleLayoutsData,
-    loadingCircleLayouts,
-    errorCircleLayouts,
-  ] = useDocument(
-    circleData &&
-      circleData.data() &&
-      (circleData.data() as firebase.firestore.DocumentData).layouts &&
-      (circleData.data() as firebase.firestore.DocumentData).layouts !== ''
-      ? firestoreClient
-          .collection(FIRESTORE_COLLECTIONS.CIRCLES)
-          .doc((circleData.data() as firebase.firestore.DocumentData).layouts)
-      : undefined,
-  );
+  const {
+    data: circleData,
+    loading: loadingCircle,
+    error: errorCircle,
+  } = useGetCircleToViewByIdQuery({
+    skip: !id,
+    variables: {
+      id: id as string,
+    },
+  });
 
   // const [circleUiData, loadingCircleUi, errorCircleUi] = useDocument(
   //   firestoreClient.collection(FIRESTORE_COLLECTIONS.CIRCLES).doc(id),
   // );
 
   const updateContentViewing = () => {
-    if (circleData) {
-      const circle = circleData.data() as Circle;
-      if (
-        circle &&
-        ((contentViewing && circle.id !== contentViewing.id) ||
-          (contentViewing && circle.dateUpdated !== contentViewing.dateUpdated))
-      ) {
-        setContentViewing(circle);
+    // Need to add if data changes and you have unsaved changes, merge with them
+    let circle: CircleHydrated | null = null;
+
+    if (circleData && circleData?.getCircleById) {
+      circle = circleData.getCircleById as CircleHydrated;
+    }
+
+    if (circle) {
+      console.log('Circle updated, updating...');
+      const flattenedCircle = convertHydratedCircleToFlatCircle(circle);
+      setContentViewing(flattenedCircle);
+      setAppBarItems(<CircleViewerAppBarItems circle={flattenedCircle} />);
+      if (circle.layouts) {
+        const layouts = JSON.parse(circle.layouts.data.layouts, function(
+          key,
+          value,
+        ) {
+          return value === 'Infinity' ? Infinity : value;
+        });
+        setCircleLayouts(
+          convertHydratedCircleToFlatCircle({
+            ...circle.layouts,
+            data: {
+              layouts,
+            },
+          }),
+        );
+      } else {
+        setCircleLayouts({
+          id: 'default-circle-layout',
+          type: 'LAYOUTS',
+          collection: FIRESTORE_COLLECTIONS.CIRCLES,
+          data: {
+            layouts: generateDefaultGridLayouts(
+              Object.getOwnPropertyNames(circle),
+            ),
+          },
+        });
       }
     }
   };
 
-  const componentDidUpdate = () => {
-    const circle: Circle | null =
-      circleData && circleData.data() ? (circleData.data() as Circle) : null;
-    if (circle) {
-      setAppBarItems(<CircleViewerAppBarItems circle={circle} />);
-    }
-  };
-
-  useEffect(componentDidUpdate, [loadingCircle, loadingCircleLayouts]);
-  useEffect(updateContentViewing, [loadingCircle, loadingCircleLayouts]);
+  useEffect(updateContentViewing, [loadingCircle]);
 
   if (errorCircle) {
     return <Error error={errorCircle} />;
   }
 
-  if (errorCircleLayouts) {
-    return <Error error={errorCircleLayouts} />;
-  }
-
-  if (loadingCircle || loadingCircleLayouts) {
+  if (loadingCircle) {
     return <Progress />;
   }
 
-  if (circleData) {
-    const circle = circleData.data() as Circle;
-    let circleLayouts = null;
+  if (contentViewing && circleLayouts) {
+    const circle = contentViewing as Circle;
 
-    if (circleLayoutsData) {
-      const circleLayoutsResponse = circleLayoutsData.data() as Circle;
-
-      const layouts = JSON.parse(circleLayoutsResponse.data.layouts, function(
-        key,
-        value,
-      ) {
-        return value === 'Infinity' ? Infinity : value;
-      });
-      circleLayouts = {
-        ...circleLayoutsResponse,
-        data: {
-          layouts,
-        },
-      };
-    } else {
-      circleLayouts = {
-        id: 'default-circle-layout',
-        type: 'LAYOUTS',
-        collection: FIRESTORE_COLLECTIONS.CIRCLES,
-        data: {
-          layouts: generateDefaultGridLayouts(
-            Object.getOwnPropertyNames(circle),
-          ),
-        },
-      } as Circle;
-    }
     if (circle) {
       let viewer = null;
 
