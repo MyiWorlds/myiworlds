@@ -61,11 +61,11 @@ const ProfileCloneType = new GraphQLObjectType({
         return null;
       },
     },
-    circleUIs: {
+    circleUis: {
       type: CircleType,
       resolve: async (profile, args, context: Context) => {
-        if (profile.circleUIs) {
-          return context.circleLoader.load(profile.circleUIs);
+        if (profile.circleUis) {
+          return context.circleLoader.load(profile.circleUis);
         }
         return null;
       },

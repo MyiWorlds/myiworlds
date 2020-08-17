@@ -45,7 +45,7 @@ fragment CircleCloneHeaderFragment on CircleClone {
     id
     username
   }
-  styles {
+  ui {
     id
     title
     data

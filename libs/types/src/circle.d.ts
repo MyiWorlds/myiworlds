@@ -17,6 +17,7 @@ export type PossibleCircleTypes =
   | 'DATA'
   | 'DATE'
   | 'NUMBER'
+  | 'SELECT'
   | 'BIG_NUMBER'
   | 'KEY_VALUE'
   | 'GEO_POINT'
@@ -24,7 +25,7 @@ export type PossibleCircleTypes =
   | 'PERMISSION_DENIED'
   | 'LINE'
   | 'LINES'
-  | 'STYLES'
+  | 'UI'
   | 'LAYOUTS'
   | 'THEME'
   | 'UPDATED'
@@ -62,7 +63,7 @@ export interface Header {
   owner?: string;
   viewers?: string[];
   editors?: string[];
-  styles?: string;
+  ui?: string;
   layouts?: string;
   dateCreated?: number;
   dateUpdated?: number;
@@ -93,7 +94,7 @@ export interface HeaderHydrated {
   owner?: PublicProfile;
   viewers?: PublicProfile[];
   editors?: PublicProfile[];
-  styles?: CircleHydrated;
+  ui?: CircleHydrated;
   layouts?: CircleHydrated;
   dateCreated?: number;
   dateUpdated?: number;

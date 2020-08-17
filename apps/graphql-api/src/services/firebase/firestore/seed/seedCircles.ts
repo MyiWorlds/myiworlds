@@ -5,7 +5,7 @@ import { baseTypesListMedia } from './circles/baseTypes.ts/baseTypesListMedia';
 import { boolean } from './circles/baseTypes.ts/boolean';
 import { booleanMedia } from './circles/baseTypes.ts/booleanMedia';
 import { Circle } from '@myiworlds/types';
-import { circleUIs } from './circles/profileCircles/circleUIs';
+import { circleUis } from './circles/profileCircles/circleUis';
 import { context } from './adminContext';
 import { data } from './circles/baseTypes.ts/data';
 import { dataMedia } from './circles/baseTypes.ts/dataMedia';
@@ -61,7 +61,7 @@ export const circlesToCreate: Circle[] = [
   theme,
   history,
   following,
-  circleUIs,
+  circleUis,
   home,
   publicHome,
   defaultProfileMedia,

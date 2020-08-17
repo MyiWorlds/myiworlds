@@ -21,7 +21,7 @@ mutation updateCircle(
     $owner: String
     $viewers: [String]
     $editors: [String]
-    $styles: String
+    $ui: String
     $layouts: String
     $dateCreated: BigInt
     $dateUpdated: BigInt
@@ -59,7 +59,7 @@ mutation updateCircle(
       owner: $owner
       viewers: $viewers
       editors: $editors
-      styles: $styles
+      ui: $ui
       layouts: $layouts
       dateCreated: $dateCreated
       dateUpdated: $dateUpdated

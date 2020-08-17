@@ -95,7 +95,7 @@ export default async function buildAndCreateProfile(
       FIRESTORE_COLLECTIONS.CIRCLES,
       updatedContext,
     );
-    const circleUIs = await copyCircle(
+    const circleUis = await copyCircle(
       'circle-uis',
       FIRESTORE_COLLECTIONS.CIRCLES,
       updatedContext,
@@ -127,8 +127,8 @@ export default async function buildAndCreateProfile(
       theme.createdDocumentId &&
       following &&
       following.createdDocumentId &&
-      circleUIs &&
-      circleUIs.createdDocumentId &&
+      circleUis &&
+      circleUis.createdDocumentId &&
       home &&
       home.createdDocumentId &&
       publicHome &&
@@ -144,7 +144,7 @@ export default async function buildAndCreateProfile(
         media: 'default-profile-media',
         level: level.createdDocumentId,
         rating: rating.createdDocumentId,
-        circleUIs: circleUIs.createdDocumentId,
+        circleUis: circleUis.createdDocumentId,
         theme: theme.createdDocumentId,
         publicHome: publicHome.createdDocumentId,
         home: home.createdDocumentId,
@@ -226,13 +226,13 @@ export default async function buildAndCreateProfile(
             stackdriver.report(error);
           });
       }
-      if (circleUIs && circleUIs.createdDocumentId) {
+      if (circleUis && circleUis.createdDocumentId) {
         firestoreAdmin
           .collection(FIRESTORE_COLLECTIONS.PROFILES)
-          .doc(circleUIs.createdDocumentId)
+          .doc(circleUis.createdDocumentId)
           .delete()
           .then(() => {
-            console.log('circleUIs deleted');
+            console.log('circleUis deleted');
           })
           .catch(error => {
             stackdriver.report(error);

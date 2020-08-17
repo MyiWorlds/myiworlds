@@ -42,7 +42,7 @@ const createCircleMutation = {
     owner: { type: GraphQLString },
     viewers: { type: GraphQLList(GraphQLString) },
     editors: { type: GraphQLList(GraphQLString) },
-    styles: { type: GraphQLString },
+    ui: { type: GraphQLString },
     layouts: { type: GraphQLString },
     dateCreated: { type: GraphQLBigInt },
     dateUpdated: { type: GraphQLBigInt },

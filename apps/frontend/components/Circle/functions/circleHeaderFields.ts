@@ -24,7 +24,7 @@ export const circleHeaderFields = (circle: Circle) => {
     'owner',
     'viewers',
     'editors',
-    'styles',
+    'ui',
     'layouts',
   ];
 

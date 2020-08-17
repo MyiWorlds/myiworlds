@@ -1,10 +1,11 @@
 import ColorListItem from './ColorListItem';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
 import React from 'react';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+import UiEditor from './../../Circle/CircleEditor/components/UiEditor/UiEditor';
+import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import Select from '@material-ui/core/Select';
 import {
   ListItem,
   ListItemSecondaryAction,
@@ -16,6 +17,9 @@ interface Props {
   property: string;
   value: string;
   setValue: (newValue: string) => void;
+  ui: Circle | null;
+  canNotCustomizatize?: boolean;
+  setCircleUi?: (newValue: Circle) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,10 +40,12 @@ const StringEditor: React.FunctionComponent<Props> = ({
   property,
   value,
   setValue,
+  ui,
+  setCircleUi,
+  canNotCustomizatize,
 }) => {
   const classes = useStyles();
-  const [variant, setVariant] = React.useState('h1');
-
+  console.log('do something with', ui);
   const handleStringChange = (newValue: string) => {
     setValue(newValue);
   };
@@ -48,12 +54,69 @@ const StringEditor: React.FunctionComponent<Props> = ({
     console.log(event.target.value);
   };
 
-  function handleChange(event: React.ChangeEvent<{ value: string }>) {
-    setVariant(event.target.value);
-  }
+  const stringUiDefaults: Circle = {
+    id: '',
+    type: 'UI',
+    data: {
+      options: {
+        showLabel: {
+          id: 'show-label',
+          title: 'Label',
+          type: 'BOOLEAN',
+          boolean: false,
+        },
+        variant: {
+          id: 'variant',
+          title: 'Variant',
+          type: 'SELECT',
+          data: {
+            items: [
+              'h1',
+              'h2',
+              'h3',
+              'h4',
+              'h5',
+              'h6',
+              'subtitle1',
+              'subtitle2',
+              'body1',
+              'body2',
+              'overline',
+              'srOnly',
+              'button',
+            ],
+          },
+        },
+      },
+      styles: {
+        // container: {
 
-  // Add customizations
-  const customizations = () => false;
+        // },
+        label: {
+          fontColor: {
+            id: 'fontColor',
+            title: 'Font Color',
+            type: 'STRING',
+            string: 'red',
+          },
+        },
+        string: {
+          fontColor: {
+            id: 'fontColor',
+            title: 'Font Color',
+            type: 'STRING',
+            string: 'red',
+          },
+          fontSize: {
+            id: 'fontSize',
+            title: 'Font Size',
+            type: 'String',
+            string: '43rem',
+          },
+        },
+      },
+    },
+  };
 
   if (isColor(value)) {
     return (
@@ -65,7 +128,7 @@ const StringEditor: React.FunctionComponent<Props> = ({
       />
     );
   } else {
-    if (!customizations()) {
+    if (canNotCustomizatize || !setCircleUi) {
       return (
         <div className={classes.textField} key={`${property}`}>
           <TextField
@@ -82,7 +145,7 @@ const StringEditor: React.FunctionComponent<Props> = ({
       );
     }
     return (
-      <div className={classes.textField} key={`${property}`}>
+      <div key={`${property}`}>
         <ListItem>
           <TextField
             id={`${property}`}
@@ -107,28 +170,11 @@ const StringEditor: React.FunctionComponent<Props> = ({
             />
           </ListItemSecondaryAction>
         </ListItem>
-
-        <ListItem>
-          <ListItemText primary="Variant" />
-
-          <FormControl>
-            <Select value={variant} onChange={handleChange}>
-              <MenuItem value={'h1'}>h1</MenuItem>
-              <MenuItem value={'h2'}>h2</MenuItem>
-              <MenuItem value={'h3'}>h3</MenuItem>
-              <MenuItem value={'h4'}>h4</MenuItem>
-              <MenuItem value={'h5'}>h5</MenuItem>
-              <MenuItem value={'h6'}>h6</MenuItem>
-              <MenuItem value={'subtitle1'}>subtitle1</MenuItem>
-              <MenuItem value={'subtitle2'}>subtitle2</MenuItem>
-              <MenuItem value={'body1'}>body1</MenuItem>
-              <MenuItem value={'body2'}>body2</MenuItem>
-              <MenuItem value={'overline'}>overline</MenuItem>
-              <MenuItem value={'srOnly'}>srOnly</MenuItem>
-              <MenuItem value={'button'}>button</MenuItem>
-            </Select>
-          </FormControl>
-        </ListItem>
+        <UiEditor
+          uiCircle={stringUiDefaults}
+          uiValues={ui}
+          setCircleUi={setCircleUi}
+        />
       </div>
     );
   }

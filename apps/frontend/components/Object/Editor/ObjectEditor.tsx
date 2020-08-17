@@ -170,6 +170,8 @@ const ObjectEditor: React.FC<Props> = ({
               property={property}
               value={value}
               setValue={updateValue}
+              ui={null}
+              canNotCustomizatize={false}
             />
           </div>,
         );

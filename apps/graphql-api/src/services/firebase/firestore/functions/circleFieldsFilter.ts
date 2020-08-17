@@ -24,7 +24,7 @@ export const circleFieldsFilter = (circleToUpdate: any) => {
     'owner',
     'viewers',
     'editors',
-    'styles',
+    'ui',
     'layouts',
     'dateCreated',
     'dateUpdated',

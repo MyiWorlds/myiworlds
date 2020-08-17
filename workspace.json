@@ -133,7 +133,8 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "graphql-api:build"
+            "buildTarget": "graphql-api:build",
+            "port": 9229
           }
         },
         "lint": {

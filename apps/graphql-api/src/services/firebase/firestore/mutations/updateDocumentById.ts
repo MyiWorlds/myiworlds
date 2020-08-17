@@ -110,12 +110,24 @@ export default async function updateDocumentById(
         const doc = document.data();
 
         if (!doc) {
-          response = {
-            status: RESPONSE_CODES.SUCCESS,
-            message: 'Sorry, that document does not exist.',
-            updatedDocumentId: null,
-            previousCloneId: null,
-          };
+          const createdDocument = await createCircle(updatedDocument, context);
+
+          if (createdDocument) {
+            response = {
+              status: RESPONSE_CODES.SUCCESS,
+              message: 'I created that for you.',
+              updatedDocumentId: createdDocument.createdDocumentId,
+              previousCloneId: null,
+            };
+          } else {
+            response = {
+              status: RESPONSE_CODES.ERROR,
+              message:
+                'Sorry there was an error creating the document you were trying to update.',
+              updatedDocumentId: null,
+              previousCloneId: null,
+            };
+          }
           return response;
         }
 

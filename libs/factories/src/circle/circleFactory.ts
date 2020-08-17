@@ -27,12 +27,12 @@ export class CircleFactory {
   use(type: 'NUMBER'): CircleNumber;
   use(type: 'BIG_NUMBER'): CircleBigNumber;
   use(type: 'DATE'): CircleDate;
-  use(type: 'DATA' | 'LAYOUTS'): CircleData;
+  use(type: 'DATA' | 'LAYOUTS' | 'UI'): CircleData;
   use(type: 'GEO_POINT'): CircleGeoPoint;
   use(type: 'KEY_VALUE'): CircleKeyValue;
   use(type: 'LINE' | 'UPDATED' | 'CREATED' | 'VIEWED'): CircleLine;
   use(type: 'VIEWED_BY_IDS'): CircleViewedByIds;
-  use(type: 'LINES' | 'STYLES'): CircleLines;
+  use(type: 'LINES'): CircleLines;
   use(type: 'MEDIA_FONT_ICON'): CircleMediaFontIcon;
   use(type: 'MEDIA_IMAGE_HREF'): CircleMediaImageHref;
   use(type: 'EDGE'): CircleEdge;
@@ -58,6 +58,7 @@ export class CircleFactory {
       case 'BIG_NUMBER':
         return new CircleBigNumber();
 
+      case 'UI':
       case 'LAYOUTS':
       case 'DATA':
         return new CircleData();
@@ -80,7 +81,6 @@ export class CircleFactory {
       case 'VIEWED_BY_IDS':
         return new CircleViewedByIds();
 
-      case 'STYLES':
       case 'LINES':
         return new CircleLines();
 

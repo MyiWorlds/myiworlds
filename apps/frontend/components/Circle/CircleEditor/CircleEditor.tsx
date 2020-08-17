@@ -23,7 +23,9 @@ import ThemeViewer from '../../Theme/Viewer';
 import UserCanNotCreate from './components/UserCanNotCreate';
 import { canEdit } from '@myiworlds/helper-functions';
 import { Circle, CircleHydrated } from '@myiworlds/types';
+import { CircleFactory } from '@myiworlds/factories';
 import { convertHydratedCircleToFlatCircle } from '../functions/convertHydratedCircleToFlatCircle';
+import { createCollectionIdClient } from './../../../functions/createCollectionIdClient';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
@@ -85,7 +87,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     FIRESTORE_COLLECTIONS.CIRCLES,
   );
   const [circleLayouts, setCircleLayouts] = useState<Circle | null>(null);
-
+  const [circleEditingsUi, setCircleEditingsUi] = useState<Circle | null>(null);
+  const [circleUiElements, setCircleUiElements] = useState<Circle[] | null>(
+    null,
+  );
+  const [circleUiElement, setCircleUiElement] = useState<Circle | null>(null);
   const {
     data: circleData,
     loading: loadingCircle,
@@ -144,6 +150,42 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
               )
             : {},
       },
+      merge: true,
+    },
+  });
+
+  const [
+    updateCircleUiElement,
+    {
+      data: updateCircleUiElementData,
+      loading: updateCircleUiElementLoading,
+      error: updateCircleUiElementError,
+    },
+  ] = useUpdateCircleMutation({
+    variables: {
+      ...(circleUiElement as Circle),
+      merge: true,
+    },
+  });
+
+  console.log(
+    'UPDATE UI ELEMENT',
+    circleUiElement,
+    updateCircleUiElementData,
+    updateCircleUiElementLoading,
+    updateCircleUiElementError,
+  );
+
+  const [
+    updateCircleEditingsUi,
+    {
+      data: updateCircleEditingsUiData,
+      loading: updateCircleEditingsUiLoading,
+      error: updateCircleEditingsUiError,
+    },
+  ] = useUpdateCircleMutation({
+    variables: {
+      ...(circleEditingsUi as Circle),
       merge: true,
     },
   });
@@ -209,6 +251,56 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           layouts: updateLayoutCircleData.updateCircle.updatedDocumentId,
         });
       }
+    }
+  };
+
+  const circleEditingsUiWasUpdated = () => {
+    if (updateCircleEditingsUiLoading) {
+      console.log('Saving ui circle');
+    }
+    if (updateCircleEditingsUiError) {
+      setSavingCircle(false);
+      setAppSnackbar({
+        title: `There was an error updating the user interface. ${updateCircleEditingsUiError.message}`,
+        autoHideDuration: 3000,
+        severity: 'error',
+      });
+    }
+
+    if (
+      updateCircleEditingsUiData &&
+      updateCircleEditingsUiData.updateCircle &&
+      updateCircleEditingsUiData.updateCircle.status === RESPONSE_CODES.SUCCESS
+    ) {
+      if (
+        updateCircleVariables &&
+        !updateCircleVariables.ui &&
+        updateCircleEditingsUiData.updateCircle.updatedDocumentId
+      ) {
+        const circleUiId = createCollectionIdClient(
+          FIRESTORE_COLLECTIONS.CIRCLES,
+        );
+        const circleUiToCreate = new CircleFactory().use('LINES').create({
+          selectedProfileId: selectedProfile.id,
+          header: {
+            id: circleUiId,
+            title: 'User Interface elements',
+            public: true,
+          },
+          lines: [updateCircleEditingsUiData.updateCircle.updatedDocumentId],
+        });
+        setCircleEditingsUi(circleUiToCreate);
+        handleUpdateCircleAndSave({
+          ...updateCircleVariables,
+          ui: circleUiId,
+        });
+      }
+      setSavingCircle(false);
+      setEditingGrid(false);
+      setAppSnackbar({
+        title: 'User interface was saved!',
+        autoHideDuration: 3000,
+      });
     }
   };
 
@@ -327,6 +419,21 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           },
         });
       }
+
+      if (circle.ui) {
+        const cUis: Circle[] = [];
+        if (circle.ui && circle.ui.lines && circle.ui.lines?.length) {
+          circle.ui.lines.forEach((cUi: CircleHydrated) => {
+            if (cUi) {
+              const circleUiToPush = convertHydratedCircleToFlatCircle(cUi);
+              if (circleUiToPush) {
+                cUis.push(circleUiToPush);
+              }
+            }
+          });
+          setCircleUiElements(cUis);
+        }
+      }
     }
   };
 
@@ -364,6 +471,121 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
         clearTimeout(timerToSaveCircle.current);
       }
     };
+  };
+
+  const uiElementUpdated = () => {
+    if (circleUiElement) {
+      timerToSaveCircle.current = setTimeout(() => {
+        console.log(
+          'circleUiElementcircleUiElementcircleUiElement',
+          circleUiElement,
+        );
+        if (circleUiElement) {
+          updateCircleUiElement();
+          setCircleUiElement(null);
+        }
+        setHasUnsavedChanges(false);
+      }, 1500);
+    }
+  };
+
+  // Infinite re render
+  // const updateUiCircle = () => {
+  //   if (circleEditingsUi) {
+  //     updateCircleEditingsUi();
+  //   }
+  // };
+
+  const handleUpdateUiElementCircleAndSave = (uiElement: Circle) => {
+    if (!updateCircleVariables) {
+      return;
+    }
+    const circleHasCircleUi =
+      updateCircleVariables &&
+      updateCircleVariables.ui !== null &&
+      updateCircleVariables.ui !== '';
+
+    if (circleHasCircleUi) {
+      // UPDATE UI with current id
+      // Use update circle generic?
+      const circleUiElementToUpdate = circleUiElements?.find(
+        (element: Circle) => element.id === uiElement.id,
+      );
+      if (circleUiElementToUpdate) {
+        // Update ui element
+        // TODO I dont think this should be here and it should be moved out to its own function
+        updateCircleEditingsUi();
+      } else {
+        // create new ui element
+        // Add ui element to circleUi lines
+        setCircleUiElement(uiElement);
+      }
+      setSavingCircle(true);
+      if (timerToSaveCircle.current) {
+        clearTimeout(timerToSaveCircle.current);
+      }
+
+      return () => {
+        if (timerToSaveCircle) {
+          clearTimeout(timerToSaveCircle.current);
+        }
+      };
+    } else {
+      const circleUiId = `ui-${updateCircleVariables.id}`;
+      const circleUiToCreate = new CircleFactory().use('LINES').create({
+        selectedProfileId: selectedProfile.id,
+        header: {
+          id: circleUiId,
+          title: 'User Interface elements',
+          public: true,
+        },
+        lines: [uiElement.id],
+      });
+      setCircleUiElement(uiElement); //Not sure if this is correct DOUBLE CHECK
+      setCircleEditingsUi(circleUiToCreate);
+      setUpdateCircleVariables({
+        ...updateCircleVariables,
+        ui: circleUiId,
+      } as Circle);
+    }
+    // const uiIds: string[] = [];
+    // const updatedUis =
+    //   circleUiElements && circleUiElements.length
+    //     ? circleUiElements?.map(ui => {
+    //         uiIds.push(ui.id);
+    //         if (ui.id === uiElement.id) {
+    //           return uiElement;
+    //         } else {
+    //           return ui;
+    //         }
+    //       })
+    //     : [uiElement];
+
+    // if (circleEditingsUi) {
+    //   setCircleEditingsUi({
+    //     ...circleEditingsUi,
+    //     lines: uiIds,
+    //   } as Circle);
+    // } else {
+    //   // setCircleEditingsUi();
+    // }
+    // setCircleUiElement(uiElement);
+    // setCircleUiElements(updatedUis);
+    // setSavingCircle(true);
+    // if (timerToSaveCircle.current) {
+    //   clearTimeout(timerToSaveCircle.current);
+    // }
+    // timerToSaveCircle.current = setTimeout(() => {
+    //   if (circleUiElement) {
+    //     updateCircleUiElement();
+    //   }
+    //   setHasUnsavedChanges(false);
+    // }, 1500);
+    // return () => {
+    //   if (timerToSaveCircle) {
+    //     clearTimeout(timerToSaveCircle.current);
+    //   }
+    // };
   };
 
   const handleSaveHistory = () => {
@@ -482,7 +704,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
             setCircleLayouts={
               editingGrid ? setCircleLayouts : handleUpdateLayoutsCircleAndSave
             }
+            setCircleUi={handleUpdateUiElementCircleAndSave}
             displaySize={displaySize}
+            circleUis={circleUiElements}
           />
         ) : (
           <CircleFieldsController
@@ -502,8 +726,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           circle={circle}
           circleLayouts={circleLayouts}
           setCircleLayouts={setCircleLayouts}
-          editingGrid={true}
           displaySize={displaySize}
+          circleUis={circleUiElements}
+          setCircleUi={handleUpdateUiElementCircleAndSave}
         />
       );
     }
@@ -568,6 +793,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     user,
     viewingHistory,
   ]);
+  useEffect(uiElementUpdated, [circleUiElement]);
   useEffect(updateAppBarItems, [
     hasUnsavedChanges,
     circleData,
@@ -600,6 +826,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     updateLayoutCircleData,
     updateLayoutCircleLoading,
     updateLayoutCircleError,
+  ]);
+
+  useEffect(circleEditingsUiWasUpdated, [
+    updateCircleEditingsUiData,
+    updateCircleEditingsUiLoading,
+    updateCircleEditingsUiError,
   ]);
 
   if (!user.canCreate) {

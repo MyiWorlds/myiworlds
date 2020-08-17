@@ -44,7 +44,7 @@ export type Circle = {
   owner?: Maybe<PublicProfile>;
   viewers?: Maybe<Array<Maybe<PublicProfile>>>;
   editors?: Maybe<Array<Maybe<PublicProfile>>>;
-  styles?: Maybe<Circle>;
+  ui?: Maybe<Circle>;
   layouts?: Maybe<Circle>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
@@ -87,7 +87,7 @@ export type CircleClone = {
   owner?: Maybe<PublicProfile>;
   viewers?: Maybe<Array<Maybe<PublicProfile>>>;
   editors?: Maybe<Array<Maybe<PublicProfile>>>;
-  styles?: Maybe<Circle>;
+  ui?: Maybe<Circle>;
   layouts?: Maybe<Circle>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
@@ -134,7 +134,7 @@ export type CreatedProfile = {
   home?: Maybe<Circle>;
   history?: Maybe<Circle>;
   overrideCircleUIs?: Maybe<Scalars['Boolean']>;
-  circleUIs?: Maybe<Circle>;
+  circleUis?: Maybe<Circle>;
   following?: Maybe<Circle>;
   level?: Maybe<Circle>;
 };
@@ -221,7 +221,7 @@ export type MutationUpdateProfileArgs = {
   following?: Maybe<Scalars['String']>;
   level?: Maybe<Scalars['String']>;
   publicHome?: Maybe<Scalars['String']>;
-  circleUIs?: Maybe<Scalars['String']>;
+  circleUis?: Maybe<Scalars['String']>;
 };
 
 export type MutationCopyCircleArgs = {
@@ -251,7 +251,7 @@ export type MutationCreateCircleArgs = {
   owner?: Maybe<Scalars['String']>;
   viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   editors?: Maybe<Array<Maybe<Scalars['String']>>>;
-  styles?: Maybe<Scalars['String']>;
+  ui?: Maybe<Scalars['String']>;
   layouts?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
@@ -288,7 +288,7 @@ export type MutationUpdateCircleArgs = {
   owner?: Maybe<Scalars['String']>;
   viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   editors?: Maybe<Array<Maybe<Scalars['String']>>>;
-  styles?: Maybe<Scalars['String']>;
+  ui?: Maybe<Scalars['String']>;
   layouts?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
@@ -319,7 +319,7 @@ export type ProfileClone = {
   publicHome?: Maybe<Circle>;
   home?: Maybe<Circle>;
   history?: Maybe<Circle>;
-  circleUIs?: Maybe<Circle>;
+  circleUis?: Maybe<Circle>;
 };
 
 /**
@@ -336,7 +336,7 @@ export type PublicProfile = {
   media?: Maybe<Circle>;
   theme?: Maybe<Circle>;
   publicHome?: Maybe<Circle>;
-  circleUIs?: Maybe<Circle>;
+  circleUis?: Maybe<Circle>;
 };
 
 export type Query = {
@@ -561,7 +561,7 @@ export type UpdateCircleMutationVariables = {
   owner?: Maybe<Scalars['String']>;
   viewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   editors?: Maybe<Array<Maybe<Scalars['String']>>>;
-  styles?: Maybe<Scalars['String']>;
+  ui?: Maybe<Scalars['String']>;
   layouts?: Maybe<Scalars['String']>;
   dateCreated?: Maybe<Scalars['BigInt']>;
   dateUpdated?: Maybe<Scalars['BigInt']>;
@@ -642,7 +642,7 @@ export type CircleCloneHeaderFragmentFragment = {
         >
       >
     >;
-    styles: Maybe<
+    ui: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
     >;
     layouts: Maybe<
@@ -703,8 +703,19 @@ export type CircleHeaderFragmentFragment = { __typename?: 'Circle' } & Pick<
         >
       >
     >;
-    styles: Maybe<
-      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
+    ui: Maybe<
+      { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'> & {
+          lines: Maybe<
+            Array<
+              Maybe<
+                { __typename?: 'Circle' } & Pick<
+                  Circle,
+                  'id' | 'title' | 'data'
+                >
+              >
+            >
+          >;
+        }
     >;
     layouts: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
@@ -911,7 +922,7 @@ export type UpdateProfileMutationVariables = {
   following?: Maybe<Scalars['String']>;
   level?: Maybe<Scalars['String']>;
   publicHome?: Maybe<Scalars['String']>;
-  circleUIs?: Maybe<Scalars['String']>;
+  circleUis?: Maybe<Scalars['String']>;
 };
 
 export type UpdateProfileMutation = { __typename?: 'Mutation' } & {
@@ -989,7 +1000,7 @@ export type SelectedProfileFragmentFragment = {
     >;
     level: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
     rating: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    circleUIs: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    circleUis: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
     theme: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'type' | 'data'>
     >;
@@ -1094,7 +1105,7 @@ export const CircleCloneHeaderFragmentFragmentDoc = gql`
       id
       username
     }
-    styles {
+    ui {
       id
       title
       data
@@ -1175,10 +1186,15 @@ export const CircleHeaderFragmentFragmentDoc = gql`
       id
       username
     }
-    styles {
+    ui {
       id
       title
       data
+      lines {
+        id
+        title
+        data
+      }
     }
     layouts {
       id
@@ -1234,7 +1250,7 @@ export const SelectedProfileFragmentFragmentDoc = gql`
       type
     }
     overrideCircleUIs
-    circleUIs {
+    circleUis {
       id
       type
     }
@@ -1668,7 +1684,7 @@ export const UpdateCircleDocument = gql`
     $owner: String
     $viewers: [String]
     $editors: [String]
-    $styles: String
+    $ui: String
     $layouts: String
     $dateCreated: BigInt
     $dateUpdated: BigInt
@@ -1704,7 +1720,7 @@ export const UpdateCircleDocument = gql`
       owner: $owner
       viewers: $viewers
       editors: $editors
-      styles: $styles
+      ui: $ui
       layouts: $layouts
       dateCreated: $dateCreated
       dateUpdated: $dateUpdated
@@ -1763,7 +1779,7 @@ export type UpdateCircleMutationFn = ApolloReactCommon.MutationFunction<
  *      owner: // value for 'owner'
  *      viewers: // value for 'viewers'
  *      editors: // value for 'editors'
- *      styles: // value for 'styles'
+ *      ui: // value for 'ui'
  *      layouts: // value for 'layouts'
  *      dateCreated: // value for 'dateCreated'
  *      dateUpdated: // value for 'dateUpdated'
@@ -2255,7 +2271,7 @@ export const UpdateProfileDocument = gql`
     $following: String
     $level: String
     $publicHome: String
-    $circleUIs: String
+    $circleUis: String
   ) {
     updateProfile(
       id: $id
@@ -2274,7 +2290,7 @@ export const UpdateProfileDocument = gql`
       following: $following
       level: $level
       publicHome: $publicHome
-      circleUIs: $circleUIs
+      circleUis: $circleUis
     ) {
       status
       message
@@ -2315,7 +2331,7 @@ export type UpdateProfileMutationFn = ApolloReactCommon.MutationFunction<
  *      following: // value for 'following'
  *      level: // value for 'level'
  *      publicHome: // value for 'publicHome'
- *      circleUIs: // value for 'circleUIs'
+ *      circleUis: // value for 'circleUis'
  *   },
  * });
  */

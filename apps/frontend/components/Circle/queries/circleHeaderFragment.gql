@@ -42,10 +42,15 @@ fragment CircleHeaderFragment on Circle {
     id
     username
   }
-  styles {
+  ui {
     id
     title
     data
+    lines {
+      id
+      title
+      data
+    }
   }
   layouts {
     id

@@ -5,10 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "attach",
       "name": "Graphql API",
-      "port": 51888,
+      "port": 9229,
+      "request": "attach",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node",
       "restart": true,
       "sourceMaps": true,
       "outFiles": ["${workspaceFolder}/dist/apps/graphql-api"]

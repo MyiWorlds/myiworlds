@@ -10,6 +10,7 @@ import StringEditor from '../../../String/Editor/StringEditor';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
 import { format } from 'date-fns';
+import { setDeep } from '@myiworlds/helper-functions';
 import {
   circleFields,
   circleListFields,
@@ -28,34 +29,8 @@ interface Props {
   originalCircle?: Circle;
   property: string;
   value: any;
-}
-
-function setDeep(
-  obj: any,
-  path: string[],
-  property: string,
-  value: any,
-  setrecursively = false,
-) {
-  path.reduce((a: any, b: any, level: any) => {
-    if (
-      setrecursively &&
-      typeof a[b] === 'undefined' &&
-      level !== path.length
-    ) {
-      a[b] = {};
-      return a[b];
-    }
-
-    if (level === path.length - 1) {
-      a[b] = {
-        ...a[b],
-        [property]: value,
-      };
-      return value;
-    }
-    return a[b];
-  }, obj);
+  fieldUi: Circle | null;
+  setCircleUi: (newValues: Circle) => void;
 }
 
 const CircleFieldEditor: React.FC<Props> = ({
@@ -65,6 +40,8 @@ const CircleFieldEditor: React.FC<Props> = ({
   parentStrings = [],
   property,
   value,
+  fieldUi,
+  setCircleUi,
 }) => {
   const updateValue = (newValue: string | number | boolean) => {
     let updatedObject: any = null;
@@ -133,6 +110,8 @@ const CircleFieldEditor: React.FC<Props> = ({
           property={property}
           value={value as string}
           setValue={updateValue}
+          ui={fieldUi}
+          setCircleUi={setCircleUi}
         />
       </div>
     );

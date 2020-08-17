@@ -41,7 +41,7 @@ const updateProfileMutation = {
     following: { type: GraphQLString },
     level: { type: GraphQLString },
     publicHome: { type: GraphQLString },
-    circleUIs: { type: GraphQLString },
+    circleUis: { type: GraphQLString },
   },
   resolve: (_: null, args: UpdateProfileMutation, context: Context) =>
     updateDocumentById(

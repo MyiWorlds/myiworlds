@@ -20,7 +20,7 @@ fragment SelectedProfileFragment on CreatedProfile {
     type
   }
   overrideCircleUIs
-  circleUIs {
+  circleUis {
     id
     type
   }

@@ -109,11 +109,11 @@ const CircleType: any = new GraphQLObjectType({
         return [];
       },
     },
-    styles: {
+    ui: {
       type: CircleType,
       resolve: async (circle, args, context: Context) => {
-        if (circle.styles) {
-          return context.circleLoader.load(circle.styles);
+        if (circle.ui) {
+          return context.circleLoader.load(circle.ui);
         }
         return null;
       },

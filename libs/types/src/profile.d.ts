@@ -16,7 +16,7 @@ export interface PublicProfileHydrated extends PublicProfileBase {
   following?: CircleHydrated;
   level?: CircleHydrated;
   publicHome?: CircleHydrated;
-  circleUIs?: CircleHydrated;
+  circleUis?: CircleHydrated;
 }
 
 export interface UserProfileData extends PublicProfileBase {
@@ -31,7 +31,7 @@ export interface UserProfileData extends PublicProfileBase {
   following?: string;
   level?: string;
   publicHome?: string;
-  circleUIs?: string;
+  circleUis?: string;
 }
 
 export interface UserProfileHydrated extends PublicProfileHydrated {
@@ -47,7 +47,7 @@ export interface UserProfileHydrated extends PublicProfileHydrated {
   level?: CircleHydrated;
   publicHome?: CircleHydrated;
   media?: CircleHydrated;
-  circleUIs?: CircleHydrated;
+  circleUis?: CircleHydrated;
 }
 
 export interface PublicProfileData extends PublicProfileBase {
@@ -58,7 +58,7 @@ export interface PublicProfileData extends PublicProfileBase {
   level?: string;
   publicHome?: string;
   media?: string;
-  circleUIs?: string;
+  circleUis?: string;
 }
 
 export interface PublicProfileCloneData extends PublicProfileData {

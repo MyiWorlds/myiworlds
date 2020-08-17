@@ -1,41 +1,41 @@
 mutation updateProfile(
-    $id: String!,
-    $merge: Boolean!
-    $username: String,
-    $dateCreated: BigInt,
-    $dateUpdated: BigInt,
-    $addToHistory: Boolean,
-    $home: String,
-    $history: String,
-    $overrideCircleUIs: Boolean,
-    $userId: String,
-    $media: String,
-    $theme: String,
-    $rating: String,
-    $following: String,
-    $level: String,
-    $publicHome: String,
-    $circleUIs: String,
-  ) {
+  $id: String!
+  $merge: Boolean!
+  $username: String
+  $dateCreated: BigInt
+  $dateUpdated: BigInt
+  $addToHistory: Boolean
+  $home: String
+  $history: String
+  $overrideCircleUIs: Boolean
+  $userId: String
+  $media: String
+  $theme: String
+  $rating: String
+  $following: String
+  $level: String
+  $publicHome: String
+  $circleUis: String
+) {
   updateProfile(
-    id: $id,
-    merge: $merge,
-    username: $username,
-    dateCreated: $dateCreated,
-    dateUpdated: $dateUpdated,
-    addToHistory: $addToHistory,
-    home: $home,
-    history: $history,
-    overrideCircleUIs: $overrideCircleUIs,
-    userId: $userId,
-    media: $media,
-    theme: $theme,
-    rating: $rating,
-    following: $following,
-    level: $level,
-    publicHome: $publicHome,
-    circleUIs: $circleUIs,
-    ) {
+    id: $id
+    merge: $merge
+    username: $username
+    dateCreated: $dateCreated
+    dateUpdated: $dateUpdated
+    addToHistory: $addToHistory
+    home: $home
+    history: $history
+    overrideCircleUIs: $overrideCircleUIs
+    userId: $userId
+    media: $media
+    theme: $theme
+    rating: $rating
+    following: $following
+    level: $level
+    publicHome: $publicHome
+    circleUis: $circleUis
+  ) {
     status
     message
   }
