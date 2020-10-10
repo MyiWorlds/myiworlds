@@ -5,6 +5,7 @@ import React from 'react';
 import withApollo from '../lib/apollo/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { ProfileProvider } from '../contexts/Profile/ProfileContext';
+import { RecoilRoot } from 'recoil';
 import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
 import { UserInterfaceProvider } from '../contexts/UserInterface/UserInterfaceContext';
 import { UserProvider } from '../contexts/User/UserContext';
@@ -15,19 +16,21 @@ class MyApp extends App<any> {
     const { Component, pageProps, apolloClient } = this.props;
     return (
       <ApolloProvider client={apolloClient}>
-        <MaterialUiTheme>
-          <SystemMessagesProvider>
-            <AppBody>
-              <UserProvider>
-                <ProfileProvider>
-                  <UserInterfaceProvider>
-                    <Component {...pageProps} />
-                  </UserInterfaceProvider>
-                </ProfileProvider>
-              </UserProvider>
-            </AppBody>
-          </SystemMessagesProvider>
-        </MaterialUiTheme>
+        <RecoilRoot>
+          <MaterialUiTheme>
+            <SystemMessagesProvider>
+              <AppBody>
+                <UserProvider>
+                  <ProfileProvider>
+                    <UserInterfaceProvider>
+                      <Component {...pageProps} />
+                    </UserInterfaceProvider>
+                  </ProfileProvider>
+                </UserProvider>
+              </AppBody>
+            </SystemMessagesProvider>
+          </MaterialUiTheme>
+        </RecoilRoot>
       </ApolloProvider>
     );
   }

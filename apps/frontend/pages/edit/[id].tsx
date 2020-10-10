@@ -1,7 +1,8 @@
-import CircleEditor from './../../components/Circle/CircleEditor/CircleEditor';
+import CircleComponent from '../../components/Circle2/Circle';
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import { useRouter } from 'next/router';
+// import CircleEditor from './../../components/Circle/CircleEditor/CircleEditor';
 
 const EditCircle = () => {
   const router = useRouter();
@@ -13,7 +14,14 @@ const EditCircle = () => {
       circleId = router.query.id;
     }
 
-    return <CircleEditor id={circleId} />;
+    // return <CircleEditor id={circleId} />;
+    return (
+      <CircleComponent
+        isEditing={true}
+        circle={{ id: circleId }}
+        fetch={true}
+      />
+    );
   }
 
   return <Typography>Circle Editor requires an id</Typography>;

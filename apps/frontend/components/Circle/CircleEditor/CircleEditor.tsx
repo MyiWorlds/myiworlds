@@ -392,7 +392,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setCircleId(undefined);
       setUpdateCircleVariables(convertHydratedCircleToFlatCircle(circle));
 
-      if (circle.layouts) {
+      if (circle.layouts && circle.layouts.data) {
         const layouts = JSON.parse(circle.layouts.data.layouts, function(
           key,
           value,
@@ -857,7 +857,8 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   if (
     !selectedProfile ||
     (updateCircleVariables &&
-      !canEdit(updateCircleVariables, selectedProfile.id))
+      !canEdit(updateCircleVariables, selectedProfile.id)) ||
+    !user.isSystemAdmin
   ) {
     return <ProfileCanNotEdit />;
   }

@@ -16,9 +16,8 @@ import {
 interface Props {
   property: string;
   value: string;
-  field: keyof Circle;
-  setValue: (feild: keyof Circle, newValue: string) => void;
-  ui?: Circle | null;
+  setValue: (newValue: string) => void;
+  ui: Circle | null;
   canNotCustomizatize?: boolean;
   setCircleUi?: (newValue: Circle) => void;
 }
@@ -40,16 +39,15 @@ function isColor(strColor: string) {
 const StringEditor: React.FunctionComponent<Props> = ({
   property,
   value,
-  field,
   setValue,
-  ui = null,
+  ui,
   setCircleUi,
   canNotCustomizatize,
 }) => {
   const classes = useStyles();
   console.log('do something with', ui);
   const handleStringChange = (newValue: string) => {
-    setValue(field, newValue);
+    setValue(newValue);
   };
 
   const toggleShowLabel = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -2,7 +2,7 @@ import BooleanEditor from '../../../../Boolean/Editor/BooleanEditor';
 import NumberEditor from '../../../../Number/Editor/NumberEditor';
 import React from 'react';
 import SelectEditor from '../../../../Select/Editor/SelectEditor';
-import StringEditor from '../../../../String/Editor/StringEditor';
+import StringEditor from '../../../../OldString/Editor/StringEditor';
 import { Circle } from '@myiworlds/types';
 
 interface Props {

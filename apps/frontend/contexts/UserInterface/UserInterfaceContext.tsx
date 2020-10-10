@@ -6,12 +6,19 @@ import ContentArea from './ContentArea';
 import DraggableDialog from './DraggableDialog';
 import Fab from '@material-ui/core/Fab';
 import Navigation from './Navigation';
-import React, { useContext, useEffect, useState } from 'react';
 import Zoom from '@material-ui/core/Zoom';
 import { Circle } from '@myiworlds/types';
+import { CircleHydrated } from '../../../../libs/types/src/circle';
+import { convertAllNestedHydratedCircleToFlatCircle } from '../../components/Circle/functions/convertHydratedCircleToFlatCircle';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
 import { useRouter } from 'next/router';
+import React, {
+  useContext,
+  useEffect,
+  // useReducer,
+  useState,
+} from 'react';
 import {
   createStyles,
   makeStyles,
@@ -50,10 +57,98 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+// function reducer(state: State, action: UpdateCircleFieldAction): State {
+//   if (!action.type) return state;
+//   switch (action.type) {
+//     // Resume
+//     case 'RESIZE-NAV':
+//       return {
+//         ...state,
+//       };
+//     case 'UPDATE-UI':
+//     // Local state change
+//     case 'SAVE-UI':
+//       // Save UI to users profile
+//       // Saves to a my components list
+//       return {
+//         ...state,
+//       };
+//     default: {
+//       console.error('Reducer got unusable command');
+//       return state;
+//     }
+//   }
+// }
+
+// DEFAULT UI should come from local storage first.
+// Prompt user resume from this if different from what is given to it
+// Show loading bars on UI?
+const defaultUI: CircleHydrated = {
+  id: 'user-interface',
+  title: 'User Interface',
+  // state: {
+  //   showController: true,
+  //   controllerWidth: 244,
+  // },
+  layouts: {
+    id: 'ui-layout',
+  },
+  lines: [
+    {
+      id: 'app-bar',
+      type: 'LINES',
+      // state: {},
+      layouts: {
+        id: 'app-bar-layouts',
+        // type: 'REACT-GRID-LAYOUT'  // Allow for other types
+      },
+      lines: [
+        {
+          id: 'app-bar-layouts',
+          title: 'TEST',
+          // type: 'REACT-GRID-LAYOUT'  // Allow for other types
+        },
+        {
+          id: 'controller-toggle-button',
+          // type: 'BUTTON',
+          // state: {},
+        },
+        {
+          id: 'domain-name',
+          type: 'STRING',
+          string: 'MyiWorlds',
+        },
+        {
+          id: 'search-field',
+          // type: 'SEARCH',
+        },
+      ],
+      // component: null,
+    },
+    {
+      id: 'controller',
+      type: 'LINES',
+      // component: 'MENU'
+      lines: [
+        {
+          id: 'home',
+        },
+      ],
+    },
+    {
+      id: 'content',
+      // component: null,
+    },
+  ],
+};
+
 const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   const router = useRouter();
   const { user } = useContext(UserContext);
   const classes = useStyles();
+  // Maybe put this in lib so it can be used by both front/admin backend
+  // const [{ ui }, dispatch] = React.useReducer(reducer, defaultUI);
+  // const [ui, setUI] = useState(defaultUI);
   const defaultNavWidth = 240;
   const [showNavigation, setShowNavigation] = useState(false);
   const [creatingCircle, setCreatingCircle] = useState(false);
@@ -70,7 +165,11 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
     null,
   );
   const theme = useTheme();
-
+  console.log(
+    'defaultUI',
+    '\n',
+    convertAllNestedHydratedCircleToFlatCircle(defaultUI),
+  );
   const didMount = () => {
     if (window.innerWidth > theme.breakpoints.values.md) {
       setShowNavigation(true);
