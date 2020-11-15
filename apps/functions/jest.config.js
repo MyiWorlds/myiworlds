@@ -1,5 +1,6 @@
 module.exports = {
-  name: 'functions',
-  preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/functions'
+  preset: '../../jest.preset.js',
+  coverageDirectory: '../../coverage/apps/functions',
+  globals: { 'ts-jest': { tsConfig: '<rootDir>/tsconfig.spec.json' } },
+  displayName: 'functions',
 };

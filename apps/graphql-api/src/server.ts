@@ -1,8 +1,8 @@
-import Context from './context';
+import AppContext from './context';
 import cors from 'cors';
 import express from 'express';
-import graphqlHTTP from 'express-graphql';
 import schema from './schema';
+import { graphqlHTTP } from 'express-graphql';
 import { stackdriver } from '@myiworlds/services';
 import 'dotenv/config';
 
@@ -16,11 +16,10 @@ app.use(
   }),
 );
 
-app.use(
-  '/graphql',
+const gql = () =>
   graphqlHTTP(async (req: any) => ({
     schema,
-    context: await Context(req),
+    context: await AppContext(req),
     graphiql: process.env.NODE_ENV !== 'production',
     customFormatErrorFn: (error: Error) => {
       stackdriver.report(new Error(`Graphql-api server errror: ${error}`));
@@ -30,7 +29,8 @@ app.use(
       }
       return error;
     },
-  })),
-);
+  }));
+
+app.use('/graphql', gql);
 
 export default app;

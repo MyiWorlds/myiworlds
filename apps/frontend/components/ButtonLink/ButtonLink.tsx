@@ -12,10 +12,10 @@ import { ButtonProps } from '@material-ui/core/Button';
  */
 
 export type ButtonLinkProps = Omit<ButtonProps, 'href' | 'classes'> &
-  Pick<LinkProps, 'href' | 'as' | 'prefetch'>;
+  Pick<LinkProps, 'href' | 'as'>;
 
 const ButtonLink = React.forwardRef<ButtonLinkProps, any>(
-  ({ href, as, prefetch, ...props }, ref) => (
+  ({ href, as, ...props }, ref) => (
     <Link href={href} as={as}>
       <div ref={ref} {...props} />
     </Link>

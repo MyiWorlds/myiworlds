@@ -1,5 +1,6 @@
 module.exports = {
-  name: 'graphql-api',
-  preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/graphql-api'
+  preset: '../../jest.preset.js',
+  coverageDirectory: '../../coverage/apps/graphql-api',
+  globals: { 'ts-jest': { tsConfig: '<rootDir>/tsconfig.spec.json' } },
+  displayName: 'graphql-api',
 };

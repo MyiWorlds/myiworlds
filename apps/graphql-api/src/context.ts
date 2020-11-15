@@ -7,7 +7,7 @@ import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { stackdriver } from '@myiworlds/services';
 
-const Context = async (req: ExpressContext['req']) => {
+const AppContext = async (req: ExpressContext['req']) => {
   try {
     const cookies = cookie.parse(
       req.headers.cookies ? req.headers.cookies.toString() : '',
@@ -72,4 +72,4 @@ const Context = async (req: ExpressContext['req']) => {
   }
 };
 
-export default Context;
+export default AppContext;

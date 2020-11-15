@@ -9,14 +9,14 @@ import { GraphQLList } from 'graphql';
 const getSeededCirclesByIdsQuery = {
   name: 'GetSeededCirclesByIds',
   type: GraphQLList(CircleType),
-  resolve: async (query: null, args: null, context: Context) => {
+  resolve: async (query: null, context: Context) => {
     if (!(await isSystemAdmin(context.userId))) {
       return [];
     }
 
     const circleIds: string[] = [];
 
-    circlesToCreate.forEach(circle => {
+    circlesToCreate.forEach((circle) => {
       if (circle.id) {
         circleIds.push(circle.id);
       }

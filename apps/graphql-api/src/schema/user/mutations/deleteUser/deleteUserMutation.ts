@@ -9,7 +9,7 @@ import {
 
 const deleteUserMutation = {
   name: 'DeleteUser',
-  resolve: (_: null, args: null, context: Context) => deleteUser(context),
+  resolve: (_: null, context: Context) => deleteUser(context),
   type: new GraphQLObjectType({
     name: 'DeleteUserPayload',
     fields: () => ({

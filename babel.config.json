@@ -1,0 +1,5 @@
+{
+  "presets": ["@nrwl/web/babel"],
+  "plugins": ["@babel/plugin-transform-flow-strip-types"],
+  "babelrcRoots": ["*"]
+}

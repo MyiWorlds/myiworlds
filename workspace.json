@@ -22,7 +22,7 @@
           }
         },
         "serve": {
-          "builder": "@nrwl/next:dev-server",
+          "builder": "@nrwl/next:server",
           "options": {
             "buildTarget": "frontend:build",
             "dev": true
@@ -40,22 +40,21 @@
           }
         },
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "apps/frontend/.eslintrc",
-            "tsConfig": [
-              "apps/frontend/tsconfig.json",
-              "apps/frontend/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/frontend/**"]
+            "lintFilePatterns": [
+              "apps/frontend/**/*.spec.ts",
+              "apps/frontend/**/*.spec.tsx",
+              "apps/frontend/**/*.spec.js",
+              "apps/frontend/**/*.spec.jsx",
+              "apps/frontend/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/frontend/jest.config.js",
-            "tsConfig": "apps/frontend/tsconfig.spec.json",
             "passWithNoTests": true
           }
         },
@@ -90,12 +89,9 @@
           }
         },
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "apps/frontend-e2e/.eslintrc",
-            "tsConfig": ["apps/frontend-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/frontend-e2e/**"]
+            "lintFilePatterns": ["apps/frontend-e2e/src/**/*.ts"]
           }
         }
       }
@@ -138,22 +134,20 @@
           }
         },
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "apps/graphql-api/.eslintrc",
-            "tsConfig": [
-              "apps/graphql-api/tsconfig.app.json",
-              "apps/graphql-api/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/graphql-api/**"]
+            "lintFilePatterns": [
+              "apps/graphql-api/**/*.ts",
+              "apps/graphql-api/src/types/*.d.ts",
+              "apps/graphql-api/**/*.spec.ts",
+              "apps/graphql-api/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/graphql-api/jest.config.js",
-            "tsConfig": "apps/graphql-api/tsconfig.spec.json",
             "passWithNoTests": true
           }
         },
@@ -176,22 +170,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "libs/credentials/.eslintrc",
-            "tsConfig": [
-              "libs/credentials/tsconfig.lib.json",
-              "libs/credentials/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/credentials/**"]
+            "lintFilePatterns": [
+              "libs/credentials/**/*.ts",
+              "libs/credentials/**/*.spec.ts",
+              "libs/credentials/**/*.spec.tsx",
+              "libs/credentials/**/*.spec.js",
+              "libs/credentials/**/*.spec.jsx",
+              "libs/credentials/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/credentials/jest.config.js",
-            "tsConfig": "libs/credentials/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -204,22 +198,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "libs/types/.eslintrc",
-            "tsConfig": [
-              "libs/types/tsconfig.lib.json",
-              "libs/types/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/types/**"]
+            "lintFilePatterns": [
+              "libs/types/**/*.ts",
+              "libs/types/**/*.spec.ts",
+              "libs/types/**/*.spec.tsx",
+              "libs/types/**/*.spec.js",
+              "libs/types/**/*.spec.jsx",
+              "libs/types/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/types/jest.config.js",
-            "tsConfig": "libs/types/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -232,22 +226,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "libs/services/.eslintrc",
-            "tsConfig": [
-              "libs/services/tsconfig.lib.json",
-              "libs/services/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/services/**"]
+            "lintFilePatterns": [
+              "libs/services/**/*.ts",
+              "libs/services/**/*.spec.ts",
+              "libs/services/**/*.spec.tsx",
+              "libs/services/**/*.spec.js",
+              "libs/services/**/*.spec.jsx",
+              "libs/services/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/services/jest.config.js",
-            "tsConfig": "libs/services/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -260,22 +254,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "libs/enums/.eslintrc",
-            "tsConfig": [
-              "libs/enums/tsconfig.lib.json",
-              "libs/enums/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/enums/**"]
+            "lintFilePatterns": [
+              "libs/enums/**/*.ts",
+              "libs/enums/**/*.spec.ts",
+              "libs/enums/**/*.spec.tsx",
+              "libs/enums/**/*.spec.js",
+              "libs/enums/**/*.spec.jsx",
+              "libs/enums/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/enums/jest.config.js",
-            "tsConfig": "libs/enums/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -318,22 +312,19 @@
           }
         },
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "apps/functions/.eslintrc",
-            "tsConfig": [
-              "apps/functions/tsconfig.app.json",
-              "apps/functions/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/functions/**"]
+            "lintFilePatterns": [
+              "apps/functions/**/*.ts",
+              "apps/functions/**/*.spec.ts",
+              "apps/functions/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/functions/jest.config.js",
-            "tsConfig": "apps/functions/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -346,22 +337,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "libs/factories/.eslintrc",
-            "tsConfig": [
-              "libs/factories/tsconfig.lib.json",
-              "libs/factories/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/factories/**"]
+            "lintFilePatterns": [
+              "libs/factories/**/*.ts",
+              "libs/factories/**/*.spec.ts",
+              "libs/factories/**/*.spec.tsx",
+              "libs/factories/**/*.spec.js",
+              "libs/factories/**/*.spec.jsx",
+              "libs/factories/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/factories/jest.config.js",
-            "tsConfig": "libs/factories/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -374,22 +365,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "config": "libs/helper-functions/.eslintrc",
-            "tsConfig": [
-              "libs/helper-functions/tsconfig.lib.json",
-              "libs/helper-functions/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/helper-functions/**"]
+            "lintFilePatterns": [
+              "libs/helper-functions/**/*.ts",
+              "libs/helper-functions/**/*.spec.ts",
+              "libs/helper-functions/**/*.spec.tsx",
+              "libs/helper-functions/**/*.spec.js",
+              "libs/helper-functions/**/*.spec.jsx",
+              "libs/helper-functions/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/helper-functions/jest.config.js",
-            "tsConfig": "libs/helper-functions/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }

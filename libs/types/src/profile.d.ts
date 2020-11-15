@@ -80,8 +80,3 @@ export interface PublicProfileCloneHydrated extends PublicProfileData {
   collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
   clonedFrom: string;
 }
-
-export interface PublicProfileCloneHydrated extends PublicProfileData {
-  collection: FIRESTORE_COLLECTIONS.PROFILES_CLONES;
-  clonedFrom: PublicProfileData;
-}

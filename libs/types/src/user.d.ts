@@ -1,5 +1,4 @@
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
-export type LoggedInUser = GuestUser | User;
 
 export interface User {
   id: string;

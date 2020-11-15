@@ -146,7 +146,7 @@ export interface ContentHydrated {
 export interface CircleHydrated extends HeaderHydrated, ContentHydrated {}
 
 export interface UpdateCircleMutation extends Circle {
-  merge: boolean;
+  merge?: boolean;
 }
 
 export interface CircleCloneHydrated extends Circle {

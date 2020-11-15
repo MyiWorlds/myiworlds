@@ -1,9 +1,13 @@
 module.exports = {
-  testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
-  transform: {
-    '^.+\\.(ts|js|html)$': 'ts-jest',
-  },
-  resolver: '@nrwl/jest/plugins/resolver',
-  moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageReporters: ['html'],
+  projects: [
+    '<rootDir>/apps/frontend',
+    '<rootDir>/apps/graphql-api',
+    '<rootDir>/libs/credentials',
+    '<rootDir>/libs/types',
+    '<rootDir>/libs/services',
+    '<rootDir>/libs/enums',
+    '<rootDir>/apps/functions',
+    '<rootDir>/libs/factories',
+    '<rootDir>/libs/helper-functions',
+  ],
 };
