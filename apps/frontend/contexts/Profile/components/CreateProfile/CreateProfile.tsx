@@ -1,11 +1,11 @@
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Progress from '../../../../components/Progress';
 import React, { useContext } from 'react';
 import Spacer from '../../../../components/Spacer';
 import { ProfileContext } from '../../ProfileContext';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  AccordionSummary,
   Button,
   Icon,
   InputAdornment,
@@ -55,7 +55,7 @@ interface Props {
   onCancel?: () => void;
 }
 
-const CreateProfile: React.FC<Props> = ({ onCancel = () => {} }) => {
+const CreateProfile: React.FC<Props> = ({ onCancel = () => { } }) => {
   const {
     usernameToCreate,
     setUsernameToCreate,
@@ -110,16 +110,16 @@ const CreateProfile: React.FC<Props> = ({ onCancel = () => {} }) => {
       </Typography>
       <Spacer />
 
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+      <Accordion>
+        <AccordionSummary
           expandIcon={<Icon>expand_more</Icon>}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           <Icon style={{ marginRight: 8 }}>help</Icon>
           <Typography>Why</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary >
+        <AccordionDetails>
           <div>
             <Typography>
               If you create custom URL's using your username and give them out,
@@ -159,19 +159,19 @@ const CreateProfile: React.FC<Props> = ({ onCancel = () => {} }) => {
               </Typography>
             </Paper>
           </div>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
 
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+      <Accordion>
+        <AccordionSummary
           expandIcon={<Icon>expand_more</Icon>}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           <Icon style={{ marginRight: 8 }}>warning</Icon>
           <Typography>Username Requirements</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary >
+        <AccordionDetails>
           <div>
             <Paper className={classes.infoPaper}>
               <Typography variant="body1">
@@ -196,8 +196,8 @@ const CreateProfile: React.FC<Props> = ({ onCancel = () => {} }) => {
               </ul>
             </Paper>
           </div>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
 
       <Spacer />
 

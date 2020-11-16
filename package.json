@@ -109,6 +109,7 @@
     "@nrwl/jest": "10.3.2",
     "@nrwl/next": "10.3.2",
     "@nrwl/node": "10.3.2",
+    "@nrwl/nx-cloud": "latest",
     "@nrwl/nx": "^7.8.7",
     "@nrwl/react": "10.3.2",
     "@nrwl/web": "10.3.2",

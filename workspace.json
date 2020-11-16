@@ -14,11 +14,7 @@
             "outputPath": "dist/apps/functions/frontend"
           },
           "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
+            "production": {}
           }
         },
         "serve": {
@@ -29,6 +25,7 @@
           },
           "configurations": {
             "production": {
+              "buildTarget": "frontend:build:production",
               "dev": false
             }
           }
@@ -36,19 +33,13 @@
         "export": {
           "builder": "@nrwl/next:export",
           "options": {
-            "buildTarget": "frontend:build"
+            "buildTarget": "frontend:build:production"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/frontend/**/*.spec.ts",
-              "apps/frontend/**/*.spec.tsx",
-              "apps/frontend/**/*.spec.js",
-              "apps/frontend/**/*.spec.jsx",
-              "apps/frontend/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["apps/frontend/**/*.{ts,tsx}"]
           }
         },
         "test": {
@@ -91,7 +82,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/frontend-e2e/src/**/*.ts"]
+            "lintFilePatterns": ["apps/frontend-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -109,8 +100,7 @@
             "outputPath": "dist/apps/graphql-api",
             "main": "apps/graphql-api/src/index.ts",
             "tsConfig": "apps/graphql-api/tsconfig.app.json",
-            "assets": ["apps/graphql-api/src/assets"],
-            "buildLibsFromSource": true
+            "assets": ["apps/graphql-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -130,18 +120,14 @@
           "builder": "@nrwl/node:execute",
           "options": {
             "buildTarget": "graphql-api:build",
-            "port": 9229
+            "port": 9229,
+            "inspect": true
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/graphql-api/**/*.ts",
-              "apps/graphql-api/src/types/*.d.ts",
-              "apps/graphql-api/**/*.spec.ts",
-              "apps/graphql-api/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["apps/graphql-api/**/*.ts"]
           }
         },
         "test": {
@@ -172,14 +158,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/credentials/**/*.ts",
-              "libs/credentials/**/*.spec.ts",
-              "libs/credentials/**/*.spec.tsx",
-              "libs/credentials/**/*.spec.js",
-              "libs/credentials/**/*.spec.jsx",
-              "libs/credentials/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["libs/credentials/**/*.ts"]
           }
         },
         "test": {
@@ -200,14 +179,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/types/**/*.ts",
-              "libs/types/**/*.spec.ts",
-              "libs/types/**/*.spec.tsx",
-              "libs/types/**/*.spec.js",
-              "libs/types/**/*.spec.jsx",
-              "libs/types/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["libs/types/**/*.ts"]
           }
         },
         "test": {
@@ -228,14 +200,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/services/**/*.ts",
-              "libs/services/**/*.spec.ts",
-              "libs/services/**/*.spec.tsx",
-              "libs/services/**/*.spec.js",
-              "libs/services/**/*.spec.jsx",
-              "libs/services/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["libs/services/**/*.ts"]
           }
         },
         "test": {
@@ -256,14 +221,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/enums/**/*.ts",
-              "libs/enums/**/*.spec.ts",
-              "libs/enums/**/*.spec.tsx",
-              "libs/enums/**/*.spec.js",
-              "libs/enums/**/*.spec.jsx",
-              "libs/enums/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["libs/enums/**/*.ts"]
           }
         },
         "test": {
@@ -288,8 +246,7 @@
             "outputPath": "dist/apps/functions",
             "main": "apps/functions/src/main.ts",
             "tsConfig": "apps/functions/tsconfig.app.json",
-            "assets": ["apps/functions/src/assets"],
-            "buildLibsFromSource": true
+            "assets": ["apps/functions/src/assets"]
           },
           "configurations": {
             "production": {
@@ -314,11 +271,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/functions/**/*.ts",
-              "apps/functions/**/*.spec.ts",
-              "apps/functions/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["apps/functions/**/*.ts"]
           }
         },
         "test": {
@@ -339,14 +292,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/factories/**/*.ts",
-              "libs/factories/**/*.spec.ts",
-              "libs/factories/**/*.spec.tsx",
-              "libs/factories/**/*.spec.js",
-              "libs/factories/**/*.spec.jsx",
-              "libs/factories/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["libs/factories/**/*.ts"]
           }
         },
         "test": {
@@ -367,14 +313,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/helper-functions/**/*.ts",
-              "libs/helper-functions/**/*.spec.ts",
-              "libs/helper-functions/**/*.spec.tsx",
-              "libs/helper-functions/**/*.spec.js",
-              "libs/helper-functions/**/*.spec.jsx",
-              "libs/helper-functions/**/*.d.ts"
-            ]
+            "lintFilePatterns": ["libs/helper-functions/**/*.ts"]
           }
         },
         "test": {
@@ -391,53 +330,14 @@
     "defaultCollection": "@nrwl/next"
   },
   "schematics": {
-    "@nrwl/workspace": {
-      "library": {
-        "linter": "eslint"
-      }
-    },
-    "@nrwl/cypress": {
-      "cypress-project": {
-        "linter": "eslint"
-      }
-    },
     "@nrwl/react": {
       "application": {
-        "style": "css",
-        "linter": "eslint",
         "babel": true
-      },
-      "component": {
-        "style": "css"
-      },
-      "library": {
-        "style": "css",
-        "linter": "eslint"
       }
     },
     "@nrwl/next": {
       "application": {
         "style": "css",
-        "linter": "eslint"
-      }
-    },
-    "@nrwl/web": {
-      "application": {
-        "linter": "eslint"
-      }
-    },
-    "@nrwl/node": {
-      "application": {
-        "linter": "eslint"
-      }
-    },
-    "@nrwl/nest": {
-      "application": {
-        "linter": "eslint"
-      }
-    },
-    "@nrwl/express": {
-      "application": {
         "linter": "eslint"
       }
     }

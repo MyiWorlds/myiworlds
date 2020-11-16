@@ -1,10 +1,11 @@
-import graphqlFields from 'graphql-fields';
 import { CIRCLE_TYPES } from '@myiworlds/enums';
 import { factoriesSwitch } from '@myiworlds/factories';
 import { firestoreAdmin, stackdriver } from '@myiworlds/services';
 import { GraphQLResolveInfo } from 'graphql';
 import { RESPONSE_CODES } from '@myiworlds/enums';
 import { userCanView } from '@myiworlds/helper-functions';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const graphqlFields = require('graphql-fields');
 import {
   Context,
   Filter,

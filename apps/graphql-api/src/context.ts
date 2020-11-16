@@ -1,11 +1,12 @@
 import * as cookie from 'cookie';
-import DataLoader from 'dataloader';
 import getDocumentsByIds from './services/firebase/firestore/queries/getDocumentsByIds';
 import getUserId from './services/firebase/authentication/getUserId';
 import { Context } from '@myiworlds/types';
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { stackdriver } from '@myiworlds/services';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const DataLoader = require('dataloader')
 
 const AppContext = async (req: ExpressContext['req']) => {
   try {

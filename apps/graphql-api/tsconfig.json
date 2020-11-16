@@ -1,37 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "types": ["node", "jest", "express"]
-  },
-  "include": [],
   "files": [],
+  "include": [],
+  "compilerOptions": {
+    "esModuleInterop": true,
+  },
   "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
     {
       "path": "./tsconfig.app.json"
     },

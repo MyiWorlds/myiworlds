@@ -1,17 +1,22 @@
-import { Circle } from '@myiworlds/types';
-import {
-  atom,
-  // useRecoilValue
-} from 'recoil';
+import { atomFamily, selector, } from 'recoil';
 
-const circleWithIdState = (id: string) =>
-  // React.memo(
-  atom<Circle>({
-    key: id,
-    default: {
-      id: id,
-      title: 'title',
-    },
-  }) as any;
-// ) as any;
-export default circleWithIdState;
+// Chnage to circle
+export const circleWithId = atomFamily({
+  key: `circle`,
+  default: {
+    title: '',
+    subtitle: '',
+    description: '',
+    string: '',
+  }
+});
+
+export const titleState = (id: string) => selector({
+  key: 'titleState',
+  get: ({get}) => {
+    const circle = get(circleWithId(id));
+    if (circle && circle.title) {
+      return circle.title.length;
+    }
+  }
+});
