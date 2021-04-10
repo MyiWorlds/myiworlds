@@ -31,6 +31,7 @@ class MyDocument extends Document {
               height: 100%;
               width: 100%;
               position: relative;
+              display: 'block',
               margin: 0px;
             }
 
@@ -101,6 +102,5 @@ MyDocument.getInitialProps = async (ctx) => {
     ],
   };
 };
-
 
 export default MyDocument;

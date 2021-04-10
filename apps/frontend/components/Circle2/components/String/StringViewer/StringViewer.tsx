@@ -1,4 +1,5 @@
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
 import { circleWithId } from '../../../../../atoms/circleWithIdState';
 import { useRecoilValue } from 'recoil';
@@ -7,6 +8,7 @@ interface Props {
   property: keyof Circle;
   circleId: string;
   stringProperties: React.HTMLAttributes<HTMLSpanElement>;
+  value?: string;
 }
 
 export default function StringViewer({
@@ -14,11 +16,12 @@ export default function StringViewer({
   circleId,
   stringProperties,
 }: Props) {
-  const circleEditing = useRecoilValue(circleWithId(circleId));
+  const circleFieldValue = useRecoilValue(circleWithId(circleId + property));
+  let text = circleFieldValue;
 
-  return (
-    <div>
-      <span {...stringProperties}>{circleEditing[property]}</span>
-    </div>
-  );
+  if (!text || text === '') {
+    text = 'Untitled';
+  }
+
+  return <Typography>{text}</Typography>;
 }

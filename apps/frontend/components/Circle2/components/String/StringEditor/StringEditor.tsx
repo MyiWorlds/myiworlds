@@ -2,6 +2,7 @@ import React from 'react';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { Circle } from '@myiworlds/types';
 import { circleWithId } from '../../../../../atoms/circleWithIdState';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useRecoilState } from 'recoil';
 
 interface Props {
@@ -10,26 +11,44 @@ interface Props {
   textFieldProps: TextFieldProps;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      margin: theme.spacing(),
+    },
+  }),
+);
+
 export default function StringEditor({
   circleId,
   textFieldProps,
   property,
 }: Props) {
-  const [circleEditing, setCircleEditing] = useRecoilState(
-    circleWithId(circleId),
+  const [circleFieldEditing, setCircleEditing] = useRecoilState(
+    circleWithId(circleId + property),
   );
+  const classes = useStyles();
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCircleEditing({
-      ...circleEditing,
-      [property]: event.target.value,
-    });
+    setCircleEditing(event.target.value);
   };
 
+  console.log(
+    'String Editor rendered with the following props: ',
+    circleId,
+    textFieldProps,
+    property,
+    circleFieldEditing,
+  );
+
+  if (!circleFieldEditing) {
+    return null;
+  }
+
   return (
-    <div>
+    <div className={classes.container}>
       <TextField
-        value={circleEditing[property]}
+        defaultValue={circleFieldEditing}
         onChange={onChange}
         {...textFieldProps}
       />

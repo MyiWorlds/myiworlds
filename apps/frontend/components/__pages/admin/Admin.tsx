@@ -117,7 +117,7 @@ const Admin = () => {
             <CardHeader title="Services Used Shortcuts" />
             <CardContent>
               <List className={classes.root}>
-                {servicesUsed.map(service => (
+                {servicesUsed.map((service) => (
                   <ListItem
                     button
                     component="a"

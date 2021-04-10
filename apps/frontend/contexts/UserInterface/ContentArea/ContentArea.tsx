@@ -8,6 +8,8 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
+      display: 'flex',
+      width: '100%',
       flexGrow: 1,
       zIndex: theme.zIndex.drawer - 1,
       overflow: 'auto',

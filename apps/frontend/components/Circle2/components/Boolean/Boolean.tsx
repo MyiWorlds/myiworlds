@@ -1,30 +1,21 @@
+import BooleanEditor from './BooleanEditor';
+import BooleanViewer from './BooleanViewer';
 import EditIcon from '@material-ui/icons/Edit';
 import React, { useState } from 'react';
-import StringEditor from './StringEditor';
-import StringViewer from './StringViewer';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { Circle } from '@myiworlds/types';
 import {
   createStyles,
   IconButton,
   makeStyles,
-  TextFieldProps,
-  Theme,
-} from '@material-ui/core';
+  Theme
+  } from '@material-ui/core';
+import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 
-interface Props {
-  parentIsEditing: boolean;
-  property: keyof Circle;
-  circleId: string;
-  textFieldProps: TextFieldProps;
-  stringProperties: React.HTMLAttributes<HTMLSpanElement>;
-}
-
+// Move higher up as all filed types need this
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    stringContainer: {
-      width: '100%',
-      height: '100%',
+    booleanContainer: {
       margin: theme.spacing(),
     },
     editButton: {
@@ -38,14 +29,21 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function String({
+interface Props {
+  property: keyof Circle;
+  circleId: string;
+  formControlLabelProps: FormControlLabelProps;
+  parentIsEditing: boolean;
+}
+
+export default function Boolean({
   circleId,
-  parentIsEditing,
   property,
-  textFieldProps,
-  stringProperties,
+  parentIsEditing,
+  formControlLabelProps,
 }: Props) {
   const [isEditing, setIsEditing] = useState(parentIsEditing);
+
   const classes = useStyles();
 
   const handleSetEditing = () => {
@@ -53,16 +51,17 @@ export default function String({
       setIsEditing(true);
     }
   };
+
   const handleSetViewing = () => {
     setIsEditing(false);
   };
 
   return isEditing && parentIsEditing ? (
-    <div className={classes.stringContainer}>
-      <StringEditor
+    <div className={classes.booleanContainer}>
+      <BooleanEditor
         property={property}
         circleId={circleId}
-        textFieldProps={textFieldProps}
+        formControlLabelProps={formControlLabelProps}
       />
       <IconButton
         aria-label="view"
@@ -73,11 +72,12 @@ export default function String({
       </IconButton>
     </div>
   ) : (
-    <div className={classes.stringContainer} onDoubleClick={handleSetEditing}>
-      <StringViewer
+    <div className={classes.booleanContainer} onDoubleClick={handleSetEditing}>
+      <BooleanViewer
+        key="viewer"
         property={property}
         circleId={circleId}
-        stringProperties={stringProperties}
+        formControlLabelProps={formControlLabelProps}
       />
       {parentIsEditing && (
         <IconButton

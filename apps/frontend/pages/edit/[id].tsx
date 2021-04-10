@@ -1,30 +1,54 @@
 import CircleComponent from '../../components/Circle2/Circle';
-import React from 'react';
+import Error from './../../components/Error';
+import ProgressWithMessage from './../../components/ProgressWithMessage';
+import React, { useEffect } from 'react';
+import { atomFamily } from 'recoil';
+import { Circle } from '@myiworlds/types';
 import { Typography } from '@material-ui/core';
+import { useGetCircleToEditByIdQuery } from './../../generated/apolloComponents';
 import { useRouter } from 'next/router';
-// import CircleEditor from './../../components/Circle/CircleEditor/CircleEditor';
 
 const EditCircle = () => {
   const router = useRouter();
   let circleId = null;
-  if (router.query.id) {
-    if (Array.isArray(router.query.id)) {
-      circleId = router.query.id[0];
-    } else {
-      circleId = router.query.id;
-    }
+  if (Array.isArray(router.query.id)) {
+    circleId = router.query.id[0];
+  } else {
+    circleId = router.query.id;
+  }
 
-    // return <CircleEditor id={circleId} />;
+  const {
+    data: circleData,
+    loading: loadingCircle,
+    error: errorCircle,
+  } = useGetCircleToEditByIdQuery({
+    skip: !circleId,
+    variables: {
+      id: circleId,
+    },
+  });
+
+  if (loadingCircle) {
+    return <ProgressWithMessage message="Loading Circle" />;
+  }
+
+  if (errorCircle) {
+    return <Error error={errorCircle} />;
+  }
+
+  if (circleData && circleData?.getCircleById) {
     return (
       <CircleComponent
-        isEditing={true}
-        circle={{ id: circleId }}
+        initialIsEditing={true}
+        circle={circleData.getCircleById as Circle}
         fetch={true}
       />
     );
   }
 
-  return <Typography>Circle Editor requires an id</Typography>;
+  return (
+    <Typography>Could not find the content you are looking for</Typography>
+  );
 };
 
 export default EditCircle;

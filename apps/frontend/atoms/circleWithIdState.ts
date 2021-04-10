@@ -1,22 +1,35 @@
-import { atomFamily, selector, } from 'recoil';
+import { allCircleFields } from './../constants/circleFieldsStrings';
+import { atomFamily, selectorFamily } from 'recoil';
+import { Circle } from '@myiworlds/types';
 
 // Chnage to circle
 export const circleWithId = atomFamily({
   key: `circle`,
-  default: {
-    title: '',
-    subtitle: '',
-    description: '',
-    string: '',
-  }
+  default: undefined as any,
 });
 
-export const titleState = (id: string) => selector({
-  key: 'titleState',
-  get: ({get}) => {
-    const circle = get(circleWithId(id));
-    if (circle && circle.title) {
-      return circle.title.length;
+export const circlePropertyState = selectorFamily({
+  key: 'circle123',
+  get: (queryParameters: { id: string; field: keyof Circle }) => ({ get }) => {
+    const { id, field } = queryParameters;
+    const circleField = get(circleWithId(id + field));
+    if (circleField) {
+      return circleField;
     }
-  }
+  },
+});
+
+export const getAllCircleState = selectorFamily({
+  key: 'whole-circle',
+  get: (queryParameters: { id: string }) => ({ get }) => {
+    const { id } = queryParameters;
+    const circle = {};
+    allCircleFields.forEach((field: keyof Circle) => {
+      const circleFieldValue = get(circleWithId(id + field));
+      if (circleFieldValue) {
+        circle[field] = circleFieldValue;
+      }
+    });
+    return circle;
+  },
 });

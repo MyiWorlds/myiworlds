@@ -2,6 +2,8 @@
 
 I am still working on the core architecture, but will turn it on for people to watch the progression soon-ish... I have been working on this since 2013 and is the reason I am a software developer. The majority of my life since then has been spent planning/creating/rebuilding this. When it is to a stable status I will be opening it up to anyone to see and join.
 
+The purpose of this project is to take a idea and create it in the digital world as accurately and fast as possible. Then have the ability to share what you created with the world.
+
 I want to allow everyone to be better. I am building an interface to do as many things as I can through (imagine an operating system that you will use on your all your devices, computer, vr, ar, and eventually neural link). The user experience is specifically picked by the person using it. Being someone who uses so many different websites/applications I find it incredibly annoying to have features not available on some apps or just have no idea how to create or find the things your looking for. I want to be able create pages combining any type of content that someone has made in a single system. I believe having a market place of open source features anyone can use and customize for themselves in a central system will push us closer to a type 1 civilization. We are a fragile species living on a rock flying through space... We need to unite and advance our species.
 
 Some core principles:
