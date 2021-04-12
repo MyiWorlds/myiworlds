@@ -2,8 +2,8 @@ import * as functions from 'firebase-functions';
 import next from 'next';
 
 const app = next({
-  dev: false,
-  conf: { distDir: 'dist/apps/functions/frontend' },
+  dev: true,
+  // conf: { distDir: 'dist/apps/functions/frontend' },
 });
 
 const nextApp = functions.https.onRequest(
@@ -11,7 +11,7 @@ const nextApp = functions.https.onRequest(
     return app
       .prepare()
       .then(() => app.getRequestHandler()(req, res))
-      .catch(err => console.error(err.message));
+      .catch((err) => console.error(err.message));
   },
 );
 

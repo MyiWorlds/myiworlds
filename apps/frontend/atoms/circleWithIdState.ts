@@ -26,7 +26,7 @@ export const getAllCircleState = selectorFamily({
     const circle = {};
     allCircleFields.forEach((field: keyof Circle) => {
       const circleFieldValue = get(circleWithId(id + field));
-      if (circleFieldValue) {
+      if (circleFieldValue !== undefined) {
         circle[field] = circleFieldValue;
       }
     });

@@ -1,9 +1,8 @@
 import CircleComponent from '../../components/Circle2/Circle';
 import Error from './../../components/Error';
 import ProgressWithMessage from './../../components/ProgressWithMessage';
-import React, { useEffect } from 'react';
-import { atomFamily } from 'recoil';
-import { Circle } from '@myiworlds/types';
+import React from 'react';
+import { CircleHydrated } from '@myiworlds/types';
 import { Typography } from '@material-ui/core';
 import { useGetCircleToEditByIdQuery } from './../../generated/apolloComponents';
 import { useRouter } from 'next/router';
@@ -40,7 +39,7 @@ const EditCircle = () => {
     return (
       <CircleComponent
         initialIsEditing={true}
-        circle={circleData.getCircleById as Circle}
+        circle={circleData.getCircleById as CircleHydrated}
         fetch={true}
       />
     );

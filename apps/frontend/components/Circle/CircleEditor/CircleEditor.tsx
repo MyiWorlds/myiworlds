@@ -378,7 +378,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     if (circleData && circleData?.getCircleById) {
       circle = circleData.getCircleById as CircleHydrated;
     } else if (circleCloneData && circleCloneData?.getCircleCloneById) {
-      circle = circleCloneData.getCircleCloneById as CircleHydrated;
+      const clonedCircle = {
+        ...circleCloneData.getCircleCloneById,
+        __typename: 'Circle',
+        clonedFrom: undefined,
+      };
+      circle = clonedCircle as CircleHydrated;
     }
 
     if (user.id && !user.canCreate) {
@@ -393,12 +398,12 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setUpdateCircleVariables(convertHydratedCircleToFlatCircle(circle));
 
       if (circle.layouts && circle.layouts.data) {
-        const layouts = JSON.parse(circle.layouts.data.layouts, function(
-          key,
-          value,
-        ) {
-          return value === 'Infinity' ? Infinity : value;
-        });
+        const layouts = JSON.parse(
+          circle.layouts.data.layouts,
+          function (key, value) {
+            return value === 'Infinity' ? Infinity : value;
+          },
+        );
         setCircleLayouts(
           convertHydratedCircleToFlatCircle({
             ...circle.layouts,

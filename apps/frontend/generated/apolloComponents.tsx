@@ -1,7 +1,9 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -9,13 +11,67 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * The `BigInt` scalar type represents non-fractional signed whole numeric values.
-   * BigInt can represent values between -(2^53) + 1 and 2^53 - 1.
-   **/
+  /** The `BigInt` scalar type represents non-fractional signed whole numeric values. BigInt can represent values between -(2^53) + 1 and 2^53 - 1.  */
   BigInt: any;
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  getSeededCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
+  getUserById?: Maybe<User>;
+  getCircleById?: Maybe<Circle>;
+  getCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
+  getCircleCloneById?: Maybe<CircleClone>;
+  getCircleClonesById?: Maybe<GetCircleClonesByIdResponse>;
+  getCircleByProfileUsername?: Maybe<Circle>;
+  getProfileById?: Maybe<CreatedProfile>;
+  getPublicProfileById?: Maybe<PublicProfile>;
+  getPublicProfilesByIds?: Maybe<Array<Maybe<PublicProfile>>>;
+  getProfileCloneById?: Maybe<ProfileClone>;
+  getProfileByUsername?: Maybe<GetProfileByUsernamePayload>;
+  getUserProfiles?: Maybe<Array<Maybe<CreatedProfile>>>;
+};
+
+export type QueryGetCircleByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGetCirclesByIdsArgs = {
+  ids: Array<Maybe<Scalars['String']>>;
+};
+
+export type QueryGetCircleCloneByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGetCircleClonesByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGetCircleByProfileUsernameArgs = {
+  username: Scalars['String'];
+};
+
+export type QueryGetProfileByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGetPublicProfileByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGetPublicProfilesByIdsArgs = {
+  ids: Array<Maybe<Scalars['String']>>;
+};
+
+export type QueryGetProfileCloneByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryGetProfileByUsernameArgs = {
+  username: Scalars['String'];
 };
 
 /** A circle in a graph that can assemble to be anything. */
@@ -58,6 +114,33 @@ export type Circle = {
   geoPoint?: Maybe<Scalars['String']>;
   line?: Maybe<Circle>;
   lines?: Maybe<Array<Maybe<Circle>>>;
+};
+
+/** The publicProfile in which other publicProfiles can access.  Has fields removed from publicProfile others should not be able to see. */
+export type PublicProfile = {
+  __typename?: 'PublicProfile';
+  id?: Maybe<Scalars['String']>;
+  collection?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  media?: Maybe<Circle>;
+  theme?: Maybe<Circle>;
+  publicHome?: Maybe<Circle>;
+  circleUis?: Maybe<Circle>;
+};
+
+/** user who can create and interact with circles. */
+export type User = {
+  __typename?: 'User';
+  id?: Maybe<Scalars['String']>;
+  collection?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  isSystemAdmin?: Maybe<Scalars['Boolean']>;
+  canCreate?: Maybe<Scalars['Boolean']>;
 };
 
 /** A circle in a graph that can assemble to be anything. */
@@ -103,18 +186,12 @@ export type CircleClone = {
   lines?: Maybe<Array<Maybe<Circle>>>;
 };
 
-export type CopyCirclePayload = {
-  __typename?: 'CopyCirclePayload';
+export type GetCircleClonesByIdResponse = {
+  __typename?: 'GetCircleClonesByIdResponse';
   status?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  copiedCircleId?: Maybe<Scalars['String']>;
-};
-
-export type CreateCirclePayload = {
-  __typename?: 'CreateCirclePayload';
-  status?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  createdCircle?: Maybe<Circle>;
+  hasMoreResults?: Maybe<Scalars['Boolean']>;
+  cursor?: Maybe<Scalars['String']>;
+  clones?: Maybe<Array<Maybe<CircleClone>>>;
 };
 
 /** user who can create and interact with circles. */
@@ -139,40 +216,22 @@ export type CreatedProfile = {
   level?: Maybe<Circle>;
 };
 
-export type CreateProfilePayload = {
-  __typename?: 'CreateProfilePayload';
-  status?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  createdDocumentId?: Maybe<Scalars['String']>;
-};
-
-export type CreateServiceKeysPayload = {
-  __typename?: 'CreateServiceKeysPayload';
-  status?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  totalCreated?: Maybe<Scalars['Boolean']>;
-};
-
-export type CreateUserPayload = {
-  __typename?: 'CreateUserPayload';
-  status?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  createdUser?: Maybe<User>;
-};
-
-export type DeleteUserPayload = {
-  __typename?: 'DeleteUserPayload';
-  status: Scalars['String'];
-  message: Scalars['String'];
-  userDeleted: Scalars['Boolean'];
-};
-
-export type GetCircleClonesByIdResponse = {
-  __typename?: 'GetCircleClonesByIdResponse';
-  status?: Maybe<Scalars['String']>;
-  hasMoreResults?: Maybe<Scalars['Boolean']>;
-  cursor?: Maybe<Scalars['String']>;
-  clones?: Maybe<Array<Maybe<CircleClone>>>;
+/** CreatedProfile which only a user can access clone. */
+export type ProfileClone = {
+  __typename?: 'ProfileClone';
+  id?: Maybe<Scalars['String']>;
+  collection?: Maybe<Scalars['String']>;
+  clonedFrom?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['BigInt']>;
+  dateUpdated?: Maybe<Scalars['BigInt']>;
+  addToHistory?: Maybe<Scalars['Boolean']>;
+  media?: Maybe<Circle>;
+  theme?: Maybe<Circle>;
+  publicHome?: Maybe<Circle>;
+  home?: Maybe<Circle>;
+  history?: Maybe<Circle>;
+  circleUis?: Maybe<Circle>;
 };
 
 export type GetProfileByUsernamePayload = {
@@ -304,104 +363,61 @@ export type MutationUpdateCircleArgs = {
   lines?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-/** CreatedProfile which only a user can access clone. */
-export type ProfileClone = {
-  __typename?: 'ProfileClone';
-  id?: Maybe<Scalars['String']>;
-  collection?: Maybe<Scalars['String']>;
-  clonedFrom?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  dateCreated?: Maybe<Scalars['BigInt']>;
-  dateUpdated?: Maybe<Scalars['BigInt']>;
-  addToHistory?: Maybe<Scalars['Boolean']>;
-  media?: Maybe<Circle>;
-  theme?: Maybe<Circle>;
-  publicHome?: Maybe<Circle>;
-  home?: Maybe<Circle>;
-  history?: Maybe<Circle>;
-  circleUis?: Maybe<Circle>;
-};
-
-/**
- * The publicProfile in which other publicProfiles can access.  Has fields removed
- * from publicProfile others should not be able to see.
- **/
-export type PublicProfile = {
-  __typename?: 'PublicProfile';
-  id?: Maybe<Scalars['String']>;
-  collection?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  dateCreated?: Maybe<Scalars['BigInt']>;
-  dateUpdated?: Maybe<Scalars['BigInt']>;
-  media?: Maybe<Circle>;
-  theme?: Maybe<Circle>;
-  publicHome?: Maybe<Circle>;
-  circleUis?: Maybe<Circle>;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  getSeededCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
-  getUserById?: Maybe<User>;
-  getCircleById?: Maybe<Circle>;
-  getCirclesByIds?: Maybe<Array<Maybe<Circle>>>;
-  getCircleCloneById?: Maybe<CircleClone>;
-  getCircleClonesById?: Maybe<GetCircleClonesByIdResponse>;
-  getCircleByProfileUsername?: Maybe<Circle>;
-  getProfileById?: Maybe<CreatedProfile>;
-  getPublicProfileById?: Maybe<PublicProfile>;
-  getPublicProfilesByIds?: Maybe<Array<Maybe<PublicProfile>>>;
-  getProfileCloneById?: Maybe<ProfileClone>;
-  getProfileByUsername?: Maybe<GetProfileByUsernamePayload>;
-  getUserProfiles?: Maybe<Array<Maybe<CreatedProfile>>>;
-};
-
-export type QueryGetCircleByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetCirclesByIdsArgs = {
-  ids: Array<Maybe<Scalars['String']>>;
-};
-
-export type QueryGetCircleCloneByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetCircleClonesByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetCircleByProfileUsernameArgs = {
-  username: Scalars['String'];
-};
-
-export type QueryGetProfileByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetPublicProfileByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetPublicProfilesByIdsArgs = {
-  ids: Array<Maybe<Scalars['String']>>;
-};
-
-export type QueryGetProfileCloneByIdArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetProfileByUsernameArgs = {
-  username: Scalars['String'];
-};
-
 export type SeedFirestoreCirclesPayload = {
   __typename?: 'SeedFirestoreCirclesPayload';
   status?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   created?: Maybe<Array<Maybe<Circle>>>;
   edited?: Maybe<Array<Maybe<Circle>>>;
+};
+
+export type CreateServiceKeysPayload = {
+  __typename?: 'CreateServiceKeysPayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  totalCreated?: Maybe<Scalars['Boolean']>;
+};
+
+export type CreateUserPayload = {
+  __typename?: 'CreateUserPayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  createdUser?: Maybe<User>;
+};
+
+export type DeleteUserPayload = {
+  __typename?: 'DeleteUserPayload';
+  status: Scalars['String'];
+  message: Scalars['String'];
+  userDeleted: Scalars['Boolean'];
+};
+
+export type CreateProfilePayload = {
+  __typename?: 'CreateProfilePayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  createdDocumentId?: Maybe<Scalars['String']>;
+};
+
+export type UpdateProfilePayload = {
+  __typename?: 'UpdateProfilePayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  updatedProfile?: Maybe<CreatedProfile>;
+};
+
+export type CopyCirclePayload = {
+  __typename?: 'CopyCirclePayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  copiedCircleId?: Maybe<Scalars['String']>;
+};
+
+export type CreateCirclePayload = {
+  __typename?: 'CreateCirclePayload';
+  status?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  createdCircle?: Maybe<Circle>;
 };
 
 export type UpdateCirclePayload = {
@@ -412,47 +428,27 @@ export type UpdateCirclePayload = {
   updatedCircle?: Maybe<Circle>;
 };
 
-export type UpdateProfilePayload = {
-  __typename?: 'UpdateProfilePayload';
-  status?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  updatedProfile?: Maybe<CreatedProfile>;
-};
-
-/** user who can create and interact with circles. */
-export type User = {
-  __typename?: 'User';
-  id?: Maybe<Scalars['String']>;
-  collection?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  photoURL?: Maybe<Scalars['String']>;
-  dateCreated?: Maybe<Scalars['BigInt']>;
-  dateUpdated?: Maybe<Scalars['BigInt']>;
-  isSystemAdmin?: Maybe<Scalars['Boolean']>;
-  canCreate?: Maybe<Scalars['Boolean']>;
-};
-
-export type GetCircleClonesByIdQueryVariables = {
+export type GetCircleClonesByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
-  getCircleClonesById: Maybe<
+  getCircleClonesById?: Maybe<
     { __typename?: 'GetCircleClonesByIdResponse' } & Pick<
       GetCircleClonesByIdResponse,
       'status' | 'hasMoreResults' | 'cursor'
     > & {
-        clones: Maybe<
+        clones?: Maybe<
           Array<
             Maybe<
               { __typename?: 'CircleClone' } & Pick<
                 CircleClone,
                 'id' | 'title' | 'dateUpdated' | 'data'
               > & {
-                  clonedFrom: Maybe<
+                  clonedFrom?: Maybe<
                     { __typename?: 'Circle' } & Pick<Circle, 'id'>
                   >;
-                  media: Maybe<
+                  media?: Maybe<
                     { __typename?: 'Circle' } & Pick<
                       Circle,
                       'id' | 'type' | 'title' | 'string'
@@ -466,45 +462,45 @@ export type GetCircleClonesByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetCircleToEditByIdQueryVariables = {
+export type GetCircleToEditByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetCircleToEditByIdQuery = { __typename?: 'Query' } & {
-  getCircleById: Maybe<{ __typename?: 'Circle' } & FullCircleFragmentFragment>;
+  getCircleById?: Maybe<{ __typename?: 'Circle' } & FullCircleFragmentFragment>;
 };
 
-export type GetFullCircleCloneByIdQueryVariables = {
+export type GetFullCircleCloneByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetFullCircleCloneByIdQuery = { __typename?: 'Query' } & {
-  getCircleCloneById: Maybe<
+  getCircleCloneById?: Maybe<
     { __typename?: 'CircleClone' } & FullCircleCloneFragmentFragment
   >;
 };
 
-export type GetCircleAndLinesByIdQueryVariables = {
+export type GetCircleAndLinesByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetCircleAndLinesByIdQuery = { __typename?: 'Query' } & {
-  getCircleById: Maybe<
+  getCircleById?: Maybe<
     { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
-        media: Maybe<
+        media?: Maybe<
           { __typename?: 'Circle' } & Pick<
             Circle,
             'id' | 'type' | 'title' | 'string'
           >
         >;
-        lines: Maybe<
+        lines?: Maybe<
           Array<
             Maybe<
               { __typename?: 'Circle' } & Pick<
                 Circle,
                 'id' | 'type' | 'title' | 'description'
               > & {
-                  media: Maybe<
+                  media?: Maybe<
                     { __typename?: 'Circle' } & Pick<
                       Circle,
                       'id' | 'type' | 'title' | 'string'
@@ -518,21 +514,21 @@ export type GetCircleAndLinesByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetCircleToViewByIdQueryVariables = {
+export type GetCircleToViewByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetCircleToViewByIdQuery = { __typename?: 'Query' } & {
-  getCircleById: Maybe<{ __typename?: 'Circle' } & FullCircleFragmentFragment>;
+  getCircleById?: Maybe<{ __typename?: 'Circle' } & FullCircleFragmentFragment>;
 };
 
-export type CopyCircleMutationVariables = {
+export type CopyCircleMutationVariables = Exact<{
   id: Scalars['String'];
   collection: Scalars['String'];
-};
+}>;
 
 export type CopyCircleMutation = { __typename?: 'Mutation' } & {
-  copyCircle: Maybe<
+  copyCircle?: Maybe<
     { __typename?: 'CopyCirclePayload' } & Pick<
       CopyCirclePayload,
       'status' | 'message' | 'copiedCircleId'
@@ -540,7 +536,7 @@ export type CopyCircleMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export type UpdateCircleMutationVariables = {
+export type UpdateCircleMutationVariables = Exact<{
   id: Scalars['String'];
   merge: Scalars['Boolean'];
   type?: Maybe<Scalars['String']>;
@@ -575,10 +571,10 @@ export type UpdateCircleMutationVariables = {
   geoPoint?: Maybe<Scalars['String']>;
   line?: Maybe<Scalars['String']>;
   lines?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
+}>;
 
 export type UpdateCircleMutation = { __typename?: 'Mutation' } & {
-  updateCircle: Maybe<
+  updateCircle?: Maybe<
     { __typename?: 'UpdateCirclePayload' } & Pick<
       UpdateCirclePayload,
       'status' | 'message' | 'updatedDocumentId'
@@ -607,22 +603,22 @@ export type CircleCloneHeaderFragmentFragment = {
   | 'dateCreated'
   | 'dateUpdated'
 > & {
-    clonedFrom: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    parent: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    copiedFrom: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    media: Maybe<
+    clonedFrom?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    parent?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    copiedFrom?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    media?: Maybe<
       { __typename?: 'Circle' } & Pick<
         Circle,
         'id' | 'type' | 'title' | 'string' | 'data'
       >
     >;
-    creator: Maybe<
+    creator?: Maybe<
       { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
     >;
-    owner: Maybe<
+    owner?: Maybe<
       { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
     >;
-    viewers: Maybe<
+    viewers?: Maybe<
       Array<
         Maybe<
           { __typename?: 'PublicProfile' } & Pick<
@@ -632,7 +628,7 @@ export type CircleCloneHeaderFragmentFragment = {
         >
       >
     >;
-    editors: Maybe<
+    editors?: Maybe<
       Array<
         Maybe<
           { __typename?: 'PublicProfile' } & Pick<
@@ -642,10 +638,10 @@ export type CircleCloneHeaderFragmentFragment = {
         >
       >
     >;
-    ui: Maybe<
+    ui?: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
     >;
-    layouts: Maybe<
+    layouts?: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
     >;
   };
@@ -669,21 +665,21 @@ export type CircleHeaderFragmentFragment = { __typename?: 'Circle' } & Pick<
   | 'dateCreated'
   | 'dateUpdated'
 > & {
-    parent: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    copiedFrom: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
-    media: Maybe<
+    parent?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    copiedFrom?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id'>>;
+    media?: Maybe<
       { __typename?: 'Circle' } & Pick<
         Circle,
         'id' | 'type' | 'title' | 'string' | 'data'
       >
     >;
-    creator: Maybe<
+    creator?: Maybe<
       { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
     >;
-    owner: Maybe<
+    owner?: Maybe<
       { __typename?: 'PublicProfile' } & Pick<PublicProfile, 'id' | 'username'>
     >;
-    viewers: Maybe<
+    viewers?: Maybe<
       Array<
         Maybe<
           { __typename?: 'PublicProfile' } & Pick<
@@ -693,7 +689,7 @@ export type CircleHeaderFragmentFragment = { __typename?: 'Circle' } & Pick<
         >
       >
     >;
-    editors: Maybe<
+    editors?: Maybe<
       Array<
         Maybe<
           { __typename?: 'PublicProfile' } & Pick<
@@ -703,9 +699,9 @@ export type CircleHeaderFragmentFragment = { __typename?: 'Circle' } & Pick<
         >
       >
     >;
-    ui: Maybe<
+    ui?: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'> & {
-          lines: Maybe<
+          lines?: Maybe<
             Array<
               Maybe<
                 { __typename?: 'Circle' } & Pick<
@@ -717,7 +713,7 @@ export type CircleHeaderFragmentFragment = { __typename?: 'Circle' } & Pick<
           >;
         }
     >;
-    layouts: Maybe<
+    layouts?: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title' | 'data'>
     >;
   };
@@ -735,8 +731,8 @@ export type FullCircleCloneFragmentFragment = {
   | 'date'
   | 'geoPoint'
 > & {
-    line: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>;
-    lines: Maybe<
+    line?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>;
+    lines?: Maybe<
       Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
     >;
   } & CircleCloneHeaderFragmentFragment;
@@ -752,20 +748,20 @@ export type FullCircleFragmentFragment = { __typename?: 'Circle' } & Pick<
   | 'date'
   | 'geoPoint'
 > & {
-    line: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>;
-    lines: Maybe<
+    line?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>;
+    lines?: Maybe<
       Array<Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'>>>
     >;
   } & CircleHeaderFragmentFragment;
 
-export type GetCircleByIdQueryVariables = {
+export type GetCircleByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetCircleByIdQuery = { __typename?: 'Query' } & {
-  getCircleById: Maybe<
+  getCircleById?: Maybe<
     { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
-        media: Maybe<
+        media?: Maybe<
           { __typename?: 'Circle' } & Pick<
             Circle,
             'id' | 'type' | 'title' | 'string'
@@ -775,14 +771,14 @@ export type GetCircleByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetCircleCloneByIdQueryVariables = {
+export type GetCircleCloneByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetCircleCloneByIdQuery = { __typename?: 'Query' } & {
-  getCircleCloneById: Maybe<
+  getCircleCloneById?: Maybe<
     { __typename?: 'CircleClone' } & Pick<CircleClone, 'id' | 'title'> & {
-        media: Maybe<
+        media?: Maybe<
           { __typename?: 'Circle' } & Pick<
             Circle,
             'id' | 'type' | 'title' | 'string'
@@ -792,16 +788,16 @@ export type GetCircleCloneByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetCirclesByIdsQueryVariables = {
+export type GetCirclesByIdsQueryVariables = Exact<{
   ids: Array<Maybe<Scalars['String']>>;
-};
+}>;
 
 export type GetCirclesByIdsQuery = { __typename?: 'Query' } & {
-  getCirclesByIds: Maybe<
+  getCirclesByIds?: Maybe<
     Array<
       Maybe<
         { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
-            media: Maybe<
+            media?: Maybe<
               { __typename?: 'Circle' } & Pick<
                 Circle,
                 'id' | 'type' | 'title' | 'string'
@@ -813,17 +809,17 @@ export type GetCirclesByIdsQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetPublicProfileByIdQueryVariables = {
+export type GetPublicProfileByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetPublicProfileByIdQuery = { __typename?: 'Query' } & {
-  getPublicProfileById: Maybe<
+  getPublicProfileById?: Maybe<
     { __typename?: 'PublicProfile' } & Pick<
       PublicProfile,
       'id' | 'username'
     > & {
-        media: Maybe<
+        media?: Maybe<
           { __typename?: 'Circle' } & Pick<
             Circle,
             'id' | 'type' | 'title' | 'string'
@@ -833,19 +829,21 @@ export type GetPublicProfileByIdQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type SeedFirestoreCirclesMutationVariables = {};
+export type SeedFirestoreCirclesMutationVariables = Exact<{
+  [key: string]: never;
+}>;
 
 export type SeedFirestoreCirclesMutation = { __typename?: 'Mutation' } & {
-  seedFirestoreCircles: Maybe<
+  seedFirestoreCircles?: Maybe<
     { __typename?: 'SeedFirestoreCirclesPayload' } & Pick<
       SeedFirestoreCirclesPayload,
       'status' | 'message'
     > & {
-        created: Maybe<
+        created?: Maybe<
           Array<
             Maybe<
               { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
-                  media: Maybe<
+                  media?: Maybe<
                     { __typename?: 'Circle' } & Pick<
                       Circle,
                       'id' | 'type' | 'title' | 'string'
@@ -855,11 +853,11 @@ export type SeedFirestoreCirclesMutation = { __typename?: 'Mutation' } & {
             >
           >
         >;
-        edited: Maybe<
+        edited?: Maybe<
           Array<
             Maybe<
               { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
-                  media: Maybe<
+                  media?: Maybe<
                     { __typename?: 'Circle' } & Pick<
                       Circle,
                       'id' | 'type' | 'title' | 'string'
@@ -873,14 +871,16 @@ export type SeedFirestoreCirclesMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export type GetSeededCirclesByIdsQueryVariables = {};
+export type GetSeededCirclesByIdsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
 export type GetSeededCirclesByIdsQuery = { __typename?: 'Query' } & {
-  getSeededCirclesByIds: Maybe<
+  getSeededCirclesByIds?: Maybe<
     Array<
       Maybe<
         { __typename?: 'Circle' } & Pick<Circle, 'id' | 'title'> & {
-            media: Maybe<
+            media?: Maybe<
               { __typename?: 'Circle' } & Pick<
                 Circle,
                 'id' | 'type' | 'title' | 'string'
@@ -892,12 +892,12 @@ export type GetSeededCirclesByIdsQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type CreateProfileMutationVariables = {
+export type CreateProfileMutationVariables = Exact<{
   username: Scalars['String'];
-};
+}>;
 
 export type CreateProfileMutation = { __typename?: 'Mutation' } & {
-  createProfile: Maybe<
+  createProfile?: Maybe<
     { __typename?: 'CreateProfilePayload' } & Pick<
       CreateProfilePayload,
       'status' | 'message' | 'createdDocumentId'
@@ -905,7 +905,7 @@ export type CreateProfileMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export type UpdateProfileMutationVariables = {
+export type UpdateProfileMutationVariables = Exact<{
   id: Scalars['String'];
   merge: Scalars['Boolean'];
   username?: Maybe<Scalars['String']>;
@@ -923,10 +923,10 @@ export type UpdateProfileMutationVariables = {
   level?: Maybe<Scalars['String']>;
   publicHome?: Maybe<Scalars['String']>;
   circleUis?: Maybe<Scalars['String']>;
-};
+}>;
 
 export type UpdateProfileMutation = { __typename?: 'Mutation' } & {
-  updateProfile: Maybe<
+  updateProfile?: Maybe<
     { __typename?: 'UpdateProfilePayload' } & Pick<
       UpdateProfilePayload,
       'status' | 'message'
@@ -934,12 +934,12 @@ export type UpdateProfileMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export type GetProfileByUsernameQueryVariables = {
+export type GetProfileByUsernameQueryVariables = Exact<{
   username: Scalars['String'];
-};
+}>;
 
 export type GetProfileByUsernameQuery = { __typename?: 'Query' } & {
-  getProfileByUsername: Maybe<
+  getProfileByUsername?: Maybe<
     { __typename?: 'GetProfileByUsernamePayload' } & Pick<
       GetProfileByUsernamePayload,
       'usernameAvailable' | 'usernameInvalid'
@@ -947,27 +947,27 @@ export type GetProfileByUsernameQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export type GetProfileByIdQueryVariables = {
+export type GetProfileByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 export type GetProfileByIdQuery = { __typename?: 'Query' } & {
-  getProfileById: Maybe<
+  getProfileById?: Maybe<
     { __typename?: 'CreatedProfile' } & SelectedProfileFragmentFragment
   >;
 };
 
-export type GetUserProfilesQueryVariables = {};
+export type GetUserProfilesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUserProfilesQuery = { __typename?: 'Query' } & {
-  getUserProfiles: Maybe<
+  getUserProfiles?: Maybe<
     Array<
       Maybe<
         { __typename?: 'CreatedProfile' } & Pick<
           CreatedProfile,
           'id' | 'username'
         > & {
-            media: Maybe<
+            media?: Maybe<
               { __typename?: 'Circle' } & Pick<
                 Circle,
                 'id' | 'type' | 'title' | 'string'
@@ -992,47 +992,47 @@ export type SelectedProfileFragmentFragment = {
   | 'overrideCircleUIs'
   | 'addToHistory'
 > & {
-    media: Maybe<
+    media?: Maybe<
       { __typename?: 'Circle' } & Pick<
         Circle,
         'id' | 'type' | 'title' | 'string'
       >
     >;
-    level: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    rating: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    circleUis: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    theme: Maybe<
+    level?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    rating?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    circleUis?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    theme?: Maybe<
       { __typename?: 'Circle' } & Pick<Circle, 'id' | 'type' | 'data'>
     >;
-    publicHome: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    home: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    following: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
-    history: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    publicHome?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    home?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    following?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
+    history?: Maybe<{ __typename?: 'Circle' } & Pick<Circle, 'id' | 'type'>>;
   };
 
-export type CreateUserMutationVariables = {
+export type CreateUserMutationVariables = Exact<{
   id: Scalars['String'];
   email: Scalars['String'];
   photoURL?: Maybe<Scalars['String']>;
-};
+}>;
 
 export type CreateUserMutation = { __typename?: 'Mutation' } & {
-  createUser: Maybe<
+  createUser?: Maybe<
     { __typename?: 'CreateUserPayload' } & Pick<
       CreateUserPayload,
       'status' | 'message'
     > & {
-        createdUser: Maybe<
+        createdUser?: Maybe<
           { __typename?: 'User' } & LoggedInUserFragmentFragment
         >;
       }
   >;
 };
 
-export type DeleteUserMutationVariables = {};
+export type DeleteUserMutationVariables = Exact<{ [key: string]: never }>;
 
 export type DeleteUserMutation = { __typename?: 'Mutation' } & {
-  deleteUser: Maybe<
+  deleteUser?: Maybe<
     { __typename?: 'DeleteUserPayload' } & Pick<
       DeleteUserPayload,
       'status' | 'message' | 'userDeleted'
@@ -1040,10 +1040,10 @@ export type DeleteUserMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
-export type GetUserByIdQueryVariables = {};
+export type GetUserByIdQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUserByIdQuery = { __typename?: 'Query' } & {
-  getUserById: Maybe<{ __typename?: 'User' } & LoggedInUserFragmentFragment>;
+  getUserById?: Maybe<{ __typename?: 'User' } & LoggedInUserFragmentFragment>;
 };
 
 export type LoggedInUserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -1332,23 +1332,23 @@ export const GetCircleClonesByIdDocument = gql`
  * });
  */
 export function useGetCircleClonesByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCircleClonesByIdQuery,
     GetCircleClonesByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetCircleClonesByIdQuery,
     GetCircleClonesByIdQueryVariables
   >(GetCircleClonesByIdDocument, baseOptions);
 }
 export function useGetCircleClonesByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCircleClonesByIdQuery,
     GetCircleClonesByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetCircleClonesByIdQuery,
     GetCircleClonesByIdQueryVariables
   >(GetCircleClonesByIdDocument, baseOptions);
@@ -1359,7 +1359,7 @@ export type GetCircleClonesByIdQueryHookResult = ReturnType<
 export type GetCircleClonesByIdLazyQueryHookResult = ReturnType<
   typeof useGetCircleClonesByIdLazyQuery
 >;
-export type GetCircleClonesByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetCircleClonesByIdQueryResult = Apollo.QueryResult<
   GetCircleClonesByIdQuery,
   GetCircleClonesByIdQueryVariables
 >;
@@ -1389,23 +1389,23 @@ export const GetCircleToEditByIdDocument = gql`
  * });
  */
 export function useGetCircleToEditByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCircleToEditByIdQuery,
     GetCircleToEditByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetCircleToEditByIdQuery,
     GetCircleToEditByIdQueryVariables
   >(GetCircleToEditByIdDocument, baseOptions);
 }
 export function useGetCircleToEditByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCircleToEditByIdQuery,
     GetCircleToEditByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetCircleToEditByIdQuery,
     GetCircleToEditByIdQueryVariables
   >(GetCircleToEditByIdDocument, baseOptions);
@@ -1416,7 +1416,7 @@ export type GetCircleToEditByIdQueryHookResult = ReturnType<
 export type GetCircleToEditByIdLazyQueryHookResult = ReturnType<
   typeof useGetCircleToEditByIdLazyQuery
 >;
-export type GetCircleToEditByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetCircleToEditByIdQueryResult = Apollo.QueryResult<
   GetCircleToEditByIdQuery,
   GetCircleToEditByIdQueryVariables
 >;
@@ -1446,23 +1446,23 @@ export const GetFullCircleCloneByIdDocument = gql`
  * });
  */
 export function useGetFullCircleCloneByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetFullCircleCloneByIdQuery,
     GetFullCircleCloneByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetFullCircleCloneByIdQuery,
     GetFullCircleCloneByIdQueryVariables
   >(GetFullCircleCloneByIdDocument, baseOptions);
 }
 export function useGetFullCircleCloneByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetFullCircleCloneByIdQuery,
     GetFullCircleCloneByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetFullCircleCloneByIdQuery,
     GetFullCircleCloneByIdQueryVariables
   >(GetFullCircleCloneByIdDocument, baseOptions);
@@ -1473,7 +1473,7 @@ export type GetFullCircleCloneByIdQueryHookResult = ReturnType<
 export type GetFullCircleCloneByIdLazyQueryHookResult = ReturnType<
   typeof useGetFullCircleCloneByIdLazyQuery
 >;
-export type GetFullCircleCloneByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetFullCircleCloneByIdQueryResult = Apollo.QueryResult<
   GetFullCircleCloneByIdQuery,
   GetFullCircleCloneByIdQueryVariables
 >;
@@ -1521,23 +1521,23 @@ export const GetCircleAndLinesByIdDocument = gql`
  * });
  */
 export function useGetCircleAndLinesByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCircleAndLinesByIdQuery,
     GetCircleAndLinesByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetCircleAndLinesByIdQuery,
     GetCircleAndLinesByIdQueryVariables
   >(GetCircleAndLinesByIdDocument, baseOptions);
 }
 export function useGetCircleAndLinesByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCircleAndLinesByIdQuery,
     GetCircleAndLinesByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetCircleAndLinesByIdQuery,
     GetCircleAndLinesByIdQueryVariables
   >(GetCircleAndLinesByIdDocument, baseOptions);
@@ -1548,7 +1548,7 @@ export type GetCircleAndLinesByIdQueryHookResult = ReturnType<
 export type GetCircleAndLinesByIdLazyQueryHookResult = ReturnType<
   typeof useGetCircleAndLinesByIdLazyQuery
 >;
-export type GetCircleAndLinesByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetCircleAndLinesByIdQueryResult = Apollo.QueryResult<
   GetCircleAndLinesByIdQuery,
   GetCircleAndLinesByIdQueryVariables
 >;
@@ -1578,23 +1578,23 @@ export const GetCircleToViewByIdDocument = gql`
  * });
  */
 export function useGetCircleToViewByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCircleToViewByIdQuery,
     GetCircleToViewByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetCircleToViewByIdQuery,
     GetCircleToViewByIdQueryVariables
   >(GetCircleToViewByIdDocument, baseOptions);
 }
 export function useGetCircleToViewByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCircleToViewByIdQuery,
     GetCircleToViewByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetCircleToViewByIdQuery,
     GetCircleToViewByIdQueryVariables
   >(GetCircleToViewByIdDocument, baseOptions);
@@ -1605,7 +1605,7 @@ export type GetCircleToViewByIdQueryHookResult = ReturnType<
 export type GetCircleToViewByIdLazyQueryHookResult = ReturnType<
   typeof useGetCircleToViewByIdLazyQuery
 >;
-export type GetCircleToViewByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetCircleToViewByIdQueryResult = Apollo.QueryResult<
   GetCircleToViewByIdQuery,
   GetCircleToViewByIdQueryVariables
 >;
@@ -1618,7 +1618,7 @@ export const CopyCircleDocument = gql`
     }
   }
 `;
-export type CopyCircleMutationFn = ApolloReactCommon.MutationFunction<
+export type CopyCircleMutationFn = Apollo.MutationFunction<
   CopyCircleMutation,
   CopyCircleMutationVariables
 >;
@@ -1642,23 +1642,21 @@ export type CopyCircleMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCopyCircleMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CopyCircleMutation,
     CopyCircleMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
-    CopyCircleMutation,
-    CopyCircleMutationVariables
-  >(CopyCircleDocument, baseOptions);
+  return Apollo.useMutation<CopyCircleMutation, CopyCircleMutationVariables>(
+    CopyCircleDocument,
+    baseOptions,
+  );
 }
 export type CopyCircleMutationHookResult = ReturnType<
   typeof useCopyCircleMutation
 >;
-export type CopyCircleMutationResult = ApolloReactCommon.MutationResult<
-  CopyCircleMutation
->;
-export type CopyCircleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CopyCircleMutationResult = Apollo.MutationResult<CopyCircleMutation>;
+export type CopyCircleMutationOptions = Apollo.BaseMutationOptions<
   CopyCircleMutation,
   CopyCircleMutationVariables
 >;
@@ -1741,7 +1739,7 @@ export const UpdateCircleDocument = gql`
     }
   }
 `;
-export type UpdateCircleMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateCircleMutationFn = Apollo.MutationFunction<
   UpdateCircleMutation,
   UpdateCircleMutationVariables
 >;
@@ -1797,12 +1795,12 @@ export type UpdateCircleMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateCircleMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateCircleMutation,
     UpdateCircleMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateCircleMutation,
     UpdateCircleMutationVariables
   >(UpdateCircleDocument, baseOptions);
@@ -1810,10 +1808,8 @@ export function useUpdateCircleMutation(
 export type UpdateCircleMutationHookResult = ReturnType<
   typeof useUpdateCircleMutation
 >;
-export type UpdateCircleMutationResult = ApolloReactCommon.MutationResult<
-  UpdateCircleMutation
->;
-export type UpdateCircleMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateCircleMutationResult = Apollo.MutationResult<UpdateCircleMutation>;
+export type UpdateCircleMutationOptions = Apollo.BaseMutationOptions<
   UpdateCircleMutation,
   UpdateCircleMutationVariables
 >;
@@ -1849,26 +1845,26 @@ export const GetCircleByIdDocument = gql`
  * });
  */
 export function useGetCircleByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCircleByIdQuery,
     GetCircleByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
-    GetCircleByIdQuery,
-    GetCircleByIdQueryVariables
-  >(GetCircleByIdDocument, baseOptions);
+  return Apollo.useQuery<GetCircleByIdQuery, GetCircleByIdQueryVariables>(
+    GetCircleByIdDocument,
+    baseOptions,
+  );
 }
 export function useGetCircleByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCircleByIdQuery,
     GetCircleByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetCircleByIdQuery,
-    GetCircleByIdQueryVariables
-  >(GetCircleByIdDocument, baseOptions);
+  return Apollo.useLazyQuery<GetCircleByIdQuery, GetCircleByIdQueryVariables>(
+    GetCircleByIdDocument,
+    baseOptions,
+  );
 }
 export type GetCircleByIdQueryHookResult = ReturnType<
   typeof useGetCircleByIdQuery
@@ -1876,7 +1872,7 @@ export type GetCircleByIdQueryHookResult = ReturnType<
 export type GetCircleByIdLazyQueryHookResult = ReturnType<
   typeof useGetCircleByIdLazyQuery
 >;
-export type GetCircleByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetCircleByIdQueryResult = Apollo.QueryResult<
   GetCircleByIdQuery,
   GetCircleByIdQueryVariables
 >;
@@ -1912,23 +1908,23 @@ export const GetCircleCloneByIdDocument = gql`
  * });
  */
 export function useGetCircleCloneByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCircleCloneByIdQuery,
     GetCircleCloneByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetCircleCloneByIdQuery,
     GetCircleCloneByIdQueryVariables
   >(GetCircleCloneByIdDocument, baseOptions);
 }
 export function useGetCircleCloneByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCircleCloneByIdQuery,
     GetCircleCloneByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetCircleCloneByIdQuery,
     GetCircleCloneByIdQueryVariables
   >(GetCircleCloneByIdDocument, baseOptions);
@@ -1939,7 +1935,7 @@ export type GetCircleCloneByIdQueryHookResult = ReturnType<
 export type GetCircleCloneByIdLazyQueryHookResult = ReturnType<
   typeof useGetCircleCloneByIdLazyQuery
 >;
-export type GetCircleCloneByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetCircleCloneByIdQueryResult = Apollo.QueryResult<
   GetCircleCloneByIdQuery,
   GetCircleCloneByIdQueryVariables
 >;
@@ -1975,23 +1971,23 @@ export const GetCirclesByIdsDocument = gql`
  * });
  */
 export function useGetCirclesByIdsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetCirclesByIdsQuery,
     GetCirclesByIdsQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
-    GetCirclesByIdsQuery,
-    GetCirclesByIdsQueryVariables
-  >(GetCirclesByIdsDocument, baseOptions);
+  return Apollo.useQuery<GetCirclesByIdsQuery, GetCirclesByIdsQueryVariables>(
+    GetCirclesByIdsDocument,
+    baseOptions,
+  );
 }
 export function useGetCirclesByIdsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetCirclesByIdsQuery,
     GetCirclesByIdsQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetCirclesByIdsQuery,
     GetCirclesByIdsQueryVariables
   >(GetCirclesByIdsDocument, baseOptions);
@@ -2002,7 +1998,7 @@ export type GetCirclesByIdsQueryHookResult = ReturnType<
 export type GetCirclesByIdsLazyQueryHookResult = ReturnType<
   typeof useGetCirclesByIdsLazyQuery
 >;
-export type GetCirclesByIdsQueryResult = ApolloReactCommon.QueryResult<
+export type GetCirclesByIdsQueryResult = Apollo.QueryResult<
   GetCirclesByIdsQuery,
   GetCirclesByIdsQueryVariables
 >;
@@ -2038,23 +2034,23 @@ export const GetPublicProfileByIdDocument = gql`
  * });
  */
 export function useGetPublicProfileByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetPublicProfileByIdQuery,
     GetPublicProfileByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetPublicProfileByIdQuery,
     GetPublicProfileByIdQueryVariables
   >(GetPublicProfileByIdDocument, baseOptions);
 }
 export function useGetPublicProfileByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetPublicProfileByIdQuery,
     GetPublicProfileByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetPublicProfileByIdQuery,
     GetPublicProfileByIdQueryVariables
   >(GetPublicProfileByIdDocument, baseOptions);
@@ -2065,7 +2061,7 @@ export type GetPublicProfileByIdQueryHookResult = ReturnType<
 export type GetPublicProfileByIdLazyQueryHookResult = ReturnType<
   typeof useGetPublicProfileByIdLazyQuery
 >;
-export type GetPublicProfileByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetPublicProfileByIdQueryResult = Apollo.QueryResult<
   GetPublicProfileByIdQuery,
   GetPublicProfileByIdQueryVariables
 >;
@@ -2097,7 +2093,7 @@ export const SeedFirestoreCirclesDocument = gql`
     }
   }
 `;
-export type SeedFirestoreCirclesMutationFn = ApolloReactCommon.MutationFunction<
+export type SeedFirestoreCirclesMutationFn = Apollo.MutationFunction<
   SeedFirestoreCirclesMutation,
   SeedFirestoreCirclesMutationVariables
 >;
@@ -2119,12 +2115,12 @@ export type SeedFirestoreCirclesMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useSeedFirestoreCirclesMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     SeedFirestoreCirclesMutation,
     SeedFirestoreCirclesMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     SeedFirestoreCirclesMutation,
     SeedFirestoreCirclesMutationVariables
   >(SeedFirestoreCirclesDocument, baseOptions);
@@ -2132,10 +2128,8 @@ export function useSeedFirestoreCirclesMutation(
 export type SeedFirestoreCirclesMutationHookResult = ReturnType<
   typeof useSeedFirestoreCirclesMutation
 >;
-export type SeedFirestoreCirclesMutationResult = ApolloReactCommon.MutationResult<
-  SeedFirestoreCirclesMutation
->;
-export type SeedFirestoreCirclesMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type SeedFirestoreCirclesMutationResult = Apollo.MutationResult<SeedFirestoreCirclesMutation>;
+export type SeedFirestoreCirclesMutationOptions = Apollo.BaseMutationOptions<
   SeedFirestoreCirclesMutation,
   SeedFirestoreCirclesMutationVariables
 >;
@@ -2170,23 +2164,23 @@ export const GetSeededCirclesByIdsDocument = gql`
  * });
  */
 export function useGetSeededCirclesByIdsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetSeededCirclesByIdsQuery,
     GetSeededCirclesByIdsQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetSeededCirclesByIdsQuery,
     GetSeededCirclesByIdsQueryVariables
   >(GetSeededCirclesByIdsDocument, baseOptions);
 }
 export function useGetSeededCirclesByIdsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetSeededCirclesByIdsQuery,
     GetSeededCirclesByIdsQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetSeededCirclesByIdsQuery,
     GetSeededCirclesByIdsQueryVariables
   >(GetSeededCirclesByIdsDocument, baseOptions);
@@ -2197,7 +2191,7 @@ export type GetSeededCirclesByIdsQueryHookResult = ReturnType<
 export type GetSeededCirclesByIdsLazyQueryHookResult = ReturnType<
   typeof useGetSeededCirclesByIdsLazyQuery
 >;
-export type GetSeededCirclesByIdsQueryResult = ApolloReactCommon.QueryResult<
+export type GetSeededCirclesByIdsQueryResult = Apollo.QueryResult<
   GetSeededCirclesByIdsQuery,
   GetSeededCirclesByIdsQueryVariables
 >;
@@ -2210,7 +2204,7 @@ export const CreateProfileDocument = gql`
     }
   }
 `;
-export type CreateProfileMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateProfileMutationFn = Apollo.MutationFunction<
   CreateProfileMutation,
   CreateProfileMutationVariables
 >;
@@ -2233,12 +2227,12 @@ export type CreateProfileMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateProfileMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateProfileMutation,
     CreateProfileMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     CreateProfileMutation,
     CreateProfileMutationVariables
   >(CreateProfileDocument, baseOptions);
@@ -2246,10 +2240,8 @@ export function useCreateProfileMutation(
 export type CreateProfileMutationHookResult = ReturnType<
   typeof useCreateProfileMutation
 >;
-export type CreateProfileMutationResult = ApolloReactCommon.MutationResult<
-  CreateProfileMutation
->;
-export type CreateProfileMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileMutation>;
+export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<
   CreateProfileMutation,
   CreateProfileMutationVariables
 >;
@@ -2297,7 +2289,7 @@ export const UpdateProfileDocument = gql`
     }
   }
 `;
-export type UpdateProfileMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateProfileMutationFn = Apollo.MutationFunction<
   UpdateProfileMutation,
   UpdateProfileMutationVariables
 >;
@@ -2336,12 +2328,12 @@ export type UpdateProfileMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateProfileMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     UpdateProfileMutation,
     UpdateProfileMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
+  return Apollo.useMutation<
     UpdateProfileMutation,
     UpdateProfileMutationVariables
   >(UpdateProfileDocument, baseOptions);
@@ -2349,10 +2341,8 @@ export function useUpdateProfileMutation(
 export type UpdateProfileMutationHookResult = ReturnType<
   typeof useUpdateProfileMutation
 >;
-export type UpdateProfileMutationResult = ApolloReactCommon.MutationResult<
-  UpdateProfileMutation
->;
-export type UpdateProfileMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<
   UpdateProfileMutation,
   UpdateProfileMutationVariables
 >;
@@ -2382,23 +2372,23 @@ export const GetProfileByUsernameDocument = gql`
  * });
  */
 export function useGetProfileByUsernameQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetProfileByUsernameQuery,
     GetProfileByUsernameQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
+  return Apollo.useQuery<
     GetProfileByUsernameQuery,
     GetProfileByUsernameQueryVariables
   >(GetProfileByUsernameDocument, baseOptions);
 }
 export function useGetProfileByUsernameLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetProfileByUsernameQuery,
     GetProfileByUsernameQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetProfileByUsernameQuery,
     GetProfileByUsernameQueryVariables
   >(GetProfileByUsernameDocument, baseOptions);
@@ -2409,7 +2399,7 @@ export type GetProfileByUsernameQueryHookResult = ReturnType<
 export type GetProfileByUsernameLazyQueryHookResult = ReturnType<
   typeof useGetProfileByUsernameLazyQuery
 >;
-export type GetProfileByUsernameQueryResult = ApolloReactCommon.QueryResult<
+export type GetProfileByUsernameQueryResult = Apollo.QueryResult<
   GetProfileByUsernameQuery,
   GetProfileByUsernameQueryVariables
 >;
@@ -2439,26 +2429,26 @@ export const GetProfileByIdDocument = gql`
  * });
  */
 export function useGetProfileByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetProfileByIdQuery,
     GetProfileByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
-    GetProfileByIdQuery,
-    GetProfileByIdQueryVariables
-  >(GetProfileByIdDocument, baseOptions);
+  return Apollo.useQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
+    GetProfileByIdDocument,
+    baseOptions,
+  );
 }
 export function useGetProfileByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetProfileByIdQuery,
     GetProfileByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetProfileByIdQuery,
-    GetProfileByIdQueryVariables
-  >(GetProfileByIdDocument, baseOptions);
+  return Apollo.useLazyQuery<GetProfileByIdQuery, GetProfileByIdQueryVariables>(
+    GetProfileByIdDocument,
+    baseOptions,
+  );
 }
 export type GetProfileByIdQueryHookResult = ReturnType<
   typeof useGetProfileByIdQuery
@@ -2466,7 +2456,7 @@ export type GetProfileByIdQueryHookResult = ReturnType<
 export type GetProfileByIdLazyQueryHookResult = ReturnType<
   typeof useGetProfileByIdLazyQuery
 >;
-export type GetProfileByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetProfileByIdQueryResult = Apollo.QueryResult<
   GetProfileByIdQuery,
   GetProfileByIdQueryVariables
 >;
@@ -2501,23 +2491,23 @@ export const GetUserProfilesDocument = gql`
  * });
  */
 export function useGetUserProfilesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetUserProfilesQuery,
     GetUserProfilesQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<
-    GetUserProfilesQuery,
-    GetUserProfilesQueryVariables
-  >(GetUserProfilesDocument, baseOptions);
+  return Apollo.useQuery<GetUserProfilesQuery, GetUserProfilesQueryVariables>(
+    GetUserProfilesDocument,
+    baseOptions,
+  );
 }
 export function useGetUserProfilesLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetUserProfilesQuery,
     GetUserProfilesQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
+  return Apollo.useLazyQuery<
     GetUserProfilesQuery,
     GetUserProfilesQueryVariables
   >(GetUserProfilesDocument, baseOptions);
@@ -2528,7 +2518,7 @@ export type GetUserProfilesQueryHookResult = ReturnType<
 export type GetUserProfilesLazyQueryHookResult = ReturnType<
   typeof useGetUserProfilesLazyQuery
 >;
-export type GetUserProfilesQueryResult = ApolloReactCommon.QueryResult<
+export type GetUserProfilesQueryResult = Apollo.QueryResult<
   GetUserProfilesQuery,
   GetUserProfilesQueryVariables
 >;
@@ -2544,7 +2534,7 @@ export const CreateUserDocument = gql`
   }
   ${LoggedInUserFragmentFragmentDoc}
 `;
-export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateUserMutationFn = Apollo.MutationFunction<
   CreateUserMutation,
   CreateUserMutationVariables
 >;
@@ -2569,23 +2559,21 @@ export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateUserMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     CreateUserMutation,
     CreateUserMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
-    CreateUserMutation,
-    CreateUserMutationVariables
-  >(CreateUserDocument, baseOptions);
+  return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(
+    CreateUserDocument,
+    baseOptions,
+  );
 }
 export type CreateUserMutationHookResult = ReturnType<
   typeof useCreateUserMutation
 >;
-export type CreateUserMutationResult = ApolloReactCommon.MutationResult<
-  CreateUserMutation
->;
-export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
   CreateUserMutation,
   CreateUserMutationVariables
 >;
@@ -2598,7 +2586,7 @@ export const DeleteUserDocument = gql`
     }
   }
 `;
-export type DeleteUserMutationFn = ApolloReactCommon.MutationFunction<
+export type DeleteUserMutationFn = Apollo.MutationFunction<
   DeleteUserMutation,
   DeleteUserMutationVariables
 >;
@@ -2620,23 +2608,21 @@ export type DeleteUserMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useDeleteUserMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
+  baseOptions?: Apollo.MutationHookOptions<
     DeleteUserMutation,
     DeleteUserMutationVariables
   >,
 ) {
-  return ApolloReactHooks.useMutation<
-    DeleteUserMutation,
-    DeleteUserMutationVariables
-  >(DeleteUserDocument, baseOptions);
+  return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
+    DeleteUserDocument,
+    baseOptions,
+  );
 }
 export type DeleteUserMutationHookResult = ReturnType<
   typeof useDeleteUserMutation
 >;
-export type DeleteUserMutationResult = ApolloReactCommon.MutationResult<
-  DeleteUserMutation
->;
-export type DeleteUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<
   DeleteUserMutation,
   DeleteUserMutationVariables
 >;
@@ -2665,32 +2651,32 @@ export const GetUserByIdDocument = gql`
  * });
  */
 export function useGetUserByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GetUserByIdQuery,
     GetUserByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(
+  return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(
     GetUserByIdDocument,
     baseOptions,
   );
 }
 export function useGetUserByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+  baseOptions?: Apollo.LazyQueryHookOptions<
     GetUserByIdQuery,
     GetUserByIdQueryVariables
   >,
 ) {
-  return ApolloReactHooks.useLazyQuery<
-    GetUserByIdQuery,
-    GetUserByIdQueryVariables
-  >(GetUserByIdDocument, baseOptions);
+  return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(
+    GetUserByIdDocument,
+    baseOptions,
+  );
 }
 export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<
   typeof useGetUserByIdLazyQuery
 >;
-export type GetUserByIdQueryResult = ApolloReactCommon.QueryResult<
+export type GetUserByIdQueryResult = Apollo.QueryResult<
   GetUserByIdQuery,
   GetUserByIdQueryVariables
 >;

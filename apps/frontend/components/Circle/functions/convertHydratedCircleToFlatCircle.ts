@@ -12,7 +12,7 @@ export const convertHydratedCircleToFlatCircle = (
 ): Circle => {
   const flatCircle: Circle = { id: '' };
 
-  Object.keys(circleHydrated).forEach((field: keyof CircleHydrated) => {
+  Object.keys(circleHydrated).forEach((field: any) => {
     const isCircleField = circleFields.includes(field);
     const circleCloneField = circleCloneFields.includes(field);
     const isProfileField = profileFields.includes(field);
@@ -47,7 +47,7 @@ export const convertAllNestedHydratedCircleToFlatCircle = (
   const flatCircles: Circle[] = [];
   const flatCircle: Circle = { id: '' };
 
-  Object.keys(circleHydrated).forEach((field: keyof CircleHydrated) => {
+  Object.keys(circleHydrated).forEach((field: any) => {
     const isCircleField = circleFields.includes(field);
     const circleCloneField = circleCloneFields.includes(field);
     const isProfileField = profileFields.includes(field);
@@ -80,8 +80,8 @@ export const convertAllNestedHydratedCircleToFlatCircle = (
   flatCircles.push(flatCircle);
 
   const result: Circle[] = [];
-  flatCircles.forEach(elem => {
-    const match = result.find(r => r.id === elem.id);
+  flatCircles.forEach((elem) => {
+    const match = result.find((r) => r.id === elem.id);
     if (match) {
       Object.assign(match, elem);
     } else {

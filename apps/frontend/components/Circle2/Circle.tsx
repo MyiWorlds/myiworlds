@@ -1,11 +1,11 @@
 import CircleEditor from './components/CircleEditor';
 import CircleField from './CircleField';
 import React, { useEffect } from 'react';
-import { Circle } from '@myiworlds/types';
+import { CircleHydrated } from '@myiworlds/types';
 
 interface Props {
   fetch?: boolean;
-  circle: Circle;
+  circle: CircleHydrated;
   initialIsEditing: boolean;
 }
 
@@ -62,7 +62,7 @@ export default function CircleComponent({
 
   const components = (props: { isEditing: boolean }) => (
     <div>
-      {fieldsDisplayed.map((field: keyof Circle) => (
+      {fieldsDisplayed.map((field: keyof CircleHydrated) => (
         <CircleField
           key={circle.id + field}
           field={field}

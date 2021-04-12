@@ -36,8 +36,8 @@ export interface UserProfileData extends PublicProfileBase {
 
 export interface UserProfileHydrated extends PublicProfileHydrated {
   addToHistory?: boolean;
-  home?: string;
-  history?: string;
+  home?: CircleHydrated;
+  history?: CircleHydrated;
   overrideCircleUIs?: boolean;
   userId: string | null;
   media?: CircleHydrated;

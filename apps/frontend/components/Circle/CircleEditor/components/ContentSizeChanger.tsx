@@ -11,7 +11,7 @@ interface Props {
   editingGrid?: boolean;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   toggleContainer: {
     margin: theme.spacing(2, 2, 2, 0),
   },
@@ -43,7 +43,7 @@ export default function ContentSizeChanger({
     if (newScreenSize === '') {
       newScreenSize = null;
     }
-    setDisplaySize(newScreenSize);
+    setDisplaySize(newScreenSize as number | null);
   };
 
   let switchActivated: '' | number = '';

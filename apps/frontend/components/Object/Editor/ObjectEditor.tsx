@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import NumberEditor from './../../Number/Editor/NumberEditor';
 import React from 'react';
 import StringEditor from './../../String/Editor/StringEditor';
+import { Circle } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 interface Props {
@@ -168,6 +169,7 @@ const ObjectEditor: React.FC<Props> = ({
           <div key={`${parentStrings}-${property}`}>
             <StringEditor
               property={property}
+              field={property as keyof Circle}
               value={value}
               setValue={updateValue}
               ui={null}

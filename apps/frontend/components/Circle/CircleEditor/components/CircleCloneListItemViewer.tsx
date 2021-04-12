@@ -1,7 +1,7 @@
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Circle } from '@myiworlds/types';
+import { CircleCloneHydrated } from '@myiworlds/types';
 import { useGetCircleCloneByIdQuery } from '../../../../generated/apolloComponents';
 import {
   Avatar,
@@ -69,7 +69,7 @@ export default function CircleCloneListItemViewer({
 
   if (getCircleCloneQuery && getCircleCloneQuery.getCircleCloneById) {
     console.log('Rendering Circle list item.');
-    circle = getCircleCloneQuery.getCircleCloneById as Circle;
+    circle = getCircleCloneQuery.getCircleCloneById as CircleCloneHydrated;
     return (
       <ListItem
         key={circle.id}

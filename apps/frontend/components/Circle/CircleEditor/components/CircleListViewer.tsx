@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Circle } from '@myiworlds/types';
+import { CircleHydrated } from '@myiworlds/types';
 import { useGetCirclesByIdsQuery } from '../../../../generated/apolloComponents';
 import {
   Avatar,
@@ -56,10 +56,10 @@ const CircleListViewer = React.memo(({ ids }: Props) => {
 
   if (getCirclesQuery && getCirclesQuery.getCirclesByIds) {
     console.log('Circles list viewer rendered.');
-    const circles = getCirclesQuery.getCirclesByIds as Circle[];
+    const circles = getCirclesQuery.getCirclesByIds as CircleHydrated[];
     return (
       <List>
-        {circles.map((circle: Circle) => {
+        {circles.map((circle: CircleHydrated) => {
           return (
             <ListItem
               button

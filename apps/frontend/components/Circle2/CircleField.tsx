@@ -2,7 +2,7 @@ import Boolean from './components/Boolean';
 import CircleComponent from './Circle';
 import React from 'react';
 import String from './components/String';
-import { Circle } from '@myiworlds/types';
+import { CircleHydrated } from '@myiworlds/types';
 import { circleWithId } from '../../atoms/circleWithIdState';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useSetRecoilState } from 'recoil';
@@ -14,8 +14,8 @@ import {
 
 interface Props {
   isEditing: boolean;
-  field: keyof Circle;
-  circle: Circle;
+  field: keyof CircleHydrated;
+  circle: CircleHydrated;
 }
 
 const useStyles = makeStyles((theme: Theme) =>

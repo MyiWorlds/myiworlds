@@ -2,7 +2,7 @@ import CircleListItemViewer from './CircleListItemViewer';
 import List from '@material-ui/core/List';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
-import { Circle } from '@myiworlds/types';
+import { Circle, CircleCloneHydrated } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { format } from 'date-fns';
@@ -69,7 +69,8 @@ const CircleHistoryEditor = ({
 
   if (getCircleClonesQuery && getCircleClonesQuery.getCircleClonesById) {
     console.log('Circles list viewer rendered.');
-    const circles = getCircleClonesQuery.getCircleClonesById.clones as Circle[];
+    const circles = getCircleClonesQuery.getCircleClonesById
+      .clones as CircleCloneHydrated[];
     return (
       <List>
         <CircleListItemViewer
@@ -90,7 +91,7 @@ const CircleHistoryEditor = ({
               : updateCircleToFetch(circleId, FIRESTORE_COLLECTIONS.CIRCLES)
           }
         />
-        {circles.map((circle: Circle) => {
+        {circles.map((circle: CircleCloneHydrated) => {
           return (
             <ListItem
               button

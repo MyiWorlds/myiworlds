@@ -15,7 +15,8 @@
           },
           "configurations": {
             "production": {}
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@nrwl/next:server",
@@ -47,7 +48,8 @@
           "options": {
             "jestConfig": "apps/frontend/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/frontend"]
         },
         "deploy": {
           "builder": "@nrwl/workspace:run-commands",
@@ -114,7 +116,8 @@
                 }
               ]
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@nrwl/node:execute",
@@ -135,7 +138,8 @@
           "options": {
             "jestConfig": "apps/graphql-api/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/graphql-api"]
         },
         "deploy": {
           "builder": "@nrwl/workspace:run-commands",
@@ -166,7 +170,8 @@
           "options": {
             "jestConfig": "libs/credentials/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/credentials"]
         }
       }
     },
@@ -187,7 +192,8 @@
           "options": {
             "jestConfig": "libs/types/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/types"]
         }
       }
     },
@@ -208,7 +214,8 @@
           "options": {
             "jestConfig": "libs/services/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/services"]
         }
       }
     },
@@ -229,7 +236,8 @@
           "options": {
             "jestConfig": "libs/enums/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/enums"]
         }
       }
     },
@@ -260,7 +268,8 @@
                 }
               ]
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@nrwl/node:execute",
@@ -279,7 +288,8 @@
           "options": {
             "jestConfig": "apps/functions/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/functions"]
         }
       }
     },
@@ -300,7 +310,8 @@
           "options": {
             "jestConfig": "libs/factories/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/factories"]
         }
       }
     },
@@ -321,7 +332,8 @@
           "options": {
             "jestConfig": "libs/helper-functions/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/helper-functions"]
         }
       }
     }

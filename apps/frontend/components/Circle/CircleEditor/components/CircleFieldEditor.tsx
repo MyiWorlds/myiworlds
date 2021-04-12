@@ -108,6 +108,7 @@ const CircleFieldEditor: React.FC<Props> = ({
       <div key={`${parentStrings}-${property}`}>
         <StringEditor
           property={property}
+          field={property as keyof Circle}
           value={value as string}
           setValue={updateValue}
           ui={fieldUi}

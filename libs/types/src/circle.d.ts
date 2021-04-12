@@ -150,7 +150,7 @@ export interface UpdateCircleMutation extends Circle {
   merge?: boolean;
 }
 
-export interface CircleCloneHydrated extends Circle {
+export interface CircleCloneHydrated extends CircleHydrated {
   collection: FIRESTORE_COLLECTIONS.CIRCLES_CLONES;
   clonedFrom: Circle;
 }

@@ -1,7 +1,7 @@
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Circle } from '@myiworlds/types';
+import { CircleHydrated } from '@myiworlds/types';
 import { useGetCircleByIdQuery } from './../../../../generated/apolloComponents';
 import {
   Avatar,
@@ -71,7 +71,7 @@ export default function CircleListItemViewer({
   }
 
   if (getCircleQuery && getCircleQuery.getCircleById) {
-    circle = getCircleQuery.getCircleById as Circle;
+    circle = getCircleQuery.getCircleById as CircleHydrated;
     return (
       <ListItem
         key={circle.id}

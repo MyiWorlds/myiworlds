@@ -1,5 +1,4 @@
 import { CircleFactory } from '@myiworlds/factories';
-import { CircleHydrated } from '../../../../libs/types/src/circle';
 import { UserProfileHydrated } from '@myiworlds/types';
 
 const guestProfile: UserProfileHydrated = {
@@ -19,7 +18,7 @@ const guestProfile: UserProfileHydrated = {
       public: true,
       type: 'THEME',
     },
-  }) as CircleHydrated,
+  }) as any,
   publicHome: undefined,
   userId: null,
 };
