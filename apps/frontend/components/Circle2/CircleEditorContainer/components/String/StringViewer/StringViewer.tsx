@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
-import { circleWithId } from '../../../../../atoms/circleWithIdState';
+import { circleWithId } from '../../../../../../atoms/circleAtoms';
 import { useRecoilValue } from 'recoil';
 
 interface Props {

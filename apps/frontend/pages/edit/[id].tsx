@@ -1,4 +1,4 @@
-import CircleComponent from '../../components/Circle2/Circle';
+import CircleEditorContainer from '../../components/Circle2/CircleEditorContainer/CircleEditorContainer';
 import Error from './../../components/Error';
 import ProgressWithMessage from './../../components/ProgressWithMessage';
 import React from 'react';
@@ -37,7 +37,7 @@ const EditCircle = () => {
 
   if (circleData && circleData?.getCircleById) {
     return (
-      <CircleComponent
+      <CircleEditorContainer
         initialIsEditing={true}
         circle={circleData.getCircleById as CircleHydrated}
         fetch={true}

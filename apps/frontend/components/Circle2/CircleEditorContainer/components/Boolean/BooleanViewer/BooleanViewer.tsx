@@ -1,7 +1,7 @@
 import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import { Circle } from '@myiworlds/types';
-import { circleWithId } from '../../../../../atoms/circleWithIdState';
+import { circleWithId } from '../../../../../../atoms/circleAtoms';
 import { useRecoilValue } from 'recoil';
 import FormControlLabel, {
   FormControlLabelProps,

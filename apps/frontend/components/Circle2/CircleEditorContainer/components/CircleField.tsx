@@ -1,16 +1,16 @@
-import Boolean from './components/Boolean';
-import CircleComponent from './Circle';
+import Boolean from './Boolean';
+import CircleEditorContainer from '../CircleEditorContainer';
 import React from 'react';
-import String from './components/String';
+import String from './String';
 import { CircleHydrated } from '@myiworlds/types';
-import { circleWithId } from '../../atoms/circleWithIdState';
+import { circleWithId } from '../../../../atoms/circleAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useSetRecoilState } from 'recoil';
 import {
   stringFields,
   booleanFields,
   circleFields,
-} from '../../constants/circleFieldsStrings';
+} from '../../../../constants/circleFieldsStrings';
 
 interface Props {
   isEditing: boolean;
@@ -94,7 +94,7 @@ export default function CircleField({ field, isEditing, circle }: Props) {
   } else if (circleFields.includes(field)) {
     if (circle[field]) {
       display = (
-        <CircleComponent
+        <CircleEditorContainer
           initialIsEditing={false}
           circle={circle[field]}
           fetch={true}

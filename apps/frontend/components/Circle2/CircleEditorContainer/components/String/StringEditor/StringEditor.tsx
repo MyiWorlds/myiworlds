@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { Circle } from '@myiworlds/types';
-import { circleWithId } from '../../../../../atoms/circleWithIdState';
+import { circleWithId } from '../../../../../../atoms/circleAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useRecoilState } from 'recoil';
 

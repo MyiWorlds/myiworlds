@@ -1,12 +1,12 @@
 import Button from '@material-ui/core/Button';
 import React, { useContext } from 'react';
 import { blue } from '@material-ui/core/colors';
-import { CircleHydrated } from '../../../../../libs/types/src/circle';
-import { convertHydratedCircleToFlatCircle } from '../../Circle/functions/convertHydratedCircleToFlatCircle';
-import { getAllCircleState } from '../../../atoms/circleWithIdState';
-import { ProfileContext } from '../../../contexts/Profile/ProfileContext';
+import { CircleHydrated } from '../../../../../../libs/types/src/circle';
+import { convertHydratedCircleToFlatCircle } from '../../../Circle/functions/convertHydratedCircleToFlatCircle';
+import { getAllCircleState } from '../../../../atoms/circleAtoms';
+import { ProfileContext } from '../../../../contexts/Profile/ProfileContext';
 import { useRecoilValue } from 'recoil';
-import { useUpdateCircleMutation } from '../../../generated/apolloComponents';
+import { useUpdateCircleMutation } from '../../../../generated/apolloComponents';
 import {
   makeStyles,
   Theme,

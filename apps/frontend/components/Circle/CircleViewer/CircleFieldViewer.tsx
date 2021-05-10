@@ -91,14 +91,17 @@ export default function CircleFieldViewer({
   } else if (Array.isArray(value)) {
     cellContent = <>'ArrayEditor'</>;
   } else if (dateDisplayFields.includes(property)) {
-    cellContent = (
-      <>
-        <Typography variant="caption">{property}:</Typography>
-        <Typography>
-          {format(value as number, 'MMMM dd, yyyy h:mm a')}
-        </Typography>
-      </>
-    );
+    console.log('LLLLLLLLLLLLLLLLLLL', property, value);
+    if (value) {
+      cellContent = (
+        <>
+          <Typography variant="caption">{property}:</Typography>
+          <Typography>
+            {format(value as number, 'MMMM dd, yyyy h:mm a')}
+          </Typography>
+        </>
+      );
+    }
   }
 
   return (
