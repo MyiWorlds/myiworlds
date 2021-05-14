@@ -7,8 +7,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import { canEdit } from '@myiworlds/helper-functions';
 import { Circle } from '@myiworlds/types';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
-import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
+import { systemMessagesAtom } from '../../../atoms/userInterfaceAtoms';
 import { UserContext } from '../../../contexts/User/UserContext';
+import { useSetRecoilState } from 'recoil';
 import {
   createStyles,
   makeStyles,
@@ -34,13 +35,13 @@ export default function CircleViewerAppBarItems({ circle }: Props) {
   const classes = useStyles();
   const { user } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
-  const { setAppSnackbar } = useContext(SystemMessagesContext);
+  const setSystemMessages = useSetRecoilState(systemMessagesAtom);
 
   let editButton = null;
 
   const copyUrl = () => {
     navigator.clipboard.writeText(window.location.href);
-    setAppSnackbar({
+    setSystemMessages({
       title: 'Copied!',
       autoHideDuration: 2000,
     });

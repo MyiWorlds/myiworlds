@@ -1,21 +1,38 @@
 import { atom } from 'recoil';
+import { Circle } from '@myiworlds/types';
+import { SystemMessageTypes } from '../contexts/UserInterface/SystemMessages/systemMessagesTypes';
 
-export const appBar = atom({
-  key: `appBar`,
+export const appControllerItemsAtom = atom({
+  key: `appControllerItemsAtom`,
   default: null as React.ReactElement | null,
 });
 
-export const content = atom({
-  key: `content`,
+export const contentControllerItemsAtom = atom({
+  key: `contentControllerItemsAtom`,
   default: null as React.ReactElement | null,
 });
 
-export const contentEditor = atom({
-  key: `contentController`,
+export const contentAtom = atom({
+  key: `contentAtom`,
+  default: null as Circle | null,
+});
+
+export const contentEditorAtom = atom({
+  key: `contentEditorAtom`,
   default: null as React.ReactElement | null,
 });
 
-export const systemMessage = atom({
-  key: `systemMssage`,
+export const systemMessagesAtom = atom({
+  key: `systemMessagesAtom`,
+  default: null as SystemMessageTypes | null,
+});
+
+export const draggableDialogContentAtom = atom({
+  key: `draggableDialogContentAtom`,
+  default: null as React.ReactElement | null,
+});
+
+export const appDialogAtom = atom({
+  key: `appDialogAtom`,
   default: null as React.ReactElement | null,
 });

@@ -2,10 +2,12 @@ import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import React, { useContext, useState } from 'react';
+import { appDialogAtom } from '../../../atoms/userInterfaceAtoms';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { JSHINT } from 'jshint';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
+import { useSetRecoilState } from 'recoil';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/addon/lint/lint';
@@ -31,7 +33,7 @@ const JavascriptCodeMirrorEditor: React.FunctionComponent<Props> = ({
   const classes = useStyles();
   const [hasErrors, setHasErrors] = useState(false);
   const [editorValue, setEditorValue] = useState(value);
-  const { setAppDialog } = useContext(UserInterfaceContext);
+  const setAppDialog = useSetRecoilState(appDialogAtom);
 
   const handleClose = () => {
     setAppDialog(null);

@@ -8,10 +8,11 @@ import SelectProfileDialog from './components/SelectProfile/SelectProfileDialog'
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { getCookie, setCookie } from '../../functions/cookies';
 import { ProviderStore } from './profileContextTypes.d';
-import { SystemMessagesContext } from './../SystemMessages/SystemMessagesContext';
+import { systemMessagesAtom } from '../../atoms/userInterfaceAtoms';
 import { Theme } from '@material-ui/core/styles';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext } from '../User/UserContext';
+import { useSetRecoilState } from 'recoil';
 import {
   CircleHydrated,
   UserProfileData,
@@ -30,7 +31,7 @@ type SubscriptionToSelecetedProfile = null | (() => void);
 
 const ProfileProvider = ({ children }: any) => {
   const { user } = useContext(UserContext);
-  const { setAppSnackbar } = useContext(SystemMessagesContext);
+  const setSystemMessages = useSetRecoilState(systemMessagesAtom);
   const [profileIdToSelect, setProfileIdToSelect] = useState<null | string>(
     null,
   );
@@ -46,9 +47,10 @@ const ProfileProvider = ({ children }: any) => {
     selectedProfileSubscription,
     setSelectedProfileSubscription,
   ] = useState<SubscriptionToSelecetedProfile>(null);
-  const [updateProfileVariables, setUpdateProfileVariables] = useState<
-    UpdateProfileMutationVariables
-  >({
+  const [
+    updateProfileVariables,
+    setUpdateProfileVariables,
+  ] = useState<UpdateProfileMutationVariables>({
     id: selectedProfile.id,
     merge: true,
   });
@@ -84,14 +86,14 @@ const ProfileProvider = ({ children }: any) => {
 
   const profileUpdated = () => {
     if (updateProfileData?.updateProfile?.status === RESPONSE_CODES.SUCCESS) {
-      setAppSnackbar({
+      setSystemMessages({
         title: updateProfileData.updateProfile.message || '',
         autoHideDuration: 2000,
       });
     } else if (
       updateProfileData?.updateProfile?.status === RESPONSE_CODES.ERROR
     ) {
-      setAppSnackbar({
+      setSystemMessages({
         title: updateProfileData.updateProfile.message || '',
         autoHideDuration: 2000,
       });
@@ -286,7 +288,7 @@ const ProfileProvider = ({ children }: any) => {
   };
 
   if (errorTheme) {
-    setAppSnackbar({
+    setSystemMessages({
       title: 'The subscription to your theme had an error',
       autoHideDuration: 2000,
       severity: 'error',
@@ -304,7 +306,7 @@ const ProfileProvider = ({ children }: any) => {
         ...selectedProfile,
         theme,
       });
-      setAppSnackbar({
+      setSystemMessages({
         title: 'Your theme has updated.',
         autoHideDuration: 2000,
       });

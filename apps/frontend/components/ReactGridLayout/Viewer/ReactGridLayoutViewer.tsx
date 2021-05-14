@@ -55,7 +55,9 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const { navWidth, isResizingNav } = useContext(UserInterfaceContext);
+  const { contentControllerWidth, isResizingContentController } = useContext(
+    UserInterfaceContext,
+  );
   const [classNames, setClassNames] = useState(
     'flex layout bg-white shadow rounded-sm',
   );
@@ -88,7 +90,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
   ]);
 
   useEffect(() => {
-    if (!isResizingNav) {
+    if (!isResizingContentController) {
       const timer = setTimeout(() => {
         if (!showGrid) {
           setShowGrid(true);
@@ -99,7 +101,12 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
       return () => clearTimeout(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isResizingNav, navWidth, classNames, displaySize]);
+  }, [
+    isResizingContentController,
+    contentControllerWidth,
+    classNames,
+    displaySize,
+  ]);
 
   // const children = React.useMemo(() => {
   //   const newGrid: any = [];
@@ -172,9 +179,9 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
               setFieldEditing={setFieldEditing}
               editingGrid={editingGrid}
             >
-                <span className={classes.spacerText}>
-                  {editingGrid ? 'Spacer' : ''}
-                </span>
+              <span className={classes.spacerText}>
+                {editingGrid ? 'Spacer' : ''}
+              </span>
             </CircleFieldViewerContainer>
           </div>,
         );

@@ -29,11 +29,17 @@ import { createCollectionIdClient } from './../../../functions/createCollectionI
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
-import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
 import { useGetCircleToEditByIdQuery } from './../../../generated/apolloComponents';
 import { UserContext } from './../../../contexts/User/UserContext';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
+import {
+  appControllerItemsAtom,
+  systemMessagesAtom,
+  contentControllerItemsAtom,
+  appDialogAtom,
+} from '../../../atoms/userInterfaceAtoms';
 import {
   useGetFullCircleCloneByIdQuery,
   useUpdateCircleMutation,
@@ -61,13 +67,14 @@ interface Props {
 const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const classes = useStyles();
   const router = useRouter();
-  const {
-    setController,
-    setNavWidth,
-    setAppBarItems,
-    setAppDialog,
-  } = useContext(UserInterfaceContext);
-  const { setAppSnackbar } = useContext(SystemMessagesContext);
+  const { setContentControllerWidth } = useContext(UserInterfaceContext);
+  const setAppDialog = useSetRecoilState(appDialogAtom);
+  const setContentControllerItems = useSetRecoilState(
+    contentControllerItemsAtom,
+  );
+  const setAppControllerItems = useSetRecoilState(appControllerItemsAtom);
+  const setSystemMessages = useSetRecoilState(systemMessagesAtom);
+
   const { user } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
   const timerToSaveCircle = useRef<any>(false);
@@ -206,11 +213,11 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setAppDialog(<LoginModal />);
     }
     return () => {
-      if (setController) {
-        setController(null);
+      if (setContentControllerItems) {
+        setContentControllerItems(null);
       }
-      if (setAppBarItems) {
-        setAppBarItems(null);
+      if (setAppControllerItems) {
+        setAppControllerItems(null);
       }
     };
   };
@@ -222,7 +229,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
     if (updateLayoutCircleError) {
       setSavingCircle(false);
-      setAppSnackbar({
+      setSystemMessages({
         title: `There was an error updating the layout. ${updateLayoutCircleError.message}`,
         autoHideDuration: 3000,
         severity: 'error',
@@ -236,7 +243,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     ) {
       setSavingCircle(false);
       setEditingGrid(false);
-      setAppSnackbar({
+      setSystemMessages({
         title: 'Layout was saved!',
         autoHideDuration: 3000,
       });
@@ -260,7 +267,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
     if (updateCircleEditingsUiError) {
       setSavingCircle(false);
-      setAppSnackbar({
+      setSystemMessages({
         title: `There was an error updating the user interface. ${updateCircleEditingsUiError.message}`,
         autoHideDuration: 3000,
         severity: 'error',
@@ -297,7 +304,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       }
       setSavingCircle(false);
       setEditingGrid(false);
-      setAppSnackbar({
+      setSystemMessages({
         title: 'User interface was saved!',
         autoHideDuration: 3000,
       });
@@ -327,7 +334,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       updateCircleData.updateCircle &&
       updateCircleData.updateCircle.status === RESPONSE_CODES.ERROR
     ) {
-      setAppSnackbar({
+      setSystemMessages({
         title: updateCircleData.updateCircle.message || '',
         autoHideDuration: 2000,
       });
@@ -336,7 +343,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   const handleSave = () => {
     console.log('Saving circle');
-    setController(null);
+    setContentControllerItems(null);
     if (
       updateCircleVariables &&
       updateCircleVariables.collection ===
@@ -353,7 +360,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
 
   const handleGoBack = () => {
     setViewingHistory(false);
-    setController(null);
+    setContentControllerItems(null);
     setUpdateCircleVariables({ id: '' });
     if (
       // eslint-disable-next-line no-restricted-globals
@@ -655,7 +662,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
         />
       );
     }
-    setAppBarItems(newAppBarItems);
+    setAppControllerItems(newAppBarItems);
   };
 
   const updateControllerAndViewer = () => {
@@ -762,32 +769,32 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     }
 
     setViewer(newViewer);
-    setController(newController);
+    setContentControllerItems(newController);
   };
 
   const updateNavWidth = () => {
     console.log('Updating the editors navigation width.');
-    let navWidth = null;
+    let contentControllerWidth = null;
 
     const circle = updateCircleVariables;
     if (circle) {
       switch (circle.type) {
         case 'THEME': {
-          navWidth = 500;
+          contentControllerWidth = 500;
           break;
         }
         default: {
-          navWidth = 400;
+          contentControllerWidth = 400;
         }
       }
     }
 
     if (viewingHistory) {
-      navWidth = 400;
+      contentControllerWidth = 400;
     }
 
-    if (navWidth) {
-      setNavWidth(navWidth);
+    if (contentControllerWidth) {
+      setContentControllerWidth(contentControllerWidth);
     }
   };
 

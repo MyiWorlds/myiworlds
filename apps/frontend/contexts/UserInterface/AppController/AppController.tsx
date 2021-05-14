@@ -6,7 +6,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import { appControllerItemsAtom } from '../../../atoms/userInterfaceAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { useRecoilValue } from 'recoil';
 
 /*
   This components primary purpose is to give the user a single place
@@ -16,9 +18,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 interface Props {
   setShowNavigation: (value: boolean) => void;
   showNavigation: boolean;
-  navWidth: number;
-  setNavWidth: (value: number) => void;
-  appBarItems: null | React.ReactElement;
+  contentControllerWidth: number;
+  setContentControllerWidth: (value: number) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,16 +40,16 @@ const useStyles = makeStyles((theme: Theme) =>
 const AppController: React.FC<Props> = ({
   setShowNavigation,
   showNavigation,
-  navWidth,
-  setNavWidth,
-  appBarItems,
+  contentControllerWidth,
+  setContentControllerWidth,
 }) => {
   const classes = useStyles();
+  const appControllerItems = useRecoilValue(appControllerItemsAtom);
 
   const handleToggleNavigation = () => {
-    if (navWidth < 150 && showNavigation) {
+    if (contentControllerWidth < 150 && showNavigation) {
       setShowNavigation(!showNavigation);
-      setNavWidth(240);
+      setContentControllerWidth(240);
     } else {
       setShowNavigation(!showNavigation);
     }
@@ -57,7 +58,7 @@ const AppController: React.FC<Props> = ({
   const defaultAppBarItems = [
     <Typography key="title" variant="h6" className={classes.title}>
       MyiWorlds
-      </Typography>,
+    </Typography>,
     <Tooltip title="Search" key="search">
       <span>
         <IconButton color="inherit" disabled={true}>
@@ -67,7 +68,9 @@ const AppController: React.FC<Props> = ({
     </Tooltip>,
   ];
 
-  const displayedAppBarItems = appBarItems ? appBarItems : defaultAppBarItems;
+  const displayedAppBarItems = appControllerItems
+    ? appControllerItems
+    : defaultAppBarItems;
 
   return (
     <AppBar position="static" color="default" className={classes.appBar}>

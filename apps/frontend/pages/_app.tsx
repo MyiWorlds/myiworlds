@@ -2,11 +2,11 @@ import App from 'next/app';
 import AppBody from './../components/appBody';
 import MaterialUiTheme from '../components/Theme/MaterialUiTheme';
 import React from 'react';
+import SystemMessages from '../contexts/UserInterface/SystemMessages';
 import withApollo from '../lib/apollo/withApollo';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { ProfileProvider } from '../contexts/Profile/ProfileContext';
 import { RecoilRoot } from 'recoil';
-import { SystemMessagesProvider } from '../contexts/SystemMessages/SystemMessagesContext';
 import { UserInterfaceProvider } from '../contexts/UserInterface/UserInterfaceContext';
 import { UserProvider } from '../contexts/User/UserContext';
 import 'react-grid-layout/css/styles.css';
@@ -19,7 +19,8 @@ class MyApp extends App {
       <RecoilRoot>
         <ApolloProvider client={apolloClient}>
           <MaterialUiTheme>
-            <SystemMessagesProvider>
+            <>
+              <SystemMessages />
               <AppBody>
                 <UserProvider>
                   <ProfileProvider>
@@ -29,7 +30,7 @@ class MyApp extends App {
                   </ProfileProvider>
                 </UserProvider>
               </AppBody>
-            </SystemMessagesProvider>
+            </>
           </MaterialUiTheme>
         </ApolloProvider>
       </RecoilRoot>

@@ -9,8 +9,9 @@ import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { LoggedInUser, User } from '@myiworlds/types';
 import { ProviderStore, UserToCreate } from './userContextTypes';
 import { setCookie } from './../../functions/cookies';
-import { SystemMessagesContext } from '../SystemMessages/SystemMessagesContext';
+import { systemMessagesAtom } from '../../atoms/userInterfaceAtoms';
 import { useGetUserByIdQuery } from './../../generated/apolloComponents';
+import { useSetRecoilState } from 'recoil';
 import {
   useCreateUserMutation,
   useDeleteUserMutation,
@@ -25,7 +26,8 @@ const UserProvider = ({ children }: any) => {
   const [userToCreate, setUserToCreate] = useState<null | UserToCreate>(null);
   const [userIdToLogin, setUserIdToLogin] = useState<string | null>(null);
   const [appLoading, setAppLoading] = useState(true);
-  const { setAppSnackbar } = useContext(SystemMessagesContext);
+  const setSystemMessages = useSetRecoilState(systemMessagesAtom);
+
   const [userSubscription, setUserSubscription] = useState<SubscriptionToUser>(
     null,
   );
@@ -123,7 +125,7 @@ const UserProvider = ({ children }: any) => {
       async (firebaseUser: firebase.User | null) => {
         if (firebaseUser) {
           if (!firebaseUser.email) {
-            setAppSnackbar({
+            setSystemMessages({
               title:
                 'There was no email associated with the email that was attempting to login.',
               autoHideDuration: 10000,
@@ -187,7 +189,7 @@ const UserProvider = ({ children }: any) => {
             } else {
               document.cookie = 'selectedProfileId=;path=/';
               document.cookie = 'isSystemAdmin=;path=/';
-              setAppSnackbar({
+              setSystemMessages({
                 title:
                   'That email did not exist, try again or use a different email.',
                 autoHideDuration: 10000,
@@ -290,13 +292,13 @@ const UserProvider = ({ children }: any) => {
     if (deleteUserData && deleteUserData.deleteUser) {
       console.log('Cleaning up the Users old data');
       if (deleteUserData.deleteUser.status === RESPONSE_CODES.ERROR) {
-        setAppSnackbar({
+        setSystemMessages({
           title: deleteUserData.deleteUser.message,
           autoHideDuration: 10000,
         });
       } else if (deleteUserData.deleteUser.userDeleted) {
         handleLogout();
-        setAppSnackbar({
+        setSystemMessages({
           title: 'Your User account was deleted.',
           autoHideDuration: 10000,
         });

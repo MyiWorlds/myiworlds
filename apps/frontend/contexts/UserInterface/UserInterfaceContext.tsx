@@ -1,17 +1,18 @@
 import AddIcon from '@material-ui/icons/Add';
 import AppController from './AppController';
-import AppDialog from './AppDialog/AppDialog';
+import AppDialog from './AppDialog';
 import CircleSelector from '../../components/Circle/CircleSelector/CircleSelector';
 import ContentArea from './ContentArea';
+import ContentController from './ContentController';
 import DraggableDialog from './DraggableDialog';
 import Fab from '@material-ui/core/Fab';
-import Navigation from './Navigation';
 import Zoom from '@material-ui/core/Zoom';
-import { Circle } from '@myiworlds/types';
+import { appControllerItemsAtom } from '../../atoms/userInterfaceAtoms';
 import { CircleHydrated } from '../../../../libs/types/src/circle';
 import { convertAllNestedHydratedCircleToFlatCircle } from '../../components/Circle/functions/convertHydratedCircleToFlatCircle';
 import { ProviderStore } from './userInterfaceContextTypes';
 import { UserContext } from './../User/UserContext';
+import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import React, {
   useContext,
@@ -152,18 +153,14 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   const defaultNavWidth = 240;
   const [showNavigation, setShowNavigation] = useState(false);
   const [creatingCircle, setCreatingCircle] = useState(false);
-  const [navWidth, setNavWidth] = useState(defaultNavWidth);
-  const [isResizingNav, setIsResizingNav] = useState(false);
-  const [contentViewing, setContentViewing] = useState<null | Circle>(null);
-  const [navItems, setController] = useState<React.ReactElement | null>(null);
-  const [
-    draggableDialogContent,
-    setDraggableDialogContent,
-  ] = useState<React.ReactElement | null>(null);
-  const [appDialog, setAppDialog] = useState<React.ReactElement | null>(null);
-  const [appBarItems, setAppBarItems] = useState<React.ReactElement | null>(
-    null,
+  const [contentControllerWidth, setContentControllerWidth] = useState(
+    defaultNavWidth,
   );
+  const [
+    isResizingContentController,
+    setIsResizingContentController,
+  ] = useState(false);
+  const contentControllerItems = useRecoilValue(appControllerItemsAtom);
   const theme = useTheme();
   console.log(
     'defaultUI',
@@ -182,12 +179,12 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
   };
 
   const updateNavWidth = () => {
-    if (!navItems) {
-      setNavWidth(defaultNavWidth);
+    if (!contentControllerItems) {
+      setContentControllerWidth(defaultNavWidth);
     }
   };
 
-  useEffect(updateNavWidth, [navItems]);
+  useEffect(updateNavWidth, [contentControllerItems]);
   useEffect(didMount, []);
 
   const createFab = user && user.canCreate && router.pathname !== '/edit/[id]' && (
@@ -216,39 +213,29 @@ const UserInterfaceProvider: React.FC<Props> = React.memo(({ children }) => {
       value={{
         creatingCircle,
         setCreatingCircle,
-        navWidth,
-        setNavWidth,
-        contentViewing,
-        setContentViewing,
-        setController,
-        setAppBarItems,
-        setDraggableDialogContent,
-        setAppDialog,
-        isResizingNav,
-        setIsResizingNav,
+        contentControllerWidth,
+        setContentControllerWidth,
+        isResizingContentController,
+        setIsResizingContentController,
       }}
     >
       <div>
-        {appDialog && <AppDialog appDialog={appDialog} />}
-        {draggableDialogContent && (
-          <DraggableDialog draggableDialogContent={draggableDialogContent} />
-        )}
+        <DraggableDialog />
+        <AppDialog />
         {createFab}
         <CircleSelector />
         <div className={classes.root}>
           <AppController
             setShowNavigation={setShowNavigation}
             showNavigation={showNavigation}
-            navWidth={navWidth}
-            setNavWidth={setNavWidth}
-            appBarItems={appBarItems}
+            contentControllerWidth={contentControllerWidth}
+            setContentControllerWidth={setContentControllerWidth}
           />
           <div className={classes.contentArea}>
-            <Navigation
+            <ContentController
               showNavigation={showNavigation}
               setShowNavigation={setShowNavigation}
-              navItems={navItems}
-              isResizingNav={isResizingNav}
+              isResizingContentController={isResizingContentController}
             />
             <ContentArea children={children} />
           </div>

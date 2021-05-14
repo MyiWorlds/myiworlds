@@ -5,9 +5,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import React, { useContext } from 'react';
 import Router from 'next/router';
 import Spacer from './../../../components/Spacer/Spacer';
+import { appDialogAtom } from '../../../atoms/userInterfaceAtoms';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import { UserInterfaceContext } from './../UserInterfaceContext';
+import { useSetRecoilState } from 'recoil';
 
 const useStyles = makeStyles({
   root: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
 
 const RequestCreationModal: React.FunctionComponent = () => {
   const classes = useStyles();
-  const { setAppDialog } = useContext(UserInterfaceContext);
+  const setAppDialog = useSetRecoilState(appDialogAtom);
 
   const handleGoHome = () => {
     setAppDialog(null);

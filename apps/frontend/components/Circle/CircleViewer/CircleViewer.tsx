@@ -9,7 +9,11 @@ import { Circle, CircleHydrated } from '@myiworlds/types';
 import { convertHydratedCircleToFlatCircle } from '../functions/convertHydratedCircleToFlatCircle';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { useGetCircleToViewByIdQuery } from './../../../generated/apolloComponents';
-import { UserInterfaceContext } from '../../../contexts/UserInterface/UserInterfaceContext';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  appControllerItemsAtom,
+  contentAtom,
+} from '../../../atoms/userInterfaceAtoms';
 // import CircleFieldsMapperViewer from './CircleFieldsMapperViewer';
 
 interface Props {
@@ -17,9 +21,9 @@ interface Props {
 }
 
 export default function CircleViewer({ id }: Props) {
-  const { setContentViewing, contentViewing, setAppBarItems } = useContext(
-    UserInterfaceContext,
-  );
+  const [contentViewing, setContentViewing] = useRecoilState(contentAtom);
+
+  const setAppControllerItems = useSetRecoilState(appControllerItemsAtom);
   const [circleLayouts, setCircleLayouts] = React.useState<Circle | null>(null);
 
   const {
@@ -49,14 +53,16 @@ export default function CircleViewer({ id }: Props) {
       console.log('Circle updated, updating...');
       const flattenedCircle = convertHydratedCircleToFlatCircle(circle);
       setContentViewing(flattenedCircle);
-      setAppBarItems(<CircleViewerAppBarItems circle={flattenedCircle} />);
+      setAppControllerItems(
+        <CircleViewerAppBarItems circle={flattenedCircle} />,
+      );
       if (circle.layouts) {
-        const layouts = JSON.parse(circle.layouts.data.layouts, function(
-          key,
-          value,
-        ) {
-          return value === 'Infinity' ? Infinity : value;
-        });
+        const layouts = JSON.parse(
+          circle.layouts.data.layouts,
+          function (key, value) {
+            return value === 'Infinity' ? Infinity : value;
+          },
+        );
         setCircleLayouts(
           convertHydratedCircleToFlatCircle({
             ...circle.layouts,

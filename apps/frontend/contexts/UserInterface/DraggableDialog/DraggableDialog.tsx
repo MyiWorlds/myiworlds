@@ -8,10 +8,8 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, IconButton, makeStyles } from '@material-ui/core';
-
-interface Props {
-  draggableDialogContent: React.ReactElement;
-}
+import { draggableDialogContentAtom } from '../../../atoms/userInterfaceAtoms';
+import { useRecoilValue } from 'recoil';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -36,52 +34,53 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const DraggableDialog: React.FC<Props> = React.memo(
-  ({ draggableDialogContent }) => {
-    const modalWidth = 400;
-    const classes = useStyles({ modalWidth });
-
-    return (
-      <Draggable
-        handle="#draggable-dialog-title"
-        cancel={'[class*="MuiDialogContent-root"]'}
-        positionOffset={{ x: window.innerWidth - modalWidth - 12, y: 62 }}
+const DraggableDialog: React.FC = React.memo(() => {
+  const modalWidth = 400;
+  const classes = useStyles({ modalWidth });
+  const draggableDialogContent = useRecoilValue(draggableDialogContentAtom);
+  if (!draggableDialogContent) {
+    return null;
+  }
+  return (
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+      positionOffset={{ x: window.innerWidth - modalWidth - 12, y: 62 }}
+    >
+      <Modal
+        open={true}
+        className={classes.modal}
+        // onClose={handleClose}
+        hideBackdrop={true}
+        disableBackdropClick={true}
+        aria-labelledby="draggable-dialog-title"
+        disableScrollLock={true}
       >
-        <Modal
-          open={true}
-          className={classes.modal}
-          // onClose={handleClose}
-          hideBackdrop={true}
-          disableBackdropClick={true}
-          aria-labelledby="draggable-dialog-title"
-          disableScrollLock={true}
-        >
-          <Paper elevation={10} className={classes.paper}>
-            <AppBar
-              id="draggable-dialog-title"
-              className={classes.appBar}
-              position="fixed"
-              color="default"
-            >
-              <Toolbar variant="dense">
-                <Typography key="title" variant="h6" className={classes.title}>
-                  Editor
-                </Typography>
-                <IconButton className={classes.appBar}>
-                  <DragHandleIcon />
-                </IconButton>
-              </Toolbar>
-            </AppBar>
-            <div className={classes.toolbar} />
+        <Paper elevation={10} className={classes.paper}>
+          <AppBar
+            id="draggable-dialog-title"
+            className={classes.appBar}
+            position="fixed"
+            color="default"
+          >
+            <Toolbar variant="dense">
+              <Typography key="title" variant="h6" className={classes.title}>
+                Editor
+              </Typography>
+              <IconButton className={classes.appBar}>
+                <DragHandleIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <div className={classes.toolbar} />
 
-            <DialogContent>
-              <div>{draggableDialogContent}</div>
-            </DialogContent>
-          </Paper>
-        </Modal>
-      </Draggable>
-    );
-  },
-);
+          <DialogContent>
+            <div>{draggableDialogContent}</div>
+          </DialogContent>
+        </Paper>
+      </Modal>
+    </Draggable>
+  );
+});
 
 export default DraggableDialog;

@@ -1,17 +1,10 @@
-import { Circle } from '@myiworlds/types';
 export interface ProviderStore {
   creatingCircle: boolean;
-  isResizingNav: boolean;
-  setIsResizingNav: (isResizingNav: boolean) => void;
-  setCreatingCircle: (value: boolean) => void;
-  navWidth: number;
-  setNavWidth: (value: number) => void;
-  contentViewing: null | Circle;
-  setContentViewing: (val: null | Circle) => void;
-  setController: (navItems: React.ReactElement | null) => void;
-  setAppBarItems: (appBarItems: React.ReactElement | null) => void;
-  setDraggableDialogContent: (
-    draggableDialogContent: React.ReactElement | null,
+  isResizingContentController: boolean;
+  setIsResizingContentController: (
+    isResizingContentController: boolean,
   ) => void;
-  setAppDialog: (appDialog: React.ReactElement | null) => void;
+  setCreatingCircle: (value: boolean) => void;
+  contentControllerWidth: number;
+  setContentControllerWidth: (value: number) => void;
 }

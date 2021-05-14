@@ -1,11 +1,9 @@
-import React from 'react';
+import { appDialogAtom } from '../../../atoms/userInterfaceAtoms';
+import { useRecoilValue } from 'recoil';
 
-interface Props {
-  appDialog: React.ReactElement;
-}
-
-const AppDialog: React.FC<Props> = React.memo(({ appDialog }) => {
+const AppDialog = () => {
+  const appDialog = useRecoilValue(appDialogAtom);
   return appDialog;
-});
+};
 
 export default AppDialog;

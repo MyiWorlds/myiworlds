@@ -18,10 +18,11 @@ import Typography from '@material-ui/core/Typography';
 import { CircleHydrated } from '@myiworlds/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
-import { SystemMessagesContext } from './../../../contexts/SystemMessages/SystemMessagesContext';
+import { systemMessagesAtom } from '../../../atoms/userInterfaceAtoms';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { UserInterfaceContext } from '../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
 import {
   CopyCircleMutation,
   useCopyCircleMutation,
@@ -70,7 +71,7 @@ const CircleSelector = React.memo(() => {
     UserInterfaceContext,
   );
   const [idToCopy, setIdToCopy] = useState<null | string>(null);
-  const { setAppSnackbar } = useContext(SystemMessagesContext);
+  const setSystemMessages = useSetRecoilState(systemMessagesAtom);
 
   const [
     getCircle,
@@ -116,7 +117,7 @@ const CircleSelector = React.memo(() => {
     } else if (
       copyCircleResponse?.copyCircle?.status === RESPONSE_CODES.ERROR
     ) {
-      setAppSnackbar({
+      setSystemMessages({
         title: copyCircleResponse?.copyCircle?.message
           ? copyCircleResponse?.copyCircle?.message
           : 'There was an error copying the circle. Please try again',

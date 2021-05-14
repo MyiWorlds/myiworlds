@@ -8,9 +8,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import React, { useContext } from 'react';
+import React from 'react';
+import { appDialogAtom } from '../../../atoms/userInterfaceAtoms';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
+import { useSetRecoilState } from 'recoil';
 
 const JavascriptCodeMirrorEditor = dynamic(
   () => import('./JavascriptCodeMirrorEditor'),
@@ -37,7 +38,7 @@ const FunctionEditor: React.FunctionComponent<Props> = ({
   setValue,
 }) => {
   const classes = useStyles();
-  const { setAppDialog } = useContext(UserInterfaceContext);
+  const setAppDialog = useSetRecoilState(appDialogAtom);
 
   const showEditor = () => {
     setAppDialog(

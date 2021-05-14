@@ -14,7 +14,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Media from './../../../components/Media/Media';
+import Media from '../../../components/Media/Media';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PeopleIcon from '@material-ui/icons/People';
@@ -22,9 +22,11 @@ import PublicIcon from '@material-ui/icons/Public';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import { contentControllerItemsAtom } from '../../../atoms/userInterfaceAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { ProfileContext } from './../../Profile/ProfileContext';
+import { ProfileContext } from '../../Profile/ProfileContext';
 import { UserContext } from '../../User/UserContext';
+import { useRecoilValue } from 'recoil';
 import { UserInterfaceContext } from '../UserInterfaceContext';
 import React, {
   useContext,
@@ -37,8 +39,7 @@ import React, {
 interface Props {
   showNavigation: boolean;
   setShowNavigation: (value: boolean) => void;
-  navItems: null | React.ReactElement;
-  isResizingNav: boolean;
+  isResizingContentController: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
     },
     drawerOpen: {
-      width: (props: any) => props.navWidth,
+      width: (props: any) => props.contentControllerWidth,
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -144,21 +145,21 @@ function useEventListener(eventName: any, handler: any, element = window) {
   }, [eventName, element]); // Re-run if eventName or element changes
 }
 
-const Navigation: React.FC<Props> = ({
+const ContentController: React.FC<Props> = ({
   showNavigation,
   setShowNavigation,
-  navItems,
 }) => {
+  const contentControllerItems = useRecoilValue(contentControllerItemsAtom);
   const { user, handleLogin } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
   const {
     creatingCircle,
-    navWidth,
-    setNavWidth,
-    setIsResizingNav,
-    isResizingNav,
+    contentControllerWidth,
+    setContentControllerWidth,
+    setIsResizingContentController,
+    isResizingContentController,
   } = useContext(UserInterfaceContext);
-  const classes = useStyles({ navWidth });
+  const classes = useStyles({ contentControllerWidth });
   const [open, setOpen] = useState(false);
 
   const handleShowMoreMenuItems = () => {
@@ -172,7 +173,7 @@ const Navigation: React.FC<Props> = ({
   // ... so that reference never changes.
   const handleMouseMove = (e: MouseEvent) => {
     // we don't want to do anything if we aren't resizing.
-    if (!isResizingNav) {
+    if (!isResizingContentController) {
       return;
     }
     const offsetLeft = e.clientX - 20;
@@ -180,19 +181,19 @@ const Navigation: React.FC<Props> = ({
     const maxWidth = 1000;
 
     if (offsetLeft > minWidth && offsetLeft < maxWidth) {
-      setNavWidth(offsetLeft);
+      setContentControllerWidth(offsetLeft);
     }
   };
 
   const handleMouseup = (e: MouseEvent) => {
-    setIsResizingNav(false);
+    setIsResizingContentController(false);
   };
 
   const handleMousedown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!showNavigation) {
       setShowNavigation(true);
     }
-    setIsResizingNav(true);
+    setIsResizingContentController(true);
   };
 
   const defaultController = (
@@ -296,9 +297,11 @@ const Navigation: React.FC<Props> = ({
     </List>
   );
 
-  const displayedController = navItems ? navItems : defaultController;
+  const displayedController = contentControllerItems
+    ? contentControllerItems
+    : defaultController;
 
-  useCallback(handleMouseMove, [setNavWidth]);
+  useCallback(handleMouseMove, [setContentControllerWidth]);
   useEventListener('mousemove', handleMouseMove);
   useEventListener('mouseup', handleMouseup);
 
@@ -308,6 +311,7 @@ const Navigation: React.FC<Props> = ({
         <SwipeableDrawer
           variant="temporary"
           open={showNavigation && !creatingCircle}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onOpen={() => {}}
           onClose={() => setShowNavigation(false)}
         >
@@ -342,4 +346,4 @@ const Navigation: React.FC<Props> = ({
   );
 };
 
-export default Navigation;
+export default ContentController;
