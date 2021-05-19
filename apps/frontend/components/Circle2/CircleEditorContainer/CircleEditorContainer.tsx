@@ -1,16 +1,15 @@
-import Button from '@material-ui/core/Button';
+import AppControllerEditor from './components/UIEditorComponents/AppControllerEditor';
 import CircleField from './components/CircleField';
+import ContentEditor from './components/UIEditorComponents/ContentEditor';
+import GridItem from './components/GridItem';
 import React, { useEffect, useState } from 'react';
-import SaveCircle from './components/SaveCircle';
-import SaveCircleButton from './components/SaveCircleButton';
 import { CircleHydrated } from '../../../../../libs/types/src/circle';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { useSetRecoilState } from 'recoil';
 import {
-  AppBar,
-  createStyles,
-  makeStyles,
-  Theme,
-  Toolbar,
-} from '@material-ui/core';
+  appControllerItemsAtom,
+  contentControllerAtom,
+} from '../../../atoms/userInterfaceAtoms';
 
 interface Props {
   fetch?: boolean;
@@ -62,14 +61,6 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
     },
-    btn: {
-      margin: theme.spacing(1),
-    },
-    appBar: {},
-    toolbar: {
-      display: 'flex',
-      flexDirection: 'row-reverse',
-    },
   }),
 );
 
@@ -79,47 +70,57 @@ export default function CircleEditorContainer({
   initialIsEditing,
 }: Props) {
   const classes = useStyles();
+  const setAppControllerItems = useSetRecoilState(appControllerItemsAtom);
+  const setContentControllerAtom = useSetRecoilState(contentControllerAtom);
   const [isEditing, setIsEditing] = useState(initialIsEditing);
+  const [viewingHistory, setViewingHistory] = useState(false);
+
   const fetchCircle = () => {
     if (fetch) {
       console.log('Fetch the circle');
     }
   };
+
+  const updateEditingUI = () => {
+    setAppControllerItems(
+      <AppControllerEditor
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        circleId={circle.id}
+        viewingHistory={viewingHistory}
+        setViewingHistory={setViewingHistory}
+      />,
+    );
+
+    setContentControllerAtom(
+      <ContentEditor circle={circle} viewingHistory={viewingHistory} />,
+    );
+
+    return () => {
+      if (setAppControllerItems) {
+        setAppControllerItems(null);
+        setContentControllerAtom(null);
+      }
+    };
+  };
+
   useEffect(fetchCircle, [fetch]);
+  useEffect(updateEditingUI, [
+    isEditing,
+    circle.id,
+    setAppControllerItems,
+    viewingHistory,
+    setContentControllerAtom,
+  ]);
 
   console.log('Editor re-rendered');
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar} color="transparent">
-        <Toolbar className={classes.toolbar} variant="dense">
-          {isEditing ? (
-            <Button
-              className={classes.btn}
-              variant="contained"
-              onClick={() => setIsEditing(false)}
-            >
-              View
-            </Button>
-          ) : (
-            <Button
-              className={classes.btn}
-              variant="contained"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit
-            </Button>
-          )}
-          <SaveCircleButton id={circle.id} />
-        </Toolbar>
-      </AppBar>
       <div>
         {fieldsDisplayed.map((field: keyof CircleHydrated) => (
-          <CircleField
-            key={circle.id + field}
-            field={field}
-            isEditing={initialIsEditing}
-            circle={circle}
+          <GridItem
+          // Add props
           />
         ))}
       </div>

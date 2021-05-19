@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { selectedCircleFieldEditingAtom } from '../../../atoms/circleAtoms';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   property: string;
-  setFieldEditing?: (newFieldEditing: string | null) => void;
   // children: React.ReactElement;
-  fieldEditing?: string | null;
   editingGrid?: boolean;
 }
 
@@ -73,11 +73,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CircleFieldViewerContainer: React.FunctionComponent<Props> = ({
   property,
-  setFieldEditing,
-  fieldEditing,
   children,
   editingGrid,
 }) => {
+  const [fieldEditing, setFieldEditing] = useRecoilState(
+    selectedCircleFieldEditingAtom,
+  );
   const classes = useStyles();
 
   if (setFieldEditing) {

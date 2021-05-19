@@ -1,6 +1,7 @@
 import AppBar from '@material-ui/core/AppBar';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CircleFieldEditor from './CircleFieldEditor';
+import CircleFieldsController from './CircleFieldsController';
 import cloneDeep from 'lodash.clonedeep';
 import IconButton from '@material-ui/core/IconButton';
 import LayoutEditor from './LayoutEditor';
@@ -9,10 +10,13 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Circle } from '@myiworlds/types';
+import { contentControllerAtom } from '../../../../atoms/userInterfaceAtoms';
 import { createCollectionIdClient } from './../../../../functions/createCollectionIdClient';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { Layout } from 'react-grid-layout';
+import { selectedCircleFieldEditingAtom } from '../../../../atoms/circleAtoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useTheme } from '@material-ui/core/styles';
 import {
   generateLayoutFromSize,
@@ -36,8 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   circle: Circle;
   updateCircle: (newValues: any) => void;
-  fieldEditing: null | string;
-  setFieldEditing: (newFieldEditing: string | null) => void;
   circleLayouts: any;
   setCircleLayouts: (circle: Circle) => void;
   setCircleUi: (newValue: Circle) => void;
@@ -48,8 +50,6 @@ interface Props {
 export default function CircleFieldController({
   circle,
   updateCircle,
-  fieldEditing,
-  setFieldEditing,
   circleLayouts,
   setCircleLayouts,
   displaySize,
@@ -58,8 +58,13 @@ export default function CircleFieldController({
 }: Props) {
   const classes = useStyles();
   const theme = useTheme();
+  const [fieldEditing, setFieldEditing] = useRecoilState(
+    selectedCircleFieldEditingAtom,
+  );
+  const setContentControllerItems = useSetRecoilState(contentControllerAtom);
 
   if (!fieldEditing) {
+    setContentControllerItems(<CircleFieldsController circle={circle} />);
     return null;
   }
 

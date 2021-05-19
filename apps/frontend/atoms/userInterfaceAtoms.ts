@@ -7,18 +7,13 @@ export const appControllerItemsAtom = atom({
   default: null as React.ReactElement | null,
 });
 
-export const contentControllerItemsAtom = atom({
-  key: `contentControllerItemsAtom`,
-  default: null as React.ReactElement | null,
-});
-
 export const contentAtom = atom({
   key: `contentAtom`,
   default: null as Circle | null,
 });
 
-export const contentEditorAtom = atom({
-  key: `contentEditorAtom`,
+export const contentControllerAtom = atom({
+  key: `contentControllerAtom`,
   default: null as React.ReactElement | null,
 });
 

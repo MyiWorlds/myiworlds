@@ -1,6 +1,11 @@
 import { allCircleFields } from '../constants/circleFieldsStrings';
-import { atomFamily, selectorFamily } from 'recoil';
-import { Circle } from '@myiworlds/types';
+import { atom, atomFamily, selectorFamily } from 'recoil';
+import { Circle, CircleHydrated } from '@myiworlds/types';
+
+export const selectedCircleFieldEditingAtom = atom({
+  key: `selected-circle-field-editing`,
+  default: null as keyof CircleHydrated | null,
+});
 
 export const circleFieldEditing = atomFamily({
   key: `circle-field-editing`,

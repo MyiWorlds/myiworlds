@@ -25,15 +25,11 @@ import {
 interface Props {
   property: string;
   value: any;
-  setFieldEditing?: (newFieldEditing: string | null) => void;
-  fieldEditing?: string | null;
   circle: Circle;
   editingGrid?: boolean;
 }
 
 export default function CircleFieldViewer({
-  fieldEditing,
-  setFieldEditing,
   property,
   circle,
   value,
@@ -107,9 +103,7 @@ export default function CircleFieldViewer({
   return (
     <CircleFieldViewerContainer
       key={property}
-      fieldEditing={fieldEditing}
       property={property}
-      setFieldEditing={setFieldEditing}
       editingGrid={editingGrid}
     >
       {cellContent}

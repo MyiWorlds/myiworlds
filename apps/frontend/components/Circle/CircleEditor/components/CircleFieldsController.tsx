@@ -6,17 +6,17 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
 import { Circle } from '@myiworlds/types';
+import { selectedCircleFieldEditingAtom } from '../../../../atoms/circleAtoms';
 import { unEditableFields } from '../../../../constants/circleFieldsStrings';
+import { useSetRecoilState } from 'recoil';
 
 interface Props {
   circle: Circle;
-  setFieldEditing: (newFieldEditing: string | null) => void;
 }
 
-const CircleFieldsController: React.FC<Props> = ({
-  circle,
-  setFieldEditing,
-}) => {
+const CircleFieldsController: React.FC<Props> = ({ circle }) => {
+  const setFieldEditing = useSetRecoilState(selectedCircleFieldEditingAtom);
+
   const renderObject = (obj: any): any => {
     const renderElements = [];
     for (const [property] of Object.entries(obj)) {

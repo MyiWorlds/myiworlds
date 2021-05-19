@@ -22,7 +22,7 @@ import PublicIcon from '@material-ui/icons/Public';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import { contentControllerItemsAtom } from '../../../atoms/userInterfaceAtoms';
+import { contentControllerAtom } from '../../../atoms/userInterfaceAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { ProfileContext } from '../../Profile/ProfileContext';
 import { UserContext } from '../../User/UserContext';
@@ -149,7 +149,7 @@ const ContentController: React.FC<Props> = ({
   showNavigation,
   setShowNavigation,
 }) => {
-  const contentControllerItems = useRecoilValue(contentControllerItemsAtom);
+  const contentController = useRecoilValue(contentControllerAtom);
   const { user, handleLogin } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
   const {
@@ -297,8 +297,8 @@ const ContentController: React.FC<Props> = ({
     </List>
   );
 
-  const displayedController = contentControllerItems
-    ? contentControllerItems
+  const displayedController = contentController
+    ? contentController
     : defaultController;
 
   useCallback(handleMouseMove, [setContentControllerWidth]);

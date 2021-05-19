@@ -29,15 +29,16 @@ import { createCollectionIdClient } from './../../../functions/createCollectionI
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
+import { selectedCircleFieldEditingAtom } from '../../../atoms/circleAtoms';
 import { useGetCircleToEditByIdQuery } from './../../../generated/apolloComponents';
 import { UserContext } from './../../../contexts/User/UserContext';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
-import { useSetRecoilState } from 'recoil';
 import {
   appControllerItemsAtom,
   systemMessagesAtom,
-  contentControllerItemsAtom,
+  contentControllerAtom,
   appDialogAtom,
 } from '../../../atoms/userInterfaceAtoms';
 import {
@@ -69,12 +70,9 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const router = useRouter();
   const { setContentControllerWidth } = useContext(UserInterfaceContext);
   const setAppDialog = useSetRecoilState(appDialogAtom);
-  const setContentControllerItems = useSetRecoilState(
-    contentControllerItemsAtom,
-  );
+  const setContentControllerItems = useSetRecoilState(contentControllerAtom);
   const setAppControllerItems = useSetRecoilState(appControllerItemsAtom);
   const setSystemMessages = useSetRecoilState(systemMessagesAtom);
-
   const { user } = useContext(UserContext);
   const { selectedProfile } = useContext(ProfileContext);
   const timerToSaveCircle = useRef<any>(false);
@@ -84,7 +82,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
   const [editingGrid, setEditingGrid] = useState(false);
   const [savingCircle, setSavingCircle] = useState(false);
   const [circleId, setCircleId] = useState<string | undefined>(id);
-  const [fieldEditing, setFieldEditing] = useState<null | string>(null);
   const [displaySize, setDisplaySize] = useState<null | number>(null);
   const [
     updateCircleVariables,
@@ -212,6 +209,7 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
       setHasUnsavedChanges(false);
       setAppDialog(<LoginModal />);
     }
+
     return () => {
       if (setContentControllerItems) {
         setContentControllerItems(null);
@@ -699,17 +697,13 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
           <ReactGridLayoutViewer
             circle={circle}
             editingGrid={editingGrid}
-            setFieldEditing={setFieldEditing}
-            fieldEditing={fieldEditing}
             displaySize={displaySize}
             circleLayouts={circleLayouts}
             setCircleLayouts={setCircleLayouts}
           />
         );
-        newController = fieldEditing ? (
+        newController = (
           <CircleFieldController
-            fieldEditing={fieldEditing}
-            setFieldEditing={setFieldEditing}
             updateCircle={handleUpdateCircleAndSave}
             circle={circle}
             circleLayouts={circleLayouts}
@@ -720,20 +714,13 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
             displaySize={displaySize}
             circleUis={circleUiElements}
           />
-        ) : (
-          <CircleFieldsController
-            circle={circle}
-            setFieldEditing={setFieldEditing}
-          />
         );
       }
     }
 
-    if (editingGrid && fieldEditing) {
+    if (editingGrid) {
       newController = (
         <CircleFieldController
-          fieldEditing={fieldEditing}
-          setFieldEditing={setFieldEditing}
           updateCircle={handleUpdateCircleAndSave}
           circle={circle}
           circleLayouts={circleLayouts}
@@ -824,7 +811,6 @@ const CircleEditor = ({ id, onSavePath, onCancelPath }: Props) => {
     updateCircleVariables,
     viewingHistory,
     editingGrid,
-    fieldEditing,
     displaySize,
     circleLayouts,
   ]);
