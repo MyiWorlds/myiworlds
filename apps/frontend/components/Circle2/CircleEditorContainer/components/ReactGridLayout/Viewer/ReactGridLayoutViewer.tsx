@@ -1,10 +1,11 @@
 import AddToGrid from './../Editor/AddToGrid';
-import CircleFieldViewer from './../../Circle/CircleViewer/CircleFieldViewer';
-import CircleFieldViewerContainer from './../../Circle/CircleViewer/CircleFieldViewerContainer';
+import CircleFieldViewer from '../../../../../Circle/CircleViewer/CircleFieldViewer';
 import React, { useContext, useEffect, useState } from 'react';
 import { Circle } from '@myiworlds/types';
+import { contentDisplaySizeAtom } from '../../../../../../atoms/userInterfaceAtoms';
 import { getCurrentLayoutSize } from './gridLayoutHelperFunctions';
-import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
+import { useRecoilValue } from 'recoil';
+import { UserInterfaceContext } from '../../../../../../contexts/UserInterface/UserInterfaceContext';
 import {
   createStyles,
   makeStyles,
@@ -22,9 +23,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 interface Props {
   circle: Circle;
-  circleLayouts: Circle;
-  displaySize?: null | number;
-  editingGrid?: boolean;
+  isEditingGrid?: boolean;
   setCircleLayouts?: (newValues: Circle) => void;
 }
 
@@ -44,9 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const ReactGridLayoutViewer: React.FC<Props> = ({
   circle,
-  circleLayouts,
-  displaySize,
-  editingGrid,
+  isEditingGrid,
   setCircleLayouts,
 }) => {
   const classes = useStyles();
@@ -54,6 +51,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
   const { contentControllerWidth, isResizingContentController } = useContext(
     UserInterfaceContext,
   );
+  const displaySize = useRecoilValue(contentDisplaySizeAtom);
   const [classNames, setClassNames] = useState(
     'flex layout bg-white shadow rounded-sm',
   );
@@ -71,7 +69,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     currentLayout: Layout[],
     allLayouts: ReactGridLayout.Layouts,
   ) => {
-    if (setCircleLayouts && editingGrid) {
+    if (setCircleLayouts && isEditingGrid) {
       setCircleLayouts({
         ...circleLayouts,
         data: {
@@ -123,7 +121,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
             property={key}
             value={value}
             circle={circle}
-            editingGrid={editingGrid}
+            isEditingGrid={isEditingGrid}
           />
         </div>,
       );
@@ -138,10 +136,10 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
             <CircleFieldViewerContainer
               key={layoutSizeItem.i}
               property={layoutSizeItem.i}
-              editingGrid={editingGrid}
+              isEditingGrid={isEditingGrid}
             >
               <span className={classes.spacerText}>
-                {editingGrid ? 'Spacer' : ''}
+                {isEditingGrid ? 'Spacer' : ''}
               </span>
             </CircleFieldViewerContainer>
           </div>,
@@ -152,12 +150,11 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
 
   return (
     <div className={classes.container}>
-      {editingGrid && displaySize && setCircleLayouts && (
+      {isEditingGrid && displaySize && setCircleLayouts && (
         <AddToGrid
           circle={circle}
           circleLayouts={circleLayouts}
           displaySize={displaySize}
-          editingGrid={editingGrid}
           setCircleLayouts={setCircleLayouts}
         />
       )}
@@ -170,8 +167,8 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
         // autoSize={true}
         // rowHeight={muiTheme.spacing(1) / 2}
         // onResize={this.onResize}
-        isDraggable={editingGrid ? true : false}
-        isResizable={editingGrid ? true : false}
+        isDraggable={isEditingGrid ? true : false}
+        isResizable={isEditingGrid ? true : false}
         breakpoints={{
           xl: theme.breakpoints.values.xl,
           lg: theme.breakpoints.values.lg,

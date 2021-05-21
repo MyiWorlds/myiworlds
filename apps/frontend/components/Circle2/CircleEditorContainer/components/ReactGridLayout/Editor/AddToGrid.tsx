@@ -27,7 +27,6 @@ interface Props {
   circle: Circle;
   circleLayouts: Circle;
   displaySize: number;
-  editingGrid?: boolean;
   setCircleLayouts: (newValues: Circle) => void;
 }
 
@@ -52,7 +51,6 @@ const AddToGrid: React.FC<Props> = ({
   circle,
   circleLayouts,
   displaySize,
-  editingGrid,
   setCircleLayouts,
 }) => {
   const classes = useStyles();

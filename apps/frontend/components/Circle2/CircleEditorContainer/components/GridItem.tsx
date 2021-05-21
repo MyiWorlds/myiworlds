@@ -1,13 +1,22 @@
+import CircleField from './CircleField';
 import React from 'react';
+import { CircleHydrated } from '@myiworlds/types';
+import { selectedCircleFieldEditingAtom } from '../../../../atoms/circleAtoms';
+import { useSetRecoilState } from 'recoil';
 
-export default function GridItem() {
-  const setSelectedCircleFieldEditing = useRecoilValue(
+interface Props {
+  circle: CircleHydrated;
+  field: keyof CircleHydrated;
+}
+
+export default function GridItem({ circle, field }: Props) {
+  const setSelectedCircleFieldEditing = useSetRecoilState(
     selectedCircleFieldEditingAtom,
   );
   // set selected item
 
   return (
-    <div onClick={setSelectedCircleFieldEditing()}>
+    <div onClick={() => setSelectedCircleFieldEditing(field)}>
       <CircleField
         key={circle.id + field}
         field={field}

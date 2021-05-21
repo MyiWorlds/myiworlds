@@ -24,15 +24,16 @@ export default function ContentEditor({ viewingHistory, circle }: Props) {
     contentEditor = <div>history </div>;
   } else if (selectedCircleFieldEditing) {
     contentEditor = (
-      <>
+      <div>
         <CircleField
           circle={circle}
           field={selectedCircleFieldEditing}
           isEditing={true}
         />
+        <h1>{selectedCircleFieldEditing}</h1>
         <div>Other</div>
         <div>components</div>l
-      </>
+      </div>
     );
   }
 

@@ -1,3 +1,4 @@
+import ContentSizeChanger from '../ContentSizeChanger';
 import React from 'react';
 import SaveCircleButton from '../SaveCircleButton';
 import {
@@ -24,18 +25,21 @@ interface Props {
   circleId: string;
   viewingHistory: boolean;
   setViewingHistory: (val: boolean) => void;
+  isEditingGrid: boolean;
 }
 
 export default function AppControllerEditor({
   isEditing,
   setIsEditing,
   circleId,
+  isEditingGrid,
 }: Props) {
   const classes = useStyles();
 
   return (
     <>
       <div className={classes.filler} />
+      <ContentSizeChanger isEditingGrid={isEditingGrid} />
       {isEditing ? (
         <Button
           className={classes.btn}

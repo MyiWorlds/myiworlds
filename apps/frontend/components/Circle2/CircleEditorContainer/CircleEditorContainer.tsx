@@ -3,6 +3,7 @@ import CircleField from './components/CircleField';
 import ContentEditor from './components/UIEditorComponents/ContentEditor';
 import GridItem from './components/GridItem';
 import React, { useEffect, useState } from 'react';
+import ReactGridLayoutViewer from './components/ReactGridLayout/Viewer/ReactGridLayoutViewer';
 import { CircleHydrated } from '../../../../../libs/types/src/circle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useSetRecoilState } from 'recoil';
@@ -74,6 +75,7 @@ export default function CircleEditorContainer({
   const setContentControllerAtom = useSetRecoilState(contentControllerAtom);
   const [isEditing, setIsEditing] = useState(initialIsEditing);
   const [viewingHistory, setViewingHistory] = useState(false);
+  const [isEditingGrid, setIsEditingGrid] = useState(false);
 
   const fetchCircle = () => {
     if (fetch) {
@@ -89,6 +91,7 @@ export default function CircleEditorContainer({
         circleId={circle.id}
         viewingHistory={viewingHistory}
         setViewingHistory={setViewingHistory}
+        isEditingGrid={isEditingGrid}
       />,
     );
 
@@ -118,10 +121,13 @@ export default function CircleEditorContainer({
   return (
     <div className={classes.root}>
       <div>
+        {/* <ReactGridLayoutViewer
+          isEditingGrid={isEditingGrid}
+          circle={circle}
+          view
+        /> */}
         {fieldsDisplayed.map((field: keyof CircleHydrated) => (
-          <GridItem
-          // Add props
-          />
+          <GridItem circle={circle} field={field} />
         ))}
       </div>
     </div>

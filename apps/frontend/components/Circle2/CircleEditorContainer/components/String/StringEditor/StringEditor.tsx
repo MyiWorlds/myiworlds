@@ -41,15 +41,13 @@ export default function StringEditor({
     circleFieldEditing,
   );
 
-  if (!circleFieldEditing) {
-    return null;
-  }
-
   return (
     <div className={classes.container}>
       <TextField
-        defaultValue={circleFieldEditing}
+        key={property}
+        defaultValue={circleFieldEditing ? circleFieldEditing : ''}
         onChange={onChange}
+        autoFocus={true}
         {...textFieldProps}
       />
     </div>

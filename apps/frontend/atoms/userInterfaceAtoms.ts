@@ -31,3 +31,8 @@ export const appDialogAtom = atom({
   key: `appDialogAtom`,
   default: null as React.ReactElement | null,
 });
+
+export const contentDisplaySizeAtom = atom({
+  key: `contentDisplaySizeAtom`,
+  default: null as number | null,
+});

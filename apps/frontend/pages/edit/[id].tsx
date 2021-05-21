@@ -7,13 +7,22 @@ import { Typography } from '@material-ui/core';
 import { useGetCircleToEditByIdQuery } from './../../generated/apolloComponents';
 import { useRouter } from 'next/router';
 
-const EditCircle = () => {
+interface Props {
+  id?: string;
+}
+
+const EditCircle = ({ id }: Props) => {
   const router = useRouter();
   let circleId = null;
-  if (Array.isArray(router.query.id)) {
-    circleId = router.query.id[0];
+
+  if (id) {
+    circleId = { id };
   } else {
-    circleId = router.query.id;
+    if (Array.isArray(router.query.id)) {
+      circleId = router.query.id[0];
+    } else {
+      circleId = router.query.id;
+    }
   }
 
   const {
