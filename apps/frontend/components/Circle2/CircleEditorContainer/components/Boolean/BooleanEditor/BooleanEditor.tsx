@@ -1,7 +1,7 @@
 import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import { Circle } from '@myiworlds/types';
-import { circleWithId } from '../../../../../../atoms/circleAtoms';
+import { circlePropertyValueByIdAndPropertyAtom } from '../../../../../../atoms/circleAtoms';
 import { useRecoilState } from 'recoil';
 import FormControlLabel, {
   FormControlLabelProps,
@@ -19,7 +19,7 @@ export default function BooleanEditor({
   property,
 }: Props) {
   const [circleEditing, setCircleEditing] = useRecoilState(
-    circleWithId(circleId + property),
+    circlePropertyValueByIdAndPropertyAtom(circleId + property),
   );
 
   console.log(

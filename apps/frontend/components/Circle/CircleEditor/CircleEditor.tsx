@@ -29,12 +29,11 @@ import { createCollectionIdClient } from './../../../functions/createCollectionI
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { FIRESTORE_COLLECTIONS, RESPONSE_CODES } from '@myiworlds/enums';
 import { ProfileContext } from './../../../contexts/Profile/ProfileContext';
-import { selectedCircleFieldEditingAtom } from '../../../atoms/circleAtoms';
 import { useGetCircleToEditByIdQuery } from './../../../generated/apolloComponents';
 import { UserContext } from './../../../contexts/User/UserContext';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { UserInterfaceContext } from './../../../contexts/UserInterface/UserInterfaceContext';
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
 import {
   appControllerItemsAtom,
   systemMessagesAtom,

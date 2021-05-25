@@ -1,7 +1,7 @@
 import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import { Circle } from '@myiworlds/types';
-import { circleWithId } from '../../../../../../atoms/circleAtoms';
+import { circlePropertyValueByIdAndPropertyAtom } from '../../../../../../atoms/circleAtoms';
 import { useRecoilValue } from 'recoil';
 import FormControlLabel, {
   FormControlLabelProps,
@@ -18,13 +18,15 @@ export default function BooleanViewer({
   circleId,
   formControlLabelProps,
 }: Props) {
-  const circleFieldValue = useRecoilValue(circleWithId(circleId + property));
+  const circleFieldValue = useRecoilValue(
+    circlePropertyValueByIdAndPropertyAtom(circleId + property),
+  );
 
   return (
     <div>
       <FormControlLabel
         {...formControlLabelProps}
-        control={<Switch checked={circleFieldValue} disabled />}
+        control={<Switch checked={circleFieldValue || false} disabled />}
       />
     </div>
   );

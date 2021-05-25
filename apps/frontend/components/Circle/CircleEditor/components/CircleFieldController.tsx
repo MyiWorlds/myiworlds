@@ -58,24 +58,25 @@ export default function CircleFieldController({
 }: Props) {
   const classes = useStyles();
   const theme = useTheme();
-  const [fieldEditing, setFieldEditing] = useRecoilState(
-    selectedCircleFieldEditingAtom,
-  );
+  const [
+    selectedCircleFieldEditing,
+    setSelectedCircleFieldEditing,
+  ] = useRecoilState(selectedCircleFieldEditingAtom);
   const setContentControllerItems = useSetRecoilState(contentControllerAtom);
 
-  if (!fieldEditing) {
+  if (!selectedCircleFieldEditing) {
     setContentControllerItems(<CircleFieldsController circle={circle} />);
     return null;
   }
 
-  const isSpacer = fieldEditing.startsWith('spacer-');
+  const isSpacer = selectedCircleFieldEditing.startsWith('spacer-');
 
   const screenSize = displaySize
     ? getCurrentLayoutSize(displaySize, theme)
     : 'xl';
 
   let currentLayoutEditing = circleLayouts.data.layouts[screenSize].find(
-    (layout: Layout) => layout.i === fieldEditing,
+    (layout: Layout) => layout.i === selectedCircleFieldEditing,
   );
 
   let fieldUi = null;
@@ -103,12 +104,12 @@ export default function CircleFieldController({
 
     previousLayouts[screenSize] = previousLayouts[screenSize].map(
       (gridItem: any) => {
-        if (gridItem.i === fieldEditing) {
+        if (gridItem.i === selectedCircleFieldEditing) {
           gridItem = {
             ...gridItem,
             ...generateLayoutFromSize(
               screenSize,
-              fieldEditing,
+              selectedCircleFieldEditing,
               previousLayouts[screenSize].length,
             ),
           };
@@ -147,12 +148,12 @@ export default function CircleFieldController({
     if (isSpacer) {
       updatedLayouts.data.layouts[screenSize] = updatedLayouts.data.layouts[
         screenSize
-      ].filter((gridItem: any) => gridItem.i !== fieldEditing);
+      ].filter((gridItem: any) => gridItem.i !== selectedCircleFieldEditing);
     } else {
       updatedLayouts.data.layouts[screenSize] = updatedLayouts.data.layouts[
         screenSize
       ].map((gridItem: any) => {
-        if (gridItem.i === fieldEditing) {
+        if (gridItem.i === selectedCircleFieldEditing) {
           gridItem.prevW = gridItem.w;
           gridItem.prevH = gridItem.h;
           gridItem.w = 0;
@@ -174,7 +175,7 @@ export default function CircleFieldController({
     const updatedLayouts = cloneDeep(circleLayouts);
 
     updatedLayouts.data.layouts[screenSize].forEach((layout: any) => {
-      if (layout.i === fieldEditing) {
+      if (layout.i === selectedCircleFieldEditing) {
         layout[property] = value;
       }
     });
@@ -187,12 +188,12 @@ export default function CircleFieldController({
 
   if (!currentLayoutEditing) {
     if (isSpacer) {
-      setFieldEditing(null);
+      setSelectedCircleFieldEditing(null);
       return null;
     } else {
       currentLayoutEditing = generateLayoutFromSize(
         screenSize,
-        fieldEditing,
+        selectedCircleFieldEditing,
         circleLayouts.data.layouts[screenSize].length,
       );
     }
@@ -207,12 +208,12 @@ export default function CircleFieldController({
             className={classes.backButton}
             color="inherit"
             aria-label="menu"
-            onClick={() => setFieldEditing(null)}
+            onClick={() => setSelectedCircleFieldEditing(null)}
           >
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {isSpacer ? 'Spacer' : fieldEditing}
+            {isSpacer ? 'Spacer' : selectedCircleFieldEditing}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -225,8 +226,8 @@ export default function CircleFieldController({
           <CircleFieldEditor
             circle={circle}
             updateCircle={updateCircle}
-            property={fieldEditing}
-            value={circle[fieldEditing as keyof Circle]}
+            property={selectedCircleFieldEditing}
+            value={circle[selectedCircleFieldEditing as keyof Circle]}
             fieldUi={fieldUi}
             setCircleUi={handleSetCircleUi}
           />

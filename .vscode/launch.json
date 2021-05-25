@@ -18,7 +18,7 @@
       "type": "chrome",
       "request": "attach",
       // "port": 9222,
-      "urlFilter": "http://localhost:3000/",
+      "urlFilter": "http://localhost:3000/*",
       "webRoot": "${workspaceFolder}/apps/frontend",
       "sourceMapPathOverrides": {
         "webpack://_N_E/*": "${webRoot}/*"
@@ -26,13 +26,16 @@
     },
     {
       "name": "Graphql API",
-      "port": 9229,
+      "type": "node",
       "request": "attach",
+      "port": 9229
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node",
-      "restart": true,
-      "sourceMaps": true,
-      "outFiles": ["${workspaceFolder}/dist/apps/graphql-api"]
+      "port": 3000
     },
     {
       "type": "chrome",

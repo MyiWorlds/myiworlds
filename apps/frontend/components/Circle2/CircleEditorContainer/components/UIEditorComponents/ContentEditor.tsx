@@ -1,6 +1,7 @@
 import CircleField from '../CircleField';
 import React from 'react';
 import { CircleHydrated } from '@myiworlds/types';
+import { convertHydratedCircleToFlatCircle } from '../../../../Circle/functions/convertHydratedCircleToFlatCircle';
 import { selectedCircleFieldEditingAtom } from '../../../../../atoms/circleAtoms';
 import { useRecoilValue } from 'recoil';
 
@@ -19,14 +20,14 @@ export default function ContentEditor({ viewingHistory, circle }: Props) {
   );
 
   let contentEditor = null;
-
+  const circleFlattend = convertHydratedCircleToFlatCircle(circle);
   if (viewingHistory) {
     contentEditor = <div>history </div>;
   } else if (selectedCircleFieldEditing) {
     contentEditor = (
       <div>
         <CircleField
-          circle={circle}
+          circle={circleFlattend}
           field={selectedCircleFieldEditing}
           isEditing={true}
         />

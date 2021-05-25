@@ -1,11 +1,13 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { selectedCircleFieldEditingAtom } from '../../../atoms/circleAtoms';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  selectedCircleFieldEditingAtom,
+  circleFieldIsSelectedSelector,
+} from '../../../atoms/circleAtoms';
 
 interface Props {
   property: string;
-  // children: React.ReactElement;
   editingGrid?: boolean;
 }
 
@@ -71,33 +73,39 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CircleFieldViewerContainer: React.FunctionComponent<Props> = ({
-  property,
-  children,
-  editingGrid,
-}) => {
-  const [fieldEditing, setFieldEditing] = useRecoilState(
-    selectedCircleFieldEditingAtom,
-  );
-  const classes = useStyles();
+const Comp = React.memo(
+  ({
+    isEditing,
+    editingGrid,
+    property,
+    children,
+  }: {
+    isEditing: boolean;
+    editingGrid: boolean;
+    property: string;
+    children: React.ReactNode;
+  }) => {
+    const setSelectedFieldEditing = useSetRecoilState(
+      selectedCircleFieldEditingAtom,
+    );
+    const classes = useStyles();
 
-  if (setFieldEditing) {
     return (
       <div
         className={classes.container}
-        onClick={() => setFieldEditing(property)}
+        onClick={() => setSelectedFieldEditing(property)}
       >
-        {fieldEditing !== property ? (
+        {!isEditing ? (
           <div className={classes.clickable}>
             <div className={classes.noPointerEvents}>{children}</div>
           </div>
         ) : (
           <div className={classes.noPointerEvents}>{children}</div>
         )}
-        {fieldEditing !== property && !editingGrid && (
+        {!isEditing && !editingGrid && (
           <div className={classes.clickableBackground} />
         )}
-        {fieldEditing === property && (
+        {isEditing && (
           <div
             className={`${classes.selected} ${
               editingGrid ? classes.editingAndSelected : ''
@@ -107,9 +115,25 @@ const CircleFieldViewerContainer: React.FunctionComponent<Props> = ({
         {editingGrid && <div className={classes.editingGrid} />}
       </div>
     );
-  } else {
-    return <div className={classes.container}>{children}</div>;
-  }
-};
+  },
+);
+
+const CircleFieldViewerContainer: React.FunctionComponent<Props> = React.memo(
+  ({ property, children, editingGrid }) => {
+    const circleFieldIsSelected = useRecoilValue(
+      circleFieldIsSelectedSelector({ property }),
+    );
+
+    return (
+      <Comp
+        isEditing={circleFieldIsSelected}
+        editingGrid={editingGrid}
+        property={property}
+      >
+        {children}
+      </Comp>
+    );
+  },
+);
 
 export default CircleFieldViewerContainer;

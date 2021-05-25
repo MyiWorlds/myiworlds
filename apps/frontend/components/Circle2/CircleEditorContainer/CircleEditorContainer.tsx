@@ -5,6 +5,7 @@ import GridItem from './components/GridItem';
 import React, { useEffect, useState } from 'react';
 import ReactGridLayoutViewer from './components/ReactGridLayout/Viewer/ReactGridLayoutViewer';
 import { CircleHydrated } from '../../../../../libs/types/src/circle';
+import { convertHydratedCircleToFlatCircle } from '../../Circle/functions/convertHydratedCircleToFlatCircle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useSetRecoilState } from 'recoil';
 import {
@@ -13,7 +14,6 @@ import {
 } from '../../../atoms/userInterfaceAtoms';
 
 interface Props {
-  fetch?: boolean;
   circle: CircleHydrated;
   initialIsEditing: boolean;
 }
@@ -67,21 +67,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function CircleEditorContainer({
   circle,
-  fetch,
   initialIsEditing,
 }: Props) {
   const classes = useStyles();
-  const setAppControllerItems = useSetRecoilState(appControllerItemsAtom);
-  const setContentControllerAtom = useSetRecoilState(contentControllerAtom);
   const [isEditing, setIsEditing] = useState(initialIsEditing);
   const [viewingHistory, setViewingHistory] = useState(false);
   const [isEditingGrid, setIsEditingGrid] = useState(false);
-
-  const fetchCircle = () => {
-    if (fetch) {
-      console.log('Fetch the circle');
-    }
-  };
+  const setAppControllerItems = useSetRecoilState(appControllerItemsAtom);
+  const setContentControllerAtom = useSetRecoilState(contentControllerAtom);
 
   const updateEditingUI = () => {
     setAppControllerItems(
@@ -92,6 +85,7 @@ export default function CircleEditorContainer({
         viewingHistory={viewingHistory}
         setViewingHistory={setViewingHistory}
         isEditingGrid={isEditingGrid}
+        setIsEditingGrid={setIsEditingGrid}
       />,
     );
 
@@ -107,29 +101,23 @@ export default function CircleEditorContainer({
     };
   };
 
-  useEffect(fetchCircle, [fetch]);
   useEffect(updateEditingUI, [
     isEditing,
     circle.id,
     setAppControllerItems,
     viewingHistory,
     setContentControllerAtom,
+    isEditingGrid,
   ]);
 
   console.log('Editor re-rendered');
 
   return (
     <div className={classes.root}>
-      <div>
-        {/* <ReactGridLayoutViewer
-          isEditingGrid={isEditingGrid}
-          circle={circle}
-          view
-        /> */}
-        {fieldsDisplayed.map((field: keyof CircleHydrated) => (
-          <GridItem circle={circle} field={field} />
-        ))}
-      </div>
+      <ReactGridLayoutViewer
+        isEditingGrid={isEditingGrid}
+        circle={convertHydratedCircleToFlatCircle(circle)}
+      />
     </div>
   );
 }

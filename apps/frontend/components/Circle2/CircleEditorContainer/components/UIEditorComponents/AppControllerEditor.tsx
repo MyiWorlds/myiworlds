@@ -26,6 +26,7 @@ interface Props {
   viewingHistory: boolean;
   setViewingHistory: (val: boolean) => void;
   isEditingGrid: boolean;
+  setIsEditingGrid: (val: boolean) => void;
 }
 
 export default function AppControllerEditor({
@@ -33,13 +34,17 @@ export default function AppControllerEditor({
   setIsEditing,
   circleId,
   isEditingGrid,
+  setIsEditingGrid,
 }: Props) {
   const classes = useStyles();
 
   return (
     <>
       <div className={classes.filler} />
-      <ContentSizeChanger isEditingGrid={isEditingGrid} />
+      <ContentSizeChanger
+        isEditingGrid={isEditingGrid}
+        setIsEditingGrid={setIsEditingGrid}
+      />
       {isEditing ? (
         <Button
           className={classes.btn}

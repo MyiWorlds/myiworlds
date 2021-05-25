@@ -9,7 +9,7 @@
   },
   "scripts": {
     "watch": "concurrently --kill-others \"npm run frontend\" \"npm run graphql-api\"",
-    "frontend": "nx serve frontend --port 3000",
+    "frontend": "nx serve frontend --inspect --port 3000",
     "frontend:serve": "nx build functions && nx build frontend && cd dist/apps/functions && firebase serve --only functions,hosting -p 3000",
     "frontend:deploy": "nx deploy frontend",
     "graphql-api": "nx serve graphql-api --inspect",
@@ -91,7 +91,7 @@
     "react-firebase-hooks": "^2.1.1",
     "react-grid-layout": "^1.2.4",
     "react-html-parser": "^2.0.2",
-    "recoil": "0.0.13",
+    "recoil": "0.3.1",
     "tslib": "^2.0.3"
   },
   "devDependencies": {

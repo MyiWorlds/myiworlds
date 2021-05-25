@@ -3,12 +3,14 @@ import React from 'react';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Button } from '@material-ui/core';
 import { contentDisplaySizeAtom } from '../../../../atoms/userInterfaceAtoms';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useRecoilState } from 'recoil';
 
 interface Props {
   isEditingGrid?: boolean;
+  setIsEditingGrid: (val: boolean) => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ContentSizeChanger({ isEditingGrid }: Props) {
+export default function ContentSizeChanger({
+  isEditingGrid,
+  setIsEditingGrid,
+}: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const [displaySize, setDisplaySize] = useRecoilState(contentDisplaySizeAtom);
@@ -41,6 +46,10 @@ export default function ContentSizeChanger({ isEditingGrid }: Props) {
       newScreenSize = null;
     }
     setDisplaySize(newScreenSize as number | null);
+  };
+
+  const handleToggleEditGrid = () => {
+    setIsEditingGrid(!isEditingGrid);
   };
 
   let switchActivated: '' | number = '';
@@ -106,6 +115,11 @@ export default function ContentSizeChanger({ isEditingGrid }: Props) {
           </ToggleButton>
         )}
       </ToggleButtonGroup>
+      {isEditingGrid ? (
+        <Button onClick={handleToggleEditGrid}>Finish</Button>
+      ) : (
+        <Button onClick={handleToggleEditGrid}>Edit Grid</Button>
+      )}
     </div>
   );
 }

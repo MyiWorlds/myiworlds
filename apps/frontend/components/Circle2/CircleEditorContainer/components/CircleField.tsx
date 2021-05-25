@@ -2,8 +2,8 @@ import Boolean from './Boolean';
 import CircleEditorContainer from '../CircleEditorContainer';
 import React from 'react';
 import String from './String';
-import { CircleHydrated } from '@myiworlds/types';
-import { circleWithId } from '../../../../atoms/circleAtoms';
+import { Circle } from '@myiworlds/types';
+import { circlePropertyValueByIdAndPropertyAtom } from '../../../../atoms/circleAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useSetRecoilState } from 'recoil';
 import {
@@ -14,8 +14,8 @@ import {
 
 interface Props {
   isEditing: boolean;
-  field: keyof CircleHydrated;
-  circle: CircleHydrated;
+  field: keyof Circle;
+  circle: Circle;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,7 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function CircleField({ field, isEditing, circle }: Props) {
   const classes = useStyles();
-  const setFieldState = useSetRecoilState(circleWithId(circle.id + field));
+  const setFieldState = useSetRecoilState(
+    circlePropertyValueByIdAndPropertyAtom(circle.id + field),
+  );
 
   const updateAtomWithCircleFieldData = () => {
     setFieldState(circle[field]);
@@ -94,11 +96,12 @@ export default function CircleField({ field, isEditing, circle }: Props) {
   } else if (circleFields.includes(field)) {
     if (circle[field]) {
       display = (
-        <CircleEditorContainer
-          initialIsEditing={false}
-          circle={circle[field]}
-          fetch={true}
-        />
+        <div>create circle sub editor</div>
+        // <CircleEditorContainer
+        //   initialIsEditing={false}
+        //   circle={circle[]}
+        //   fetch={true}
+        // />
       );
     } else {
       display = <div>Add Circle connecting logic for field {field}?</div>;

@@ -15,7 +15,9 @@ interface Props {
 }
 
 const CircleFieldsController: React.FC<Props> = ({ circle }) => {
-  const setFieldEditing = useSetRecoilState(selectedCircleFieldEditingAtom);
+  const setSelectedFieldEditing = useSetRecoilState(
+    selectedCircleFieldEditingAtom,
+  );
 
   const renderObject = (obj: any): any => {
     const renderElements = [];
@@ -24,7 +26,7 @@ const CircleFieldsController: React.FC<Props> = ({ circle }) => {
         renderElements.push(
           <ListItem
             key={property}
-            onClick={() => setFieldEditing(property)}
+            onClick={() => setSelectedFieldEditing(property)}
             button
           >
             <ListItemText primary={property} />
@@ -32,7 +34,7 @@ const CircleFieldsController: React.FC<Props> = ({ circle }) => {
               <IconButton
                 edge="end"
                 aria-label="delete"
-                onClick={() => setFieldEditing(property)}
+                onClick={() => setSelectedFieldEditing(property)}
               >
                 <ChevronRightIcon />
               </IconButton>

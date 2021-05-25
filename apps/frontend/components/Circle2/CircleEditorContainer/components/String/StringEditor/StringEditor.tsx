@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { Circle } from '@myiworlds/types';
-import { circleWithId } from '../../../../../../atoms/circleAtoms';
+import { circlePropertyValueByIdAndPropertyAtom } from '../../../../../../atoms/circleAtoms';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useRecoilState } from 'recoil';
 
@@ -25,7 +25,7 @@ export default function StringEditor({
   property,
 }: Props) {
   const [circleFieldEditing, setCircleEditing] = useRecoilState(
-    circleWithId(circleId + property),
+    circlePropertyValueByIdAndPropertyAtom(circleId + property),
   );
   const classes = useStyles();
 

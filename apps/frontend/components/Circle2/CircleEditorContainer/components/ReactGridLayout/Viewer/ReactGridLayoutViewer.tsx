@@ -1,8 +1,11 @@
 import AddToGrid from './../Editor/AddToGrid';
-import CircleFieldViewer from '../../../../../Circle/CircleViewer/CircleFieldViewer';
+import CircleField from '../../CircleField';
+import CircleFieldViewerContainer from '../../../../../Circle/CircleViewer/CircleFieldViewerContainer';
+import generateDefaultGridLayouts from './gridLayoutHelperFunctions';
 import React, { useContext, useEffect, useState } from 'react';
 import { Circle } from '@myiworlds/types';
 import { contentDisplaySizeAtom } from '../../../../../../atoms/userInterfaceAtoms';
+import { FIRESTORE_COLLECTIONS } from '@myiworlds/enums';
 import { getCurrentLayoutSize } from './gridLayoutHelperFunctions';
 import { useRecoilValue } from 'recoil';
 import { UserInterfaceContext } from '../../../../../../contexts/UserInterface/UserInterfaceContext';
@@ -24,13 +27,13 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 interface Props {
   circle: Circle;
   isEditingGrid?: boolean;
-  setCircleLayouts?: (newValues: Circle) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       marginBottom: theme.spacing(24),
+      height: '100%',
     },
     spacerText: {
       position: 'absolute',
@@ -41,11 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ReactGridLayoutViewer: React.FC<Props> = ({
-  circle,
-  isEditingGrid,
-  setCircleLayouts,
-}) => {
+const ReactGridLayoutViewer: React.FC<Props> = ({ circle, isEditingGrid }) => {
   const classes = useStyles();
   const theme = useTheme();
   const { contentControllerWidth, isResizingContentController } = useContext(
@@ -56,6 +55,14 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     'flex layout bg-white shadow rounded-sm',
   );
   const [showGrid, setShowGrid] = useState(false);
+  const [circleLayouts, setCircleLayouts] = useState<Circle | null>({
+    id: 'default-circle-layout',
+    type: 'LAYOUTS',
+    collection: FIRESTORE_COLLECTIONS.CIRCLES,
+    data: {
+      layouts: generateDefaultGridLayouts(Object.getOwnPropertyNames(circle)),
+    },
+  });
 
   const preventInitialAnimation = () => {
     const timer = setTimeout(
@@ -116,14 +123,17 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     });
     if (itemInGrid) {
       newGrid.push(
-        <div key={key}>
-          <CircleFieldViewer
-            property={key}
-            value={value}
+        <CircleFieldViewerContainer
+          key={circle.id + key}
+          property={key as keyof Circle}
+          editingGrid={isEditingGrid}
+        >
+          <CircleField
+            field={key as keyof Circle}
+            isEditing={false}
             circle={circle}
-            isEditingGrid={isEditingGrid}
           />
-        </div>,
+        </CircleFieldViewerContainer>,
       );
     }
   }
@@ -136,7 +146,7 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
             <CircleFieldViewerContainer
               key={layoutSizeItem.i}
               property={layoutSizeItem.i}
-              isEditingGrid={isEditingGrid}
+              editingGrid={isEditingGrid}
             >
               <span className={classes.spacerText}>
                 {isEditingGrid ? 'Spacer' : ''}
@@ -148,8 +158,8 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
     },
   );
 
-  return (
-    <div className={classes.container}>
+  const rgl = (
+    <>
       {isEditingGrid && displaySize && setCircleLayouts && (
         <AddToGrid
           circle={circle}
@@ -184,8 +194,22 @@ const ReactGridLayoutViewer: React.FC<Props> = ({
       >
         {newGrid}
       </ResponsiveGridLayout>
-    </div>
+    </>
   );
+
+  let content = null;
+
+  if (displaySize) {
+    content = (
+      <div style={{ width: displaySize, margin: '0px auto', height: '100%' }}>
+        {rgl}
+      </div>
+    );
+  } else {
+    content = rgl;
+  }
+
+  return <div className={classes.container}>{content}</div>;
 };
 
 export default ReactGridLayoutViewer;
